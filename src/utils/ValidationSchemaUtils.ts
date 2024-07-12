@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import {Variables} from '../constants/Variables';
-import {RegexUntil} from './regexUtil';
+import { RegexUntil } from './RegexUtil';
 
 export const validationSchemaLoginUtils = Yup.object().shape({
   identifier: Yup.string()
