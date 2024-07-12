@@ -8,7 +8,6 @@ import RowComponent from '../row/RowComponent';
 
 interface Props {
     isScrollEnable?: boolean;
-    isCenter?: boolean;
     backgroundColor?: string;
     isFullHeight?: boolean;
     isFullWidth?: boolean;

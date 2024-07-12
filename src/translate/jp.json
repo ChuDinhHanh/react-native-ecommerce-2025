@@ -1,5 +1,57 @@
 {
     "LoginScreen": {
-        "screenName": "ログイン"
+        "screenName": "ログイン",
+        "textLoginQuestionType": "アカウントをお持ちではありませんか?",
+        "textLoginScreen": "サインイン",
+        "textForgotPassword": "パスワードをお忘れですか?",
+        "textLogin": "ログイン",
+        "textOrLoginWith": "または以下でログイン"
+    },
+    "LoginBySocial": {
+        "textLoginWithFacebook": "Facebookでログイン",
+        "textLoginWithGoogle": "Googleでログイン"
+    },
+    "RegisterScreen": {
+        "screenName": "登録",
+        "textLoginQuestionType": "アカウントをお持ちですか?",
+        "textRegisterScreen": "登録",
+        "textRegister": "登録",
+        "textOrRegisterWith": "または登録する"
+    },
+    "RegisterBySocial": {
+        "textRegisterWithFacebook": "Facebookで登録",
+        "textRegisterWithGoogle": "Googleで登録"
+    },
+    "VerifyScreen": {
+        "screenName": "認証",
+        "textErrorCodeNotMath": "コードが正しくありません"
+    },
+    "ForgotPasswordScreen": {
+        "screenName": "パスワードをお忘れですか",
+        "textSend": "送信"
+    },
+    "ResetPasswordScreen": {
+        "screenName": "新しいパスワード",
+        "textNewPassword": "新しいパスワードを入力",
+        "textPasswordConfirm": "パスワードを再入力"
+    },
+    "Validate": {
+        "textErrorPhoneNotCorrectFormat": "電話番号の形式が正しくありません",
+        "textErrorPhoneRequired": "電話番号を入力してください",
+        "textErrorPasswordAtLess6Character": "パスワードは6文字以上でなければなりません",
+        "textErrorPasswordRequired": "パスワードを入力してください",
+        "textErrorEmailNotCorrectFormat": "メールアドレスの形式が正しくありません",
+        "textErrorEmailRequired": "メールアドレスを入力してください",
+        "textErrorConfirmPasswordNotMatches": "パスワードが一致しません",
+        "textErrorConfirmPasswordRequired": "パスワードの確認が必要です"
+    },
+    "ImmediateScreen": {
+        "textButtonLeft": "戻る",
+        "textButtonRight": "続ける",
+        "textTitleDropDown": "登録方法を選択",
+        "textTitleDropDownSelectRegisterWithFacebook": "メールで登録",
+        "textTitleDropDownSelectRegisterWithGoogle": "Facebookで登録",
+        "textErrorEmailOrPhoneNumberRequired": "電話番号またはメールアドレスを入力してください",
+        "textErrorEmailOrPhoneNumberNotCorrectFormat": "無効な電話番号またはメールアドレスの形式です"
     }
 }

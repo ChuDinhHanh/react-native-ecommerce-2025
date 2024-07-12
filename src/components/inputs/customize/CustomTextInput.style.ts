@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import {Colors} from '../../constants/Colors';
+import {Colors} from '../../../constants/Colors';
 
 export const styles = StyleSheet.create({
   container: {
@@ -11,7 +11,13 @@ export const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 5,
   },
-  error: {
-    color: 'red',
+  'container__row--input': {
+    padding: 10,
+    marginBottom: 5,
+    flex: 1,
+    paddingVertical:6,
+  },
+  container__row: {
+    borderBottomWidth: 1,
   },
 });

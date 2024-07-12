@@ -1,5 +1,62 @@
 {
-    "LoginScreen":{
-        "screenName":"Đăng nhập"
+    "LoginScreen": {
+        "screenName": "Đăng nhập",
+        "textLoginQuestionType": "Bạn không có tài khoản?",
+        "textLoginScreen": "Đăng ký",
+        "textForgotPassword": "Quên mật khẩu?",
+        "textLogin": "Đăng nhập",
+        "textOrLoginWith": "Hoặc đăng nhập với",
+        "textInputPlaceHolderEmailOrPhoneNumber": "Email/Số điện thoại",
+        "textInputPlaceHolderPassword": "Mật khẩu"
+    },
+    "LoginBySocial": {
+        "textLoginWithFacebook": "Đăng nhập với Facebook",
+        "textLoginWithGoogle": "Đăng nhập với Google"
+    },
+    "RegisterScreen": {
+        "screenName": "Đăng ký",
+        "textLoginQuestionType": "Bạn đã có tài khoản?",
+        "textRegisterScreen": "Đăng ký",
+        "textRegister": "Đăng ký",
+        "textOrRegisterWith": "Hoặc đăng ký với"
+    },
+    "RegisterBySocial": {
+        "textRegisterWithFacebook": "Đăng ký với Facebook",
+        "textRegisterWithGoogle": "Đăng ký với Google"
+    },
+    "VerifyScreen": {
+        "screenName": "Xác thực",
+        "textErrorCodeNotMath": "mã code không chính xác"
+    },
+    "ForgotPasswordScreen": {
+        "screenName": "Quên mật khẩu",
+        "textSend": "Gửi",
+        "textPlaceHolderEmail": "Hãy nhập email"
+    },
+    "ResetPasswordScreen": {
+        "screenName": "Mật khẩu mới",
+        "textNewPassword": "Nhập mật khẩu mới",
+        "textPasswordConfirm": "Nhập lại mật khẩu"
+    },
+    "Validate": {
+        "textErrorPhoneNotCorrectFormat": "Số điện thoại sai định dạng",
+        "textErrorPhoneRequired": "Số điện thoại không được để trống",
+        "textErrorPasswordAtLess6Character": "Mật khẩu phải chứa ít nhất 6 ký tự",
+        "textErrorPasswordRequired": "Mật khẩu không được để trống",
+        "textErrorEmailNotCorrectFormat": "Email sai định dạng",
+        "textErrorEmailRequired": "Email không được để trống",
+        "textErrorConfirmPasswordNotMatches": "Mật khẩu không khớp",
+        "textErrorConfirmPasswordRequired": "Mật khẩu xác nhận là bắt buộc",
+        "textErrorEmailOrPhoneNumberRequired": "Số điện thoại hoặc email không được để trống",
+        "textErrorEmailOrPhoneNumberNotCorrectFormat": "Số điện thoại hoặc email không đúng định dạng"
+    },
+    "ImmediateScreen": {
+        "textButtonLeft": "Trở lại",
+        "textButtonRight": "Tiếp tục",
+        "textTitleDropDown": "Lựa chọn kiểu đăng ký",
+        "textTitleDropDownSelectRegisterWithFacebook": "Đăng ký với Email",
+        "textTitleDropDownSelectRegisterWithGoogle": "Đăng ký với facebook",
+        "textTitleNotification": "Thông báo",
+        "textWarningSelectedType": "Hãy chọn vai trò đăng ký"
     }
 }

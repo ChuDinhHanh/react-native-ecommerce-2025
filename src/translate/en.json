@@ -1,5 +1,57 @@
 {
     "LoginScreen": {
-        "screenName": "Login"
+        "screenName": "Login",
+        "textLoginQuestionType": "Don’t have an account?",
+        "textLoginScreen": "Sign in",
+        "textForgotPassword": "Forgot password?",
+        "textLogin": "Login",
+        "textOrLoginWith": "Or login with"
+    },
+    "LoginBySocial": {
+        "textLoginWithFacebook": "Login with Facebook",
+        "textLoginWithGoogle": "Login with Google"
+    },
+    "RegisterScreen": {
+        "screenName": "Register",
+        "textLoginQuestionType": "Already have an account?",
+        "textRegisterScreen": "Register",
+        "textRegister": "Register",
+        "textOrRegisterWith": "Or register with"
+    },
+    "RegisterBySocial": {
+        "textRegisterWithFacebook": "Register with Facebook",
+        "textRegisterWithGoogle": "Register with Google"
+    },
+    "VerifyScreen": {
+        "screenName": "Verification",
+        "textErrorCodeNotMath": "The code is incorrect"
+    },
+    "ForgotPasswordScreen": {
+        "screenName": "Forgot Password",
+        "textSend": "Send"
+    },
+    "ResetPasswordScreen": {
+        "screenName": "New Password",
+        "textNewPassword": "Enter new password",
+        "textPasswordConfirm": "Re-enter password"
+    },
+    "Validate": {
+        "textErrorPhoneNotCorrectFormat": "Incorrect phone number format",
+        "textErrorPhoneRequired": "Phone number cannot be empty",
+        "textErrorPasswordAtLess6Character": "Password must be at least 6 characters long",
+        "textErrorPasswordRequired": "Password cannot be empty",
+        "textErrorEmailNotCorrectFormat": "Incorrect email format",
+        "textErrorEmailRequired": "Email cannot be empty",
+        "textErrorConfirmPasswordNotMatches": "Passwords do not match",
+        "textErrorConfirmPasswordRequired": "Confirming the password is required"
+    },
+    "ImmediateScreen": {
+        "textButtonLeft": "Back",
+        "textButtonRight": "Continue",
+        "textTitleDropDown": "Select Registration Type",
+        "textTitleDropDownSelectRegisterWithFacebook": "Register with Email",
+        "textTitleDropDownSelectRegisterWithGoogle": "Register with Facebook",
+        "textErrorEmailOrPhoneNumberRequired": "Phone number or email cannot be empty",
+        "textErrorEmailOrPhoneNumberNotCorrectFormat": "Invalid phone number or email format"
     }
 }
