@@ -5,7 +5,8 @@
         "textLoginScreen": "サインイン",
         "textForgotPassword": "パスワードをお忘れですか?",
         "textLogin": "ログイン",
-        "textOrLoginWith": "または以下でログイン"
+        "textOrLoginWith": "または以下でログイン",
+        "textInputPlaceHolderUserName": "ユーザー名"
     },
     "LoginBySocial": {
         "textLoginWithFacebook": "Facebookでログイン",
@@ -16,7 +17,9 @@
         "textLoginQuestionType": "アカウントをお持ちですか?",
         "textRegisterScreen": "登録",
         "textRegister": "登録",
-        "textOrRegisterWith": "または登録する"
+        "textOrRegisterWith": "または登録する",
+        "textChooseTypeAccountRegisterSellPerson": "販売者",
+        "textChooseTypeAccountRegisterBuyPerson": "購入者"
     },
     "RegisterBySocial": {
         "textRegisterWithFacebook": "Facebookで登録",

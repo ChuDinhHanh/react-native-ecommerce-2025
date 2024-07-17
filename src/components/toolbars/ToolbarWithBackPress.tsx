@@ -10,10 +10,11 @@ import IconButtonComponent from '../buttons/iconButton/IconButtonComponent';
 interface Props {
     title: string;
     isExit?: boolean;
+    hideBackPressButton?: boolean;
 }
 
 export default function ToolbarWithBackPress(props: Props) {
-    const { title, isExit } = props;
+    const { title, isExit, hideBackPressButton } = props;
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
     const handleGoBack = () => {
         if (Boolean(isExit) && isExit) {
@@ -25,19 +26,22 @@ export default function ToolbarWithBackPress(props: Props) {
 
     return (
         <View style={styles.container}>
-            <IconButtonComponent
-                iconSize={18}
-                iconName="chevron-left"
-                iconColor="#000"
-                onPress={() => handleGoBack()}
-                inactiveBackgroundColor="#ffffff00"
-                activeBackgroundColor="#ffffff1a"
-                customStyle={styles.container__btn}
-            />
-            <TextComponent 
-            color={Colors.BLACK}
-            fontSize={18}
-            text={title}/>
+            {
+                hideBackPressButton ?? <IconButtonComponent
+                    iconSize={18}
+                    iconName="chevron-left"
+                    iconColor="#000"
+                    onPress={() => handleGoBack()}
+                    inactiveBackgroundColor="#ffffff00"
+                    activeBackgroundColor="#ffffff1a"
+                    customStyle={styles.container__btn}
+                />
+            }
+
+            <TextComponent
+                color={Colors.BLACK}
+                fontSize={18}
+                text={title} />
         </View>
     );
 };

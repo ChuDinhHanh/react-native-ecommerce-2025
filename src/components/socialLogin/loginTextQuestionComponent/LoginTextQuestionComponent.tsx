@@ -9,6 +9,8 @@ import { fontFamilies } from '../../../constants/FontFamilies';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../../routes/Routes';
 import { useTranslation } from 'react-multi-lang';
+import { scale } from '../../../utils/ScaleUtils';
+import { Variables } from '../../../constants/Variables';
 
 interface Props {
     isLogin: boolean;
@@ -20,11 +22,12 @@ export default function LoginTextQuestionComponent(props: Readonly<Props>) {
     return (
         <RowComponent justifyContent="center" alignItems="center">
             <TextComponent
+                fontSize={Variables.FONT_SIZE_CAPTION}
                 fontFamily={fontFamilies.Roboto_Medium}
                 color={Colors.BLACK}
                 text={isLogin ? t("LoginScreen.textLoginQuestionType") : t("RegisterScreen.textLoginQuestionType")}
             />
-            <SpaceComponent width={10} />
+            <SpaceComponent width={scale(10)} />
             <TextIconButtonComponent
                 onPress={() => {
                     isLogin
@@ -33,6 +36,7 @@ export default function LoginTextQuestionComponent(props: Readonly<Props>) {
                 }}
                 title={
                     <TextComponent
+                        fontSize={Variables.FONT_SIZE_CAPTION}
                         fontFamily={fontFamilies.Roboto_Medium}
                         color={Colors.COLOR_BTN_BLUE_PRIMARY}
                         text={isLogin ? t("RegisterScreen.textRegister") : t("LoginScreen.textLogin")}

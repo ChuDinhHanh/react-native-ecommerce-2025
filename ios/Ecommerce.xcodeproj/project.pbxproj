@@ -40,6 +40,8 @@
 		8FB1C339DE1142608CB82041 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 176CE0AF9FC84A69BF702109 /* Roboto-Regular.ttf */; };
 		AE31671428004CF0B47E91A3 /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F1A70F1CAF10479DA5727E9E /* Roboto-Thin.ttf */; };
 		BE7860B186C6455AB971D664 /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BA0BEF3CFB114C258EA2783C /* Roboto-ThinItalic.ttf */; };
+		EBF91F9128804C578C76E60B /* antfill.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8A47C192B9AB4E1FB791DEED /* antfill.ttf */; };
+		4CC7EF8392594473811E135A /* antoutline.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A97E4512E80542DAADE8A7BF /* antoutline.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +99,8 @@
 		176CE0AF9FC84A69BF702109 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; name = "Roboto-Regular.ttf"; path = "../assets/fonts/Roboto-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		F1A70F1CAF10479DA5727E9E /* Roboto-Thin.ttf */ = {isa = PBXFileReference; name = "Roboto-Thin.ttf"; path = "../assets/fonts/Roboto-Thin.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		BA0BEF3CFB114C258EA2783C /* Roboto-ThinItalic.ttf */ = {isa = PBXFileReference; name = "Roboto-ThinItalic.ttf"; path = "../assets/fonts/Roboto-ThinItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		8A47C192B9AB4E1FB791DEED /* antfill.ttf */ = {isa = PBXFileReference; name = "antfill.ttf"; path = "../node_modules/@ant-design/icons-react-native/fonts/antfill.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		A97E4512E80542DAADE8A7BF /* antoutline.ttf */ = {isa = PBXFileReference; name = "antoutline.ttf"; path = "../node_modules/@ant-design/icons-react-native/fonts/antoutline.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -232,6 +236,8 @@
 				176CE0AF9FC84A69BF702109 /* Roboto-Regular.ttf */,
 				F1A70F1CAF10479DA5727E9E /* Roboto-Thin.ttf */,
 				BA0BEF3CFB114C258EA2783C /* Roboto-ThinItalic.ttf */,
+				8A47C192B9AB4E1FB791DEED /* antfill.ttf */,
+				A97E4512E80542DAADE8A7BF /* antoutline.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -358,6 +364,8 @@
 				8FB1C339DE1142608CB82041 /* Roboto-Regular.ttf in Resources */,
 				AE31671428004CF0B47E91A3 /* Roboto-Thin.ttf in Resources */,
 				BE7860B186C6455AB971D664 /* Roboto-ThinItalic.ttf in Resources */,
+				EBF91F9128804C578C76E60B /* antfill.ttf in Resources */,
+				4CC7EF8392594473811E135A /* antoutline.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

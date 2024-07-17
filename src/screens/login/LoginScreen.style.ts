@@ -1,20 +1,22 @@
 import {StyleSheet} from 'react-native';
-import {appInfo} from '../../constants/Infos';
+import {scale, verticalScale} from '../../utils/ScaleUtils';
 
 export const styles = StyleSheet.create({
-  container__image: {
-    width: 150,
-    height: 150,
-    alignSelf: 'center',
+  container: {
+    flex: 4,
   },
   container__top: {
-    width: '100%',
-    height: appInfo.sizes.HEIGHT * 0.85,
+    flex: 0.5,
   },
-  container__question: {
-    height: appInfo.sizes.HEIGHT * 0.05,
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
+  'container__top--image': {
+    width: scale(150),
+    height: verticalScale(150),
+    alignSelf: 'center',
+  },
+  container__body: {
+    flex: 3.1,
+  },
+  container__bottom: {
+    flex: 0.4,
   },
 });

@@ -3,22 +3,23 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { setDefaultLanguage, setTranslations, useTranslation } from 'react-multi-lang';
 import ToolbarWithBackPress from '../components/toolbars/ToolbarWithBackPress';
-import { AUTHENTICATION_STACK_NAVIGATOR, BOTTOM_TAB_NAVIGATOR, FEED_SCREEN, FORGOT_PASSWORD, HOME_SCREEN, INTERMEDIATE_SCREEN, LIVE_STREAM_SCREEN, LOGIN_SCREEN, NOTIFICATION_SCREEN, PROFILE_SCREEN, REGISTER_SCREEN, RESET_PASSWORD, SERVICE_STACK_NAVIGATOR, SPLASH_SCREEN, VERIFY_SCREEN } from '../constants/Screens';
+import { AUTHENTICATION_STACK_NAVIGATOR, BOTTOM_TAB_NAVIGATOR, FEED_SCREEN, FORGOT_PASSWORD, INTERMEDIATE_SCREEN, LIVE_STREAM_SCREEN, LOGIN_SCREEN, NOTIFICATION_SCREEN, PROFILE_SCREEN, REGISTER_SCREEN, RESET_PASSWORD_SCREEN, SERVICE_STACK_NAVIGATOR, SPLASH_SCREEN, VERIFY_EMAIL_SCREEN, VERIFY_OTP_SCREEN } from '../constants/Screens';
 import FeedScreen from '../screens/feed/FeedScreen';
 import ForgotPassWordScreen from '../screens/forgot/ForgotPassWordScreen';
 import HomeScreen from '../screens/home/HomeScreen';
+import IntermediateScreen from '../screens/intermediate/IntermediateScreen';
 import LoginScreen from '../screens/login/LoginScreen';
 import NotificationScreen from '../screens/notifications/NotificationScreen';
 import ProfileScreen from '../screens/profile/ProfileScreen';
 import RegisterScreen from '../screens/register/RegisterScreen';
+import ResetPasswordScreen from '../screens/reset/ResetPasswordScreen';
 import SplashScreen from '../screens/splash/SplashScreen';
 import StreamScreen from '../screens/stream/StreamScreen';
-import VerificationScreen from '../screens/verification/VerificationScreen';
+import VerificationWithEmailScreen from '../screens/verification/verificationWithEmail/VerificationWithEmailScreen';
 import en from '../translate/en.json';
 import jp from '../translate/jp.json';
 import vi from '../translate/vi.json';
-import ResetPasswordScreen from '../screens/reset/ResetPasswordScreen';
-import IntermediateScreen from '../screens/intermediate/IntermediateScreen';
+import VerificationWithOTPScreen from '../screens/verification/verificationWithOTP/VerificationWithOTPScreen';
 
 setTranslations({ jp, en, vi })
 setDefaultLanguage('vi')
@@ -36,9 +37,10 @@ export type RootStackParamList = {
   REGISTER_SCREEN: undefined;
   AUTHENTICATION_STACK_NAVIGATOR: undefined;
   SERVICE_STACK_NAVIGATOR: undefined;
-  VERIFY_SCREEN: undefined;
-  RESET_PASSWORD: undefined;
+  VERIFY_OTP_SCREEN: { email: string };
+  RESET_PASSWORD_SCREEN: { code: string };
   INTERMEDIATE_SCREEN: undefined;
+  VERIFY_EMAIL_SCREEN: { token: string; email: string; };
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -52,9 +54,16 @@ function AuthenticationStackNavigator() {
   const t = useTranslation();
   return (
     <RootStack.Navigator
-      initialRouteName={SPLASH_SCREEN}
+      initialRouteName={LOGIN_SCREEN}
     >
       <RootStack.Group>
+        <RootStack.Screen
+          options={{
+            header: () => (
+              <ToolbarWithBackPress hideBackPressButton={true} title={t("ForgotPasswordScreen.screenName")} />
+            ),
+          }}
+          name={VERIFY_EMAIL_SCREEN} component={VerificationWithEmailScreen} />
         <RootStack.Screen
           options={{
             header: () => (
@@ -71,6 +80,16 @@ function AuthenticationStackNavigator() {
           name={REGISTER_SCREEN} component={RegisterScreen} />
         <RootStack.Screen
           options={{
+            header: () => null
+          }}
+          name={INTERMEDIATE_SCREEN} component={IntermediateScreen} />
+        <RootStack.Screen
+          options={{
+            header: () => <ToolbarWithBackPress  title={t("ResetPasswordScreen.screenName")} />
+          }}
+          name={RESET_PASSWORD_SCREEN} component={ResetPasswordScreen} />
+        <RootStack.Screen
+          options={{
             header: () => (
               <ToolbarWithBackPress title={t("ForgotPasswordScreen.screenName")} />
             ),
@@ -80,17 +99,7 @@ function AuthenticationStackNavigator() {
           options={{
             header: () => <ToolbarWithBackPress title={t("VerifyScreen.screenName")} />
           }}
-          name={VERIFY_SCREEN} component={VerificationScreen} />
-        <RootStack.Screen
-          options={{
-            header: () => <ToolbarWithBackPress title={t("ResetPasswordScreen.screenName")} />
-          }}
-          name={RESET_PASSWORD} component={ResetPasswordScreen} />
-        <RootStack.Screen
-          options={{
-            header: () => null
-          }}
-          name={INTERMEDIATE_SCREEN} component={IntermediateScreen} />
+          name={VERIFY_OTP_SCREEN} component={VerificationWithOTPScreen} />
       </RootStack.Group>
     </RootStack.Navigator>
   )
@@ -98,11 +107,15 @@ function AuthenticationStackNavigator() {
 
 function BottomTabNavigator() {
   return (
-    <BottomTab.Navigator>
+    <BottomTab.Navigator
+      screenOptions={{
+        headerShown: false
+      }}
+    >
       <BottomTab.Group>
         <BottomTab.Screen
           options={{ header: () => false }}
-          name={HOME_SCREEN} component={HomeScreen} />
+          name={LOGIN_SCREEN} component={HomeScreen} />
         <BottomTab.Screen name={FEED_SCREEN} component={FeedScreen} />
         <BottomTab.Screen name={LIVE_STREAM_SCREEN} component={StreamScreen} />
         <BottomTab.Screen name={NOTIFICATION_SCREEN} component={NotificationScreen} />

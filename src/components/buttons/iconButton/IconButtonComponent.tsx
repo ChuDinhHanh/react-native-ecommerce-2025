@@ -30,14 +30,14 @@ const IconButtonComponent = (props: IconButtonProps) => {
                 ? props.activeBackgroundColor ?? '#fff'
                 : props.inactiveBackgroundColor ?? '#000',
         };
-    }, [pressed, props.iconColor]);
+    }, [pressed, props.iconColor, props.inactiveBackgroundColor, props.activeBackgroundColor]);
 
     const iconColorStr = useMemo<string>(() => {
         return (
             props.iconColor ??
             (pressed
                 ? props.activeIconColor ?? '#000'
-                : props.inactiveBackgroundColor ?? '#fff')
+                : props.inactiveIconColor ?? '#fff')
         );
     }, [pressed, props.iconColor]);
 

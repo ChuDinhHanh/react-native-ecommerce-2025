@@ -7,7 +7,8 @@
         "textLogin": "Đăng nhập",
         "textOrLoginWith": "Hoặc đăng nhập với",
         "textInputPlaceHolderEmailOrPhoneNumber": "Email/Số điện thoại",
-        "textInputPlaceHolderPassword": "Mật khẩu"
+        "textInputPlaceHolderPassword": "Mật khẩu",
+        "textInputPlaceHolderUserName": "Tên tài khoản"
     },
     "LoginBySocial": {
         "textLoginWithFacebook": "Đăng nhập với Facebook",
@@ -18,7 +19,9 @@
         "textLoginQuestionType": "Bạn đã có tài khoản?",
         "textRegisterScreen": "Đăng ký",
         "textRegister": "Đăng ký",
-        "textOrRegisterWith": "Hoặc đăng ký với"
+        "textOrRegisterWith": "Hoặc đăng ký với",
+        "textChooseTypeAccountRegisterSellPerson": "Người bán",
+        "textChooseTypeAccountRegisterBuyPerson": "Người mua"
     },
     "RegisterBySocial": {
         "textRegisterWithFacebook": "Đăng ký với Facebook",

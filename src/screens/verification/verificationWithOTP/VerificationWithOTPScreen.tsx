@@ -1,18 +1,21 @@
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
-import TextButtonComponent from '../../components/buttons/textButton/TextButtonComponent';
-import ContainerComponent from '../../components/container/ContainerComponent';
-import OTPInputComponent from '../../components/inputs/otp/OTPInputComponent';
-import RowComponent from '../../components/row/RowComponent';
-import SessionComponent from '../../components/session/SessionComponent';
-import SpaceComponent from '../../components/space/SpaceComponent';
-import TextComponent from '../../components/text/TextComponent';
-import { Colors } from '../../constants/Colors';
-import { RootStackParamList } from '../../routes/Routes';
-import { SignUp } from '../../types/other/SignUp';
-import { Verification } from '../../types/other/Verification';
 import { useTranslation } from 'react-multi-lang';
+import TextButtonComponent from '../../../components/buttons/textButton/TextButtonComponent';
+import ContainerComponent from '../../../components/container/ContainerComponent';
+import OTPInputComponent from '../../../components/inputs/otp/OTPInputComponent';
+import RowComponent from '../../../components/row/RowComponent';
+import SessionComponent from '../../../components/session/SessionComponent';
+import SpaceComponent from '../../../components/space/SpaceComponent';
+import TextComponent from '../../../components/text/TextComponent';
+import { Colors } from '../../../constants/Colors';
+import { RootStackParamList } from '../../../routes/Routes';
+import { SignUp } from '../../../types/other/SignUp';
+import { Verification } from '../../../types/other/Verification';
+import { scale, verticalScale } from '../../../utils/ScaleUtils';
+import { useLazyForgotPasswordQuery } from '../../../redux/Service';
+import { RESET_PASSWORD_SCREEN } from '../../../constants/Screens';
 
 const initialValue: Verification[] = [
     {
@@ -32,6 +35,26 @@ const initialValue: Verification[] = [
     },
     {
         id: 4,
+        value: '',
+        isFocus: false,
+    },
+    {
+        id: 5,
+        value: '',
+        isFocus: false,
+    },
+    {
+        id: 6,
+        value: '',
+        isFocus: false,
+    },
+    {
+        id: 7,
+        value: '',
+        isFocus: false,
+    },
+    {
+        id: 8,
         value: '',
         isFocus: false,
     },
@@ -60,8 +83,10 @@ interface Error {
     isError: boolean;
 }
 
-const VerificationScreen = () => {
+const VerificationWithOTPScreen = () => {
     const t = useTranslation();
+    const route = useRoute<RouteProp<RootStackParamList, 'VERIFY_OTP_SCREEN'>>();
+    const email = route.params.email;
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     // CountDown
     const initialCount = 20;
@@ -72,20 +97,15 @@ const VerificationScreen = () => {
         isError: false,
     });
     // State
-    const [signUpData, setSignUpData] = useState<SignUp>({
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-    });
     const [isLoading, setIsLoading] = useState(false);
     const [isDisable, setIsDisable] = useState(false);
     const [verification, setVerification] =
         useState<Verification[]>(initialValue);
-    const [_code, _setCode] = useState<number>(1234);
-
+    const [_code, _setCode] = useState<string>('C1714391');
+    const [forgotPassword, { data: getCodeData, isFetching: isFetchingGetCode, error: errorGetCode, isError: isErrorGetCode }] = useLazyForgotPasswordQuery();
     // Process
     const handleEntryCodeEvent = (id: number, val: string) => {
+        if (val.length > 1) return;
         let validate = false;
         let isNotHaveValue = val.length === 0;
         console.log(id);
@@ -115,26 +135,21 @@ const VerificationScreen = () => {
 
     useEffect(() => {
         const valueFromInput = getAllValueFromInput(verification);
-        if (counter === 0) {
+        if (valueFromInput.length !== 8) {
             setIsDisable(true);
         }
-        if (valueFromInput.length !== 4) {
-            setIsDisable(true);
-        }
-        if (counter !== 0 && valueFromInput.length === 4) {
+        if (valueFromInput.length === 8) {
             setIsDisable(false);
         }
-    }, [verification, counter]);
+    }, [verification]);
 
     const handleVerificationActions = () => {
-        if (counter != 0) {
-            const valueFromInput = getAllValueFromInput(verification);
-            if (parseInt(valueFromInput) === _code) {
-                setError({ ...error, isError: false });
-                handleCallApi();
-            } else {
-                setError({ name: t("VerifyScreen.textErrorCodeNotMath"), isError: true });
-            }
+        const valueFromInput = getAllValueFromInput(verification);
+        if (valueFromInput === _code) {
+            setError({ ...error, isError: false });
+            handleCallApi();
+        } else {
+            setError({ name: t("VerifyScreen.textErrorCodeNotMath"), isError: true });
         }
     };
 
@@ -150,39 +165,35 @@ const VerificationScreen = () => {
     }, [counter]);
 
     const handleResendEmailVerification = async () => {
-        setError({ ...error, isError: false });
-        setCounter(initialCount);
-        const signUpData: SignUp = {
-            username: '',
-            email: '',
-            password: '',
-            confirmPassword: '',
-        };
-        const res = {
-            data: {
-                code: 1234
-            }
-        };
-        _setCode(res?.data.code);
+        setCounter(20);
+        handleSubmit();
     };
-
-
 
     const handleCallApi = async () => {
         setIsLoading(true);
-        // setTimeout(() => {
-        //     navigation.navigate(BOTTOM_TAB_NAVIGATOR);
-        // }, 3000)
+        setTimeout(() => {
+            navigation.replace(RESET_PASSWORD_SCREEN, { code: _code });
+        }, 3000)
     };
 
     const handleResetFocus = (id: number) => {
         const updatedVerification = verification.map(item => {
             if (item.id === id) {
-                return { ...item, value: item.value };
+                return { ...item, value: item.value, isFocus: true };
+            } else {
+                return { ...item, value: item.value, isFocus: false };
             }
-            return item;
         });
         setVerification(updatedVerification);
+    }
+
+
+    const handleSubmit = async () => {
+        try {
+            await forgotPassword({ email: email });
+        } catch (error) {
+            // Handle
+        }
     }
 
     return (
@@ -192,55 +203,90 @@ const VerificationScreen = () => {
             backgroundColor={Colors.WHITE}
         >
             {/* Body */}
-            <SessionComponent padding={29}>
+            <SessionComponent padding={scale(29)}>
                 <TextComponent
-                    text="Verification"
-                    fontSize={24}
+                    text="Xác minh"
+                    fontSize={20}
                     color={Colors.BLACK}
                 />
-                <SpaceComponent height={12} />
+                <SpaceComponent height={verticalScale(12)} />
                 <TextComponent
-                    text={`We’ve send you the verification code on 0988244510`}
+                    text={`Chúng tôi đã gửi cho bạn mã xác minh cho ${email}.`}
                     fontSize={15}
                     color={Colors.BLACK}
                 />
-                <SpaceComponent height={28} />
+                <SpaceComponent height={verticalScale(28)} />
                 <RowComponent justifyContent="space-around" alignItems="center">
                     <OTPInputComponent
-                        onFocus={(id) => handleResetFocus(id)}
+                        isAutoCapitalize
+                        onFocus={handleResetFocus}
                         id={verification[0].id}
                         onChange={handleEntryCodeEvent}
                         isFocus={verification[0].isFocus}
                         code={verification[0].value}
                     />
                     <OTPInputComponent
-                        onFocus={(id) => handleResetFocus(id)}
+                        isAutoCapitalize
+                        onFocus={handleResetFocus}
                         id={verification[1].id}
                         onChange={handleEntryCodeEvent}
                         isFocus={verification[1].isFocus}
                         code={verification[1].value}
                     />
                     <OTPInputComponent
-                        onFocus={(id) => handleResetFocus(id)}
+                        isAutoCapitalize
+                        onFocus={handleResetFocus}
                         id={verification[2].id}
                         onChange={handleEntryCodeEvent}
                         isFocus={verification[2].isFocus}
                         code={verification[2].value}
                     />
                     <OTPInputComponent
-                        onFocus={(id) => handleResetFocus(id)}
+                        isAutoCapitalize
+                        onFocus={handleResetFocus}
                         id={verification[3].id}
                         onChange={handleEntryCodeEvent}
                         isFocus={verification[3].isFocus}
                         code={verification[3].value}
                     />
+                    <OTPInputComponent
+                        isAutoCapitalize
+                        onFocus={handleResetFocus}
+                        id={verification[4].id}
+                        onChange={handleEntryCodeEvent}
+                        isFocus={verification[4].isFocus}
+                        code={verification[4].value}
+                    />
+                    <OTPInputComponent
+                        isAutoCapitalize
+                        onFocus={handleResetFocus}
+                        id={verification[5].id}
+                        onChange={handleEntryCodeEvent}
+                        isFocus={verification[5].isFocus}
+                        code={verification[5].value}
+                    />
+                    <OTPInputComponent
+                        isAutoCapitalize
+                        onFocus={handleResetFocus}
+                        id={verification[6].id}
+                        onChange={handleEntryCodeEvent}
+                        isFocus={verification[6].isFocus}
+                        code={verification[6].value}
+                    />
+                    <OTPInputComponent
+                        isAutoCapitalize
+                        onFocus={handleResetFocus}
+                        id={verification[7].id}
+                        onChange={handleEntryCodeEvent}
+                        isFocus={verification[7].isFocus}
+                        code={verification[7].value}
+                    />
                 </RowComponent>
-                <SpaceComponent height={9} />
+                <SpaceComponent height={verticalScale(9)} />
                 {error.isError && (
                     <TextComponent text={error.name} color={Colors.RED} />
                 )}
-                <SpaceComponent height={30} />
-                <SpaceComponent height={24} />
+                <SpaceComponent height={verticalScale(30)} />
                 <RowComponent justifyContent="center" alignItems="center">
                     {counter > 0 ? (
                         <>
@@ -255,23 +301,24 @@ const VerificationScreen = () => {
                         </>
                     ) : (
                         <TextButtonComponent
-                            title={<TextComponent fontSize={18} color={Colors.COLOR_BTN_BLUE_PRIMARY} text={"Resend email verification"} />}
+                            title={<TextComponent fontSize={18} color={Colors.COLOR_BTN_BLUE_PRIMARY} text={"Resend code verification"} />}
                             onPress={handleResendEmailVerification}
                         />
                     )}
                 </RowComponent>
-                <SpaceComponent height={30} />
+                <SpaceComponent height={verticalScale(30)} />
                 <TextButtonComponent
-                    disabled={isDisable}
+                    disabled={isLoading}
+                    isLoading={isLoading}
                     borderRadius={5}
-                    padding={15}
+                    padding={scale(15)}
                     backgroundColor={Colors.GREEN_500}
                     onPress={handleVerificationActions}
-                    title={<TextComponent text='Verify' />}
+                    title={<TextComponent fontSize={scale(18)} text='Verify' />}
                 />
             </SessionComponent>
         </ContainerComponent>
     );
 };
 
-export default VerificationScreen;
+export default VerificationWithOTPScreen;

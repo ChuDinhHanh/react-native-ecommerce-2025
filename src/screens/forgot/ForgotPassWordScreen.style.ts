@@ -1,12 +1,13 @@
 import {StyleSheet} from 'react-native';
+import {moderateScale} from '../../utils/ScaleUtils';
 
 export const styles = StyleSheet.create({
   container: {
     alignSelf: 'center',
-    marginVertical: 20,
+    marginVertical: moderateScale(20),
   },
   container__image: {
-    width: 250,
-    height: 250,
+    width: moderateScale(250),
+    height: moderateScale(250),
   },
 });

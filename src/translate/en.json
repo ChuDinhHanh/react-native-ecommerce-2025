@@ -5,7 +5,8 @@
         "textLoginScreen": "Sign in",
         "textForgotPassword": "Forgot password?",
         "textLogin": "Login",
-        "textOrLoginWith": "Or login with"
+        "textOrLoginWith": "Or login with",
+        "textInputPlaceHolderUserName": "Username"
     },
     "LoginBySocial": {
         "textLoginWithFacebook": "Login with Facebook",
@@ -16,7 +17,9 @@
         "textLoginQuestionType": "Already have an account?",
         "textRegisterScreen": "Register",
         "textRegister": "Register",
-        "textOrRegisterWith": "Or register with"
+        "textOrRegisterWith": "Or register with",
+        "textChooseTypeAccountRegisterSellPerson": "Seller",
+        "textChooseTypeAccountRegisterBuyPerson": "Buyer"
     },
     "RegisterBySocial": {
         "textRegisterWithFacebook": "Register with Facebook",

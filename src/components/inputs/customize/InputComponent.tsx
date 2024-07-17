@@ -4,9 +4,11 @@ import { Pressable, Text, TextInput, TextInputProps, View } from 'react-native';
 import IoniconsIcon from 'react-native-vector-icons/Ionicons';
 import { Colors } from '../../../constants/Colors';
 import RowComponent from '../../row/RowComponent';
-import { styles } from './CustomTextInput.style';
 import TextComponent from '../../text/TextComponent';
 import { useTranslation } from 'react-multi-lang';
+import { styles } from './InputComponent.style';
+import { scale } from '../../../utils/ScaleUtils';
+import { Variables } from '../../../constants/Variables';
 
 interface CustomTextInputProps extends TextInputProps {
     error?: string;
@@ -14,9 +16,11 @@ interface CustomTextInputProps extends TextInputProps {
     suffix?: ReactNode;
     affix?: ReactNode;
     title?: string;
+    isRequired?: boolean;
+    isAutoFocus?: boolean;
 }
 
-const CustomTextInput: React.FC<CustomTextInputProps> = ({
+const InputComponent: React.FC<CustomTextInputProps> = ({
     placeholder,
     onChangeText,
     onBlur,
@@ -27,7 +31,9 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
     suffix,
     affix,
     keyboardType,
-    title
+    title,
+    isRequired,
+    isAutoFocus
 }) => {
     const t = useTranslation();
     const [show, setShow] = useState(secureTextEntry);
@@ -36,18 +42,23 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
     return (
         <View style={styles.container}>
             {
-                Boolean(title) && <TextComponent  color={Colors.BLACK} text={title ?? ""} />
+                Boolean(title) && <TextComponent color={Colors.BLACK} text={title ?? ""} />
+            }
+            {
+                isRequired && <TextComponent customizeStyle={styles.container__text} text='*' color={Colors.RED} />
             }
             <RowComponent
                 alignItems='center'
-                styles={[styles.container__row, {
-                    borderColor: touched ? error ? Colors.RED : Colors.GREEN : Colors.GREY_FEEBLE,
-                }]}
+                styles={[
+                    styles.container__row, {
+                        borderColor: touched ? (error ? Colors.RED : Colors.COLOR_GREEN_SUCCESS) : (Colors.GREY_FEEBLE),
+                    }]}
             >
                 {
                     suffix
                 }
                 <TextInput
+                    autoFocus={isAutoFocus ?? undefined}
                     style={styles['container__row--input']}
                     placeholder={placeholder}
                     onChangeText={onChangeText}
@@ -58,16 +69,16 @@ const CustomTextInput: React.FC<CustomTextInputProps> = ({
                 />
                 {
                     secureTextEntry && <Pressable onPress={() => { setShow(!show) }}>
-                        <IoniconsIcon name={show ? showPasswordIconName : hidePasswordIconName} size={22} />
+                        <IoniconsIcon name={show ? showPasswordIconName : hidePasswordIconName} size={scale(22)} />
                     </Pressable>
                 }
             </RowComponent>
             {
-                touched && error && <TextComponent color='red' text={`${t(error)}`} />
+                touched && error && <TextComponent fontSize={Variables.FONT_SIZE_ERROR_TEXT} color='red' text={`${t(error)}`} />
             }
         </View>
     );
 };
 
 
-export default CustomTextInput;
+export default InputComponent;

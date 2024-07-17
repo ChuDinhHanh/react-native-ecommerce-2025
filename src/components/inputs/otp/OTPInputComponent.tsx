@@ -1,6 +1,7 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { TextInput, View } from 'react-native';
 import { Colors } from '../../../constants/Colors';
+import { styles } from './OTPInputComponent.style';
 
 interface Props {
     id: number;
@@ -8,10 +9,11 @@ interface Props {
     isFocus: boolean;
     code: string;
     onFocus: (id: number) => void;
+    isAutoCapitalize?: boolean;
 }
 const OTPInputComponent = (props: Props) => {
     const inputRef = useRef<TextInput>(null);
-    const { isFocus, onChange, id, code, onFocus } = props;
+    const { isFocus, onChange, id, code, onFocus, isAutoCapitalize } = props;
     const [showLine, setShowLine] = useState<boolean>(true);
     const [shouldShowKeyboard, setShouldShowKeyboard] = useState(false);
 
@@ -48,11 +50,12 @@ const OTPInputComponent = (props: Props) => {
                 styles.wrapper_input,
             ]}>
             <TextInput
+                autoCapitalize={isAutoCapitalize ? 'characters' : 'none'}
+                maxLength={2}
                 onKeyPress={handleKeyPress}
                 caretHidden={true}
                 ref={inputRef}
                 value={code}
-                keyboardType="numeric"
                 onChangeText={val =>
                     onChange(id, val.length === 0 ? val : val[val.length - 1])
                 }
@@ -75,22 +78,4 @@ const OTPInputComponent = (props: Props) => {
     );
 };
 
-const styles = StyleSheet.create({
-    wrapper_input: {
-        overflow: 'hidden',
-        width: 55,
-        height: 55,
-        borderWidth: 1,
-        borderRadius: 12,
-        borderColor: Colors.GREY_FEEBLE,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    input: {
-        textAlign: 'center',
-        fontSize: 18,
-        width: '100%',
-        height: '100%',
-    },
-});
 export default memo(OTPInputComponent);

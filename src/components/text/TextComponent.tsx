@@ -1,6 +1,7 @@
-import { View, Text, StyleProp, ViewStyle } from 'react-native';
 import React, { useMemo } from 'react';
+import { StyleProp, Text, ViewStyle } from 'react-native';
 import { Colors } from '../../constants/Colors';
+import { scale } from '../../utils/ScaleUtils';
 
 interface Props {
     text: string;
@@ -12,26 +13,27 @@ interface Props {
     "normal" | "bold" | "100" | "200" | "300" | "400" | "500" | "600" | "700" | "800" | "900" | undefined;
     textDecoration?: "line-through" | "none" | "underline" | "underline line-through";
     paddingHorizontal?: number;
+    customizeStyle?: StyleProp<ViewStyle>
 }
 
 const TextComponent = (props: Props) => {
-    const { text, fontSize, color, fontFamily, fontWeight, textDecoration, width, paddingHorizontal } =
+    const { text, fontSize, color, fontFamily, fontWeight, textDecoration, width, paddingHorizontal, customizeStyle } =
         props;
     const textStyle = useMemo<StyleProp<ViewStyle>>(() => {
         return {
-            fontSize: fontSize ?? 15,
+            fontSize: fontSize ?? scale(15),
             color: color ?? Colors.WHITE,
             fontFamily: fontFamily,
             fontWeight,
             textDecorationLine: textDecoration ? 'line-through' : 'none',
             flexWrap: 'wrap',
             width,
-            paddingHorizontal
+            paddingHorizontal,
         }
-    }, [paddingHorizontal, width, textDecoration, fontFamily, Colors, fontSize]);
+    }, [props]);
     return (
         <Text
-            style={textStyle}>
+            style={[textStyle, customizeStyle]}>
             {text}
         </Text>
     );

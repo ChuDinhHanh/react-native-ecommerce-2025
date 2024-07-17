@@ -1,17 +1,24 @@
-import { View, Text, Image } from 'react-native'
-import React from 'react'
-import ContainerComponent from '../../components/container/ContainerComponent'
 import { Formik } from 'formik'
-import CustomTextInput from '../../components/inputs/customize/CustomTextInput'
-import FontistoIcons from 'react-native-vector-icons/Fontisto';
+import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-multi-lang'
+import { Alert, Image, View } from 'react-native'
+import FontistoIcons from 'react-native-vector-icons/Fontisto'
 import TextButtonComponent from '../../components/buttons/textButton/TextButtonComponent'
+import ContainerComponent from '../../components/container/ContainerComponent'
+import CustomTextInput from '../../components/inputs/customize/InputComponent'
+import SessionComponent from '../../components/session/SessionComponent'
+import SpaceComponent from '../../components/space/SpaceComponent'
 import TextComponent from '../../components/text/TextComponent'
 import { Colors } from '../../constants/Colors'
-import { useTranslation } from 'react-multi-lang'
-import SessionComponent from '../../components/session/SessionComponent'
-import { styles } from './ForgotPassWordScreen.style'
-import SpaceComponent from '../../components/space/SpaceComponent'
 import { validationSchemaForgotPasswordUtils } from '../../utils/ValidationSchemaUtils'
+import { styles } from './ForgotPassWordScreen.style'
+import { scale, verticalScale } from '../../utils/ScaleUtils'
+import { Variables } from '../../constants/Variables'
+import { useLazyForgotPasswordQuery } from '../../redux/Service'
+import { useIsFocused, useNavigation } from '@react-navigation/native'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { RootStackParamList } from '../../routes/Routes'
+import { VERIFY_OTP_SCREEN } from '../../constants/Screens'
 
 interface ForgotPassWordFormValidate {
   email: string
@@ -19,7 +26,32 @@ interface ForgotPassWordFormValidate {
 
 const ForgotPassWordScreen = () => {
   const t = useTranslation();
-  const initialValue: ForgotPassWordFormValidate = { email: "" };
+  const isFocused = useIsFocused();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const [initialValue, setInitialValue] = useState<ForgotPassWordFormValidate>({ email: "" });
+  const [forgotPassword, { data, isFetching, error, isError }] = useLazyForgotPasswordQuery();
+
+  const handleSubmit = async (values: ForgotPassWordFormValidate) => {
+    try {
+      setInitialValue({ ...values });
+      await forgotPassword({ email: values.email });
+    } catch (error) {
+      // hanlde
+    }
+  }
+
+  useEffect(() => {
+    if (!isFocused) return;
+    if (data) {
+      Alert.alert("Thông báo", data.message);
+      navigation.navigate(VERIFY_OTP_SCREEN, initialValue);
+    }
+    if (isError) {
+      const textError = JSON.parse(JSON.stringify(error));
+      Alert.alert("Thông báo", `${textError.data.message}`);
+    }
+  }, [data, isFetching, error, isError])
+
   return (
     <ContainerComponent
       isFull
@@ -33,15 +65,16 @@ const ForgotPassWordScreen = () => {
         <Formik
           initialValues={initialValue}
           validationSchema={validationSchemaForgotPasswordUtils}
-          onSubmit={values => {
-            console.log(values);
-          }}
+          onSubmit={handleSubmit}
+          enableReinitialize
         >
           {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
             <View>
               <CustomTextInput
+                isAutoFocus={true}
+                focusable
                 suffix={
-                  <FontistoIcons name='email' size={25} color={Colors.GREY1} />
+                  <FontistoIcons name='email' size={Variables.ICON_SIZE_SMALL} color={Colors.GREY1} />
                 }
                 placeholder={t("ForgotPasswordScreen.textPlaceHolderEmail")}
                 onChangeText={handleChange('email')}
@@ -50,12 +83,14 @@ const ForgotPassWordScreen = () => {
                 error={errors.email}
                 touched={touched.email}
               />
-              <SpaceComponent height={20} />
+              <SpaceComponent height={verticalScale(20)} />
               <TextButtonComponent
-                padding={15}
+                isLoading={isFetching}
+                disabled={isFetching}
+                padding={scale(15)}
                 borderRadius={5}
                 backgroundColor={Colors.GREEN_500}
-                title={<TextComponent fontSize={18} color={Colors.WHITE} text={t("ForgotPasswordScreen.textSend")} />}
+                title={<TextComponent fontSize={Variables.FONT_SIZE_BUTTON_TEXT} fontWeight='bold' color={Colors.WHITE} text={t("ForgotPasswordScreen.textSend")} />}
                 onPress={handleSubmit}
               />
             </View>
