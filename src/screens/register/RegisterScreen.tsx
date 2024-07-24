@@ -21,11 +21,10 @@ import SocialLoginComponent from '../../components/socialLogin/socialLoginCompon
 import SpaceComponent from '../../components/space/SpaceComponent';
 import TextComponent from '../../components/text/TextComponent';
 import { Colors } from '../../constants/Colors';
-import { BOTTOM_TAB_NAVIGATOR, VERIFY_EMAIL_SCREEN } from '../../constants/Screens';
+import { BOTTOM_TAB_NAVIGATOR, VERIFY_CAPTCHA_SEND_SMS_SCREEN, VERIFY_EMAIL_SCREEN, VERIFY_PHONE_SCREEN } from '../../constants/Screens';
 import { Variables } from '../../constants/Variables';
 import { useAppDispatch } from '../../redux/Hooks';
 import { useRegisterByGoogleMutation, useRegisterMutation } from '../../redux/Service';
-import { setUserLogin } from '../../redux/Slice';
 import { RootStackParamList } from '../../routes/Routes';
 import { globalStyles } from '../../styles/globalStyles';
 import { Data } from '../../types/request/Data';
@@ -35,6 +34,10 @@ import { moderateScale, verticalScale } from '../../utils/ScaleUtils';
 import { ValidateIdentifyTypePhoneOrEmail, validationSchemaRegisterUtils } from '../../utils/ValidationSchemaUtils';
 import { styles } from './RegisterScreen.style';
 import { SignInByGoogle } from '../../types/request/SignInByGoogle';
+import { SignInRedux } from '../../types/other/SignInRedux';
+import { setUserLogin } from '../../redux/Slice';
+import { loginUser } from '../../redux/userThunks';
+import { boolean } from 'yup';
 
 interface RegisterFormValues {
   name: string;
@@ -47,6 +50,7 @@ const RegisterScreen: React.FC = () => {
   console.log('==============RegisterScreen======================');
   const t = useTranslation();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const [isPhone, setIsPhone] = useState(false);
   const [initialValues, setInitialValues] = useState<RegisterFormValues>({
     name: '',
     identifier: '',
@@ -83,10 +87,17 @@ const RegisterScreen: React.FC = () => {
       Alert.alert('Thông báo', dataRegister.message || 'Đăng ký thành công!');
       const token = dataRegister.data;
       if (token) {
-        navigation.navigate(VERIFY_EMAIL_SCREEN, {
-          token: token,
-          email: initialValues.identifier
-        })
+        if (isPhone) {
+          navigation.navigate(VERIFY_CAPTCHA_SEND_SMS_SCREEN, {
+            token: token,
+            phone: initialValues.identifier
+          })
+        } else {
+          navigation.navigate(VERIFY_EMAIL_SCREEN, {
+            token: token,
+            email: initialValues.identifier
+          })
+        }
       }
     }
     if (isErrorRegister) {
@@ -97,10 +108,13 @@ const RegisterScreen: React.FC = () => {
 
 
   const handleSubmit = async (values: RegisterFormValues) => {
+    const email = ValidateIdentifyTypePhoneOrEmail('email', values.identifier);
+    const phone = ValidateIdentifyTypePhoneOrEmail('phone', values.identifier);
+    Boolean(email.length) ? setIsPhone(false) : setIsPhone(true);
     const registerData: Register = {
       name: values.name,
-      email: ValidateIdentifyTypePhoneOrEmail('email', values.identifier),
-      phone: ValidateIdentifyTypePhoneOrEmail('phone', values.identifier),
+      email: Boolean(email.length) ? email : null,
+      phone: Boolean(phone.length) ? phone : null,
       password: values.password,
       avatar: imagePicker ? `${imagePicker[0].uri}` : '',
       roleCode: values.accountType
@@ -136,15 +150,14 @@ const RegisterScreen: React.FC = () => {
   }, [isErrorRegisterByGoogle, errorRegisterByGoogle, dataRegisterByGoogle]);
 
   const handleSaveDataAndNavigate = (data: Data<any>) => {
-    // Get data
-    const token = data.data.token;
-    const user = data.data.user;
-    // Save data
-    AsyncStorage.setItem(Variables.TOKEN_KEY, JSON.stringify(token));
-    AsyncStorage.setItem(Variables.USER_LOGIN_KEY, JSON.stringify(user));
-    dispatch(setUserLogin(user));
-    // Change screen
-    navigation.replace(BOTTOM_TAB_NAVIGATOR);
+    const user: SignInRedux = {
+      user: data.data.user,
+      token: data.data.token,
+      isFirstTime: true
+    }
+    dispatch(loginUser(user)).then((res) => {
+      navigation.replace(BOTTOM_TAB_NAVIGATOR);
+    })
   }
 
   return (

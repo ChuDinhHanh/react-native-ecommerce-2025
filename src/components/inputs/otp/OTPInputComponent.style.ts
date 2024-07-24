@@ -1,11 +1,11 @@
 import {StyleSheet} from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import {scale, verticalScale} from '../../../utils/ScaleUtils';
+import {moderateScale, scale, verticalScale} from '../../../utils/ScaleUtils';
 
 export const styles = StyleSheet.create({
   wrapper_input: {
     overflow: 'hidden',
-    width: scale(36),
+    width: moderateScale(40),
     height: verticalScale(50),
     borderWidth: 0.5,
     borderRadius: 8,

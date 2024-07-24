@@ -1,9 +1,11 @@
-import { View, Text, StyleProp, ViewStyle, Pressable } from 'react-native';
-import React, { useMemo, useState } from 'react';
+import React, { ReactNode, useMemo, useState } from 'react';
+import { Pressable, StyleProp, View, ViewStyle } from 'react-native';
+import { Badge } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { styles } from './IconButtonComponent.style';
 
 interface IconButtonProps {
-    iconName: string;
+    iconName?: string;
     iconColor?: string;
     iconSize?: number;
     onPress: () => void;
@@ -15,6 +17,9 @@ interface IconButtonProps {
     width?: number;
     height?: number;
     borderRadius?: number;
+    typeNoBackground?: boolean;
+    icon?: ReactNode;
+    badgeNumber?: number;
 }
 
 const IconButtonComponent = (props: IconButtonProps) => {
@@ -41,21 +46,35 @@ const IconButtonComponent = (props: IconButtonProps) => {
         );
     }, [pressed, props.iconColor]);
 
-    return (
-        <Pressable
+
+    if (props.typeNoBackground) {
+        return (
+            <Pressable
+                onPress={props.onPress}
+            >
+                <View style={props.customStyle}>
+                    {props.icon}
+                    {
+                        props.badgeNumber && <Badge style={styles.badge}>{props.badgeNumber}</Badge>
+                    }
+                </View>
+            </Pressable>
+        )
+    } else {
+        return <Pressable
             onPressIn={() => setPress(true)}
             onPressOut={() => setPress(false)}
             style={({ pressed }) => [props.customStyle, btnStyle]}
             onPress={props.onPress}>
             <Icon
-                name={props.iconName}
+                name={props.iconName ?? ''}
                 size={props.iconSize ?? 20}
                 color={iconColorStr}
                 solid
             />
-
         </Pressable>
-    );
+    }
+
 };
 
 export default IconButtonComponent;

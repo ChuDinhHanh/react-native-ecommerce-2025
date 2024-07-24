@@ -4,7 +4,7 @@ import React, { useEffect } from 'react'
 import { Image, Text, View } from 'react-native'
 import { Path, Svg } from 'react-native-svg'
 import { Colors } from '../../constants/Colors'
-import { LOGIN_SCREEN, REGISTER_SCREEN } from '../../constants/Screens'
+import { AUTHENTICATION_STACK_NAVIGATOR, LOGIN_SCREEN, REGISTER_SCREEN } from '../../constants/Screens'
 import { RootStackParamList } from '../../routes/Routes'
 import styles from './SplashScreen.style'
 
@@ -12,7 +12,7 @@ const SplashScreen = () => {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     useEffect(() => {
         setTimeout(() => {
-            navigation.replace(REGISTER_SCREEN);
+            navigation.replace(AUTHENTICATION_STACK_NAVIGATOR);
         }, 3000)
     })
     return (

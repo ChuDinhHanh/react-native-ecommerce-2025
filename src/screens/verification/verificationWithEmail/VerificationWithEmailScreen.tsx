@@ -19,6 +19,8 @@ import { globalStyles } from '../../../styles/globalStyles'
 import { saveTokenIntoStorage } from '../../../utils/AsyncStorageUtils'
 import { scale, verticalScale } from '../../../utils/ScaleUtils'
 import { styles } from './VerificationWithEmailScreen.style'
+import { SignInRedux } from '../../../types/other/SignInRedux'
+import { loginUser } from '../../../redux/userThunks'
 
 const VerificationWithEmailScreen = () => {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -27,9 +29,10 @@ const VerificationWithEmailScreen = () => {
     const email = route.params.email;
     const [triggerCheckVerifyToken, { data: dataCheckVerifyToken, error, isError, isLoading, isFetching }] = useLazyCheckVerifyTokenQuery();
     const dispatch = useAppDispatch();
+
     const handleVerifyToken = async () => {
         try {
-            await triggerCheckVerifyToken({ token });
+            await triggerCheckVerifyToken({ token: token });
         } catch (err) {
             // Handle
         }
@@ -38,12 +41,14 @@ const VerificationWithEmailScreen = () => {
     useEffect(() => {
         if (dataCheckVerifyToken) {
             Alert.alert("Xác thực thành công!");
-            const token = dataCheckVerifyToken.data.token;
-            const user = dataCheckVerifyToken.data.user;
-            saveTokenIntoStorage(token, 'token');
-            saveTokenIntoStorage(user, 'user');
-            dispatch(setUserLogin(user));
-            navigation.replace(BOTTOM_TAB_NAVIGATOR);
+            const user: SignInRedux = {
+                user: dataCheckVerifyToken.data.user,
+                token: dataCheckVerifyToken.data.token,
+                isFirstTime: true
+            }
+            dispatch(loginUser(user)).then((res) => {
+                navigation.replace(BOTTOM_TAB_NAVIGATOR)
+            });
         }
         if (isError) {
             const textError = JSON.parse(JSON.stringify(error));

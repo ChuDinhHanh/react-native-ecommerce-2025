@@ -3,6 +3,7 @@ import { ActivityIndicator, FlexAlignType, Pressable, StyleProp, View, ViewStyle
 import { Colors } from '../../../constants/Colors';
 import { styles } from './TextButtonComponent.style';
 import SpaceComponent from '../../space/SpaceComponent';
+import { globalStyles } from '../../../styles/globalStyles';
 
 type Props = {
     title: ReactNode;
@@ -21,7 +22,15 @@ type Props = {
     iconOrImageSuffix?: ReactNode;
     isLoading?: boolean;
     ActivityIndicatorSize?: number,
-    ActivityIndicatorColor?: string
+    ActivityIndicatorColor?: string,
+    isTextFixed?: boolean;
+    spaceAffix?: number;
+    spaceSuffix?: number;
+    typeVertical?: boolean;
+    width?: number;
+    height?: number;
+    justifyContent?: "flex-start" | "flex-end" | "center" | "space-between" | "space-around" | "space-evenly" | undefined;
+    alignItems?: FlexAlignType | undefined
 }
 
 export default function TextButtonComponent(props: Readonly<Props>) {
@@ -37,36 +46,73 @@ export default function TextButtonComponent(props: Readonly<Props>) {
                 borderWidth: props.borderWidth,
                 borderColor: props.borderColor,
                 paddingVertical: props.paddingVertical,
-                paddingHorizontal: props.paddingHorizontal
+                paddingHorizontal: props.paddingHorizontal,
+                width: props.width,
+                height: props.height,
+                justifyContent: props.justifyContent,
+                alignItems: props.alignItems
             }
         ];
-    }, [props.alignSelf, props.marginVertical, props.borderRadius, props.padding, props.borderWidth, props.borderColor, props.disabled]);
+    }, [props]);
 
-    return (
-        <Pressable
-            disabled={props.disabled ?? false}
-            style={[btnStyle, styles.container]}
-            onPress={props.onPress}>
-            {
-                (Boolean(props.iconOrImageAffix) || props.isLoading) && <View style={styles['container__icon--left']}>
-                    {
-                        props.iconOrImageAffix
-                    }
-                    {
-                        props.isLoading && <ActivityIndicator size={props.ActivityIndicatorSize ?? 25} color={props.ActivityIndicatorColor ?? Colors.WHITE} />
-                    }
-                </View>
-            }
-            {
-                props.title
-            }
-            {
-                Boolean(props.iconOrImageSuffix) && <View style={styles['container__icon--right']}>
-                    {
-                        props.iconOrImageSuffix
-                    }
-                </View>
-            }
-        </Pressable>
-    )
+    if (props.isTextFixed) {
+        return (
+            <Pressable
+                disabled={props.disabled ?? false}
+                style={[btnStyle, props.typeVertical ? { alignItems: "center" } : { flexDirection: "row", alignItems: 'center' }]}
+                onPress={props.onPress}>
+                {
+                    (Boolean(props.iconOrImageAffix) || props.isLoading) && <View style={{}}>
+                        {
+                            props.iconOrImageAffix
+                        }
+                        {
+                            props.isLoading && <ActivityIndicator size={props.ActivityIndicatorSize ?? 25} color={props.ActivityIndicatorColor ?? Colors.WHITE} />
+                        }
+                    </View>
+                }
+                <SpaceComponent width={props.spaceAffix ?? 0} />
+                {
+                    props.title
+                }
+                <SpaceComponent width={props.spaceSuffix ?? 0} />
+                {
+                    Boolean(props.iconOrImageSuffix) && <View style={{}}>
+                        {
+                            props.iconOrImageSuffix
+                        }
+                    </View>
+                }
+            </Pressable>
+        )
+    } else {
+        return (
+            <Pressable
+                disabled={props.disabled ?? false}
+                style={[btnStyle, styles.container]}
+                onPress={props.onPress}>
+                {
+                    (Boolean(props.iconOrImageAffix) || props.isLoading) && <View style={styles['container__icon--left']}>
+                        {
+                            props.iconOrImageAffix
+                        }
+                        {
+                            props.isLoading && <ActivityIndicator size={props.ActivityIndicatorSize ?? 25} color={props.ActivityIndicatorColor ?? Colors.WHITE} />
+                        }
+                    </View>
+                }
+                {
+                    props.title
+                }
+                {
+                    Boolean(props.iconOrImageSuffix) && <View style={styles['container__icon--right']}>
+                        {
+                            props.iconOrImageSuffix
+                        }
+                    </View>
+                }
+            </Pressable>
+        )
+    }
+
 }

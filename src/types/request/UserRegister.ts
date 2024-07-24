@@ -1,7 +1,7 @@
 export interface Register {
   name: string;
-  email: string;
-  phone: string;
+  email: string | null;
+  phone: string | null;
   password: string;
   avatar: string;
   roleCode: string;

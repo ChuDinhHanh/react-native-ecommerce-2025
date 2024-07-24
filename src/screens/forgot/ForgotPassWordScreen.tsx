@@ -1,3 +1,5 @@
+import { useIsFocused, useNavigation } from '@react-navigation/native'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { Formik } from 'formik'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-multi-lang'
@@ -10,28 +12,27 @@ import SessionComponent from '../../components/session/SessionComponent'
 import SpaceComponent from '../../components/space/SpaceComponent'
 import TextComponent from '../../components/text/TextComponent'
 import { Colors } from '../../constants/Colors'
-import { validationSchemaForgotPasswordUtils } from '../../utils/ValidationSchemaUtils'
-import { styles } from './ForgotPassWordScreen.style'
-import { scale, verticalScale } from '../../utils/ScaleUtils'
+import { VERIFY_OTP_SCREEN } from '../../constants/Screens'
 import { Variables } from '../../constants/Variables'
 import { useLazyForgotPasswordQuery } from '../../redux/Service'
-import { useIsFocused, useNavigation } from '@react-navigation/native'
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../../routes/Routes'
-import { VERIFY_OTP_SCREEN } from '../../constants/Screens'
+import { scale, verticalScale } from '../../utils/ScaleUtils'
+import { validationSchemaForgotPasswordUtils } from '../../utils/ValidationSchemaUtils'
+import { styles } from './ForgotPassWordScreen.style'
 
 interface ForgotPassWordFormValidate {
   email: string
 }
 
 const ForgotPassWordScreen = () => {
+  console.log('=================ForgotPassWordScreen===================');
   const t = useTranslation();
-  const isFocused = useIsFocused();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [initialValue, setInitialValue] = useState<ForgotPassWordFormValidate>({ email: "" });
-  const [forgotPassword, { data, isFetching, error, isError }] = useLazyForgotPasswordQuery();
+  const [forgotPassword, { data, isFetching, error, isError, isSuccess }] = useLazyForgotPasswordQuery();
 
   const handleSubmit = async (values: ForgotPassWordFormValidate) => {
+    console.log('===========handleSubmit=========================');
     try {
       setInitialValue({ ...values });
       await forgotPassword({ email: values.email });
@@ -41,16 +42,18 @@ const ForgotPassWordScreen = () => {
   }
 
   useEffect(() => {
-    if (!isFocused) return;
-    if (data) {
+    if (data && !isFetching) {
       Alert.alert("Thông báo", data.message);
       navigation.navigate(VERIFY_OTP_SCREEN, initialValue);
     }
     if (isError) {
       const textError = JSON.parse(JSON.stringify(error));
-      Alert.alert("Thông báo", `${textError.data.message}`);
+      Alert.alert("Thông báo", `${textError.message}`);
     }
-  }, [data, isFetching, error, isError])
+    return () => {
+
+    };
+  }, [data, isFetching, error, isError, isSuccess])
 
   return (
     <ContainerComponent

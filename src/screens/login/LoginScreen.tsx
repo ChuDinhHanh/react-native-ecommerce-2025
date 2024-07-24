@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Formik } from 'formik';
@@ -19,15 +18,17 @@ import { BOTTOM_TAB_NAVIGATOR, FORGOT_PASSWORD } from '../../constants/Screens';
 import { Variables } from '../../constants/Variables';
 import { useAppDispatch } from '../../redux/Hooks';
 import { useLazyLoginByGoogleQuery, useLazyLoginQuery } from '../../redux/Service';
-import { setUserLogin } from '../../redux/Slice';
+import { loadUser, loginUser } from '../../redux/userThunks';
 import { RootStackParamList } from '../../routes/Routes';
 import { globalStyles } from '../../styles/globalStyles';
+import { SignInRedux } from '../../types/other/SignInRedux';
 import { Data } from '../../types/request/Data';
 import { SignIn } from '../../types/request/SignIn';
 import { SignInByGoogle } from '../../types/request/SignInByGoogle';
 import { moderateScale, scale, verticalScale } from '../../utils/ScaleUtils';
 import { validationSchemaLoginUtils } from '../../utils/ValidationSchemaUtils';
 import { styles } from './LoginScreen.style';
+
 
 const LoginScreen = () => {
   const t = useTranslation();
@@ -43,6 +44,21 @@ const LoginScreen = () => {
   const [loginByGoogle,
     { data: dataLoginGoogle, isLoading: isLoadingLoginGoogle, isError: isErrorLoginGoogle, error: errorLoginGoogle, isFetching: isFetchingLoginGoogle }
   ] = useLazyLoginByGoogleQuery();
+
+  // Check account still remain 
+  useEffect(() => {
+    // Gọi hàm loadUser khi component mount
+    dispatch(loadUser())
+      .unwrap()
+      .then((data) => {
+        if (data) {
+          navigation.replace(BOTTOM_TAB_NAVIGATOR);
+        }
+      })
+      .catch((error) => {
+        // handle
+      });
+  }, [useIsFocused]);
 
   const handleSubmit = async (values: SignIn) => {
     if (!isFocussed) return;
@@ -76,33 +92,21 @@ const LoginScreen = () => {
     }
   }, [isErrorLoginGoogle, errorLoginGoogle, dataLoginGoogle]);
 
-  //Save data 
+  //Save data and change screen
   const handleSaveDataAndNavigate = (data: Data<any>) => {
     // Get data
-    const token = data.data.token;
-    const user = data.data.user;
-    // Save data
-    AsyncStorage.setItem(Variables.TOKEN_KEY, JSON.stringify(token));
-    AsyncStorage.setItem(Variables.USER_LOGIN_KEY, JSON.stringify(user));
-    dispatch(setUserLogin(user));
-    // Change screen
-    navigation.replace(BOTTOM_TAB_NAVIGATOR);
-  }
-
-  // Check account still remain 
-  useEffect(() => {
-    AsyncStorage.getItem(Variables.USER_LOGIN_KEY).then((response) => {
-      if (response) {
-        const userLoginFromAsyncStorage = JSON.parse(response);
-        if (userLoginFromAsyncStorage) {
-          dispatch(setUserLogin(userLoginFromAsyncStorage));
-          navigation.replace(BOTTOM_TAB_NAVIGATOR);
-        }
+    const user: SignInRedux = {
+      user: data.data.user,
+      token: data.data.token,
+      isFirstTime: true
+    };
+    dispatch(loginUser(user)).then((res) => {
+      if (res) {
+        // Change screen
+        navigation.replace(BOTTOM_TAB_NAVIGATOR);
       }
-    }).then((error) => {
-      // Handle
-    })
-  }, [isFocussed]);
+    });
+  }
 
   const handleLoginWithGoogle = async (data: SignInByGoogle) => {
     if (isFocussed) {
@@ -117,7 +121,6 @@ const LoginScreen = () => {
   const handleForgotPassword = () => {
     navigation.navigate(FORGOT_PASSWORD);
   }
-
 
 
   return (

@@ -123,6 +123,9 @@ dependencies {
     implementation project(':react-native-fbsdk-next')
     implementation 'com.facebook.android:facebook-login:latest.release'
     implementation 'com.facebook.android:facebook-android-sdk:[8,9]'
+    // Phone
+    implementation "androidx.browser:browser:1.2.0"
+    implementation 'com.google.firebase:firebase-auth'
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)

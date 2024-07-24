@@ -10,6 +10,7 @@ import {ResetPassword} from '../types/request/ResetPassword';
 export const SpeedAPI = createApi({
   reducerPath: 'SpeedNetworkAPI',
   baseQuery: fetchBaseQuery({baseUrl: SERVER_ADDRESS, timeout: 10000}),
+  refetchOnReconnect: true,
   tagTypes: [''],
   endpoints: builder => ({
     register: builder.mutation<Data<any>, Register>({
@@ -22,9 +23,9 @@ export const SpeedAPI = createApi({
         },
       }),
     }),
-    checkVerifyToken: builder.query<Data<any>, {token: string}>({
+    checkVerifyToken: builder.query<any, {token: string}>({
       query: data => ({
-        url: `api/users/check-verify/${data.token}`,
+        url: `api/users/email/check-verify/${data.token}`,
         method: 'GET',
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
@@ -63,7 +64,7 @@ export const SpeedAPI = createApi({
     }),
     forgotPassword: builder.query<Data<any>, {email: string}>({
       query: data => ({
-        url: 'api/users/forgot-password',
+        url: 'api/users/email/forgot-password',
         method: 'POST',
         body: data,
         headers: {
@@ -91,6 +92,90 @@ export const SpeedAPI = createApi({
         },
       }),
     }),
+    getCategories: builder.query<Data<any>, {token: string}>({
+      query: data => {
+        return {
+          url: `api/categories/true`,
+          method: 'GET',
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${JSON.parse(data.token)}`,
+          },
+        };
+      },
+    }),
+    getProductsOfCategory: builder.query<
+      Data<any>,
+      {token: string; code: string}
+    >({
+      query: data => {
+        return {
+          url: `api/products/categories?code=${data.code}`,
+          method: 'GET',
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${JSON.parse(data.token)}`,
+          },
+        };
+      },
+    }),
+    addToCart: builder.mutation<Data<any>, {cart: Cart; token: string}>({
+      query: data => {
+        return {
+          url: `api/carts`,
+          method: 'POST',
+          body: data.cart,
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${JSON.parse(data.token)}`,
+          },
+        };
+      },
+    }),
+    getCartByUserName: builder.query<
+      Data<any>,
+      {username: string; token: string}
+    >({
+      query: data => {
+        return {
+          url: `api/carts/${data.username}`,
+          method: 'GET',
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${JSON.parse(data.token)}`,
+          },
+        };
+      },
+    }),
+    checkCodeResetEmail: builder.query<Data<any>, {code: string}>({
+      query: data => ({
+        url: `api/users/email/check-reset-code`,
+        body: data,
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
+    resetPasswordAction: builder.mutation<Data<any>, ResetPassword>({
+      query: data => ({
+        url: `api/users/email/reset-password`,
+        body: data,
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
+    checkCodePhone: builder.query<Data<any>, {token: string}>({
+      query: data => ({
+        url: `api/users/phone/verify/${data.token}`,
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+      }),
+    }),
   }),
 });
 
@@ -103,4 +188,11 @@ export const {
   useRegisterByGoogleMutation,
   useLazyForgotPasswordQuery,
   useResetPasswordMutation,
+  useLazyGetCategoriesQuery,
+  useLazyGetProductsOfCategoryQuery,
+  useAddToCartMutation,
+  useLazyGetCartByUserNameQuery,
+  useLazyCheckCodeResetEmailQuery,
+  useResetPasswordActionMutation,
+  useLazyCheckCodePhoneQuery,
 } = SpeedAPI;

@@ -17,7 +17,7 @@ import { scale, verticalScale } from '../../utils/ScaleUtils';
 import { validationSchemaResetPasswordUtils } from '../../utils/ValidationSchemaUtils';
 import { styles } from './ResetPasswordScreen.style';
 import { ResetPassword } from '../../types/request/ResetPassword';
-import { useResetPasswordMutation } from '../../redux/Service';
+import { useResetPasswordActionMutation, useResetPasswordMutation } from '../../redux/Service';
 
 interface ResetPasswordFormValidate {
     password: string,
@@ -33,7 +33,7 @@ const ResetPasswordScreen = () => {
     };
     const route = useRoute<RouteProp<RootStackParamList, 'RESET_PASSWORD_SCREEN'>>();
     const code = route.params.code;
-    const [ResetPassword, { data: dataResetPassword, isLoading: isLoadingPassword, isError: isErrorPassword, isSuccess: isSuccessResetPassword, error: errorResetPassword }] = useResetPasswordMutation();
+    const [resetPasswordAction, { data, isError, isLoading, isSuccess, reset, error }] = useResetPasswordActionMutation();
 
     const handleSubmitEvent = async (values: ResetPasswordFormValidate) => {
         const data: ResetPassword = {
@@ -42,22 +42,22 @@ const ResetPasswordScreen = () => {
             comfirmPassword: values.confirmPassword
         }
         try {
-            await ResetPassword(data);
+            await resetPasswordAction(data);
         } catch (error) {
             // Handle
         }
     }
 
     useEffect(() => {
-        if (dataResetPassword) {
-            Alert.alert("Thông báo", dataResetPassword.message);
+        if (data) {
+            Alert.alert("Thông báo", data.message);
             navigation.popToTop();
         }
-        if (isErrorPassword) {
-            const textError = JSON.parse(JSON.stringify(errorResetPassword));
+        if (isError) {
+            const textError = JSON.parse(JSON.stringify(error));
             Alert.alert("Thông báo", textError.data.message);
         }
-    }, [dataResetPassword, isErrorPassword, isSuccessResetPassword, errorResetPassword])
+    }, [data, isError, error, isSuccess])
 
     return (
         <ContainerComponent
@@ -105,6 +105,8 @@ const ResetPasswordScreen = () => {
                             />
                             <SpaceComponent height={verticalScale(20)} />
                             <TextButtonComponent
+                                isLoading={isLoading}
+                                disabled={isLoading}
                                 padding={scale(15)}
                                 borderRadius={5}
                                 backgroundColor={Colors.GREEN_500}

@@ -1,10 +1,11 @@
-import { View, Text, ImageSourcePropType, ScrollView, Image, KeyboardAvoidingView, Platform } from 'react-native'
-import React, { ReactNode } from 'react'
+import { View, Text, ImageSourcePropType, ScrollView, Image, KeyboardAvoidingView, Platform, NativeSyntheticEvent, NativeScrollEvent } from 'react-native'
+import React, { ReactNode, useRef, useState } from 'react'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors } from '../../constants/Colors';
 import { appInfo } from '../../constants/Infos';
 import RowComponent from '../row/RowComponent';
 import { styles } from './ContainerComponent.style';
+import ButtonBackToTop from '../buttons/backTop/ButtonBackToTop';
 
 
 interface Props {
@@ -19,6 +20,7 @@ interface Props {
     imageBackground?: ImageSourcePropType | undefined;
     isCenterJustifyContent?: boolean;
     isCenterAlignItems?: boolean;
+    haveBackButton?: boolean;
 }
 const ContainerComponent = ({
     backgroundColor,
@@ -31,10 +33,27 @@ const ContainerComponent = ({
     imageBackground,
     isFull,
     isCenterJustifyContent,
-    isCenterAlignItems
+    isCenterAlignItems,
+    haveBackButton
 }: Props) => {
 
     const insets = useSafeAreaInsets();
+    const [showBackToTopButton, setShowBackToTopButton] = useState(true);
+    const ScrollViewRef = useRef<ScrollView>(null);
+    const handleScrollEvent = (
+        event: NativeSyntheticEvent<NativeScrollEvent>,
+        showBackToTopButton: boolean,
+        setShowBackToTopButton: React.Dispatch<React.SetStateAction<boolean>>,
+    ) => {
+        if (event.nativeEvent) {
+            const currentHeight = event.nativeEvent.contentOffset.y;
+            if (Math.round(currentHeight) > Math.round(appInfo.sizes.HEIGHT * (2 / 3))) {
+                !showBackToTopButton && setShowBackToTopButton(true);
+            } else {
+                showBackToTopButton && setShowBackToTopButton(false);
+            }
+        }
+    };
 
     const content = (
         <SafeAreaView
@@ -63,12 +82,19 @@ const ContainerComponent = ({
     return (
         <React.Fragment>
             {isScrollEnable ? (
-                <ScrollView
-                    contentContainerStyle={styles.container}
-                    style={{ backgroundColor: backgroundColor ?? Colors.WHITE }}
-                    showsVerticalScrollIndicator={showsScrollIndicator}>
-                    {content}
-                </ScrollView>
+                <>
+                    <ScrollView
+                        onScroll={event => { haveBackButton && handleScrollEvent(event, showBackToTopButton, setShowBackToTopButton) }}
+                        ref={ScrollViewRef}
+                        contentContainerStyle={styles.container}
+                        style={{ backgroundColor: backgroundColor ?? Colors.WHITE }}
+                        showsVerticalScrollIndicator={showsScrollIndicator}>
+                        {content}
+                    </ScrollView>
+                    {
+                        haveBackButton && showBackToTopButton && <ButtonBackToTop scrollViewRef={ScrollViewRef} />
+                    }
+                </>
             ) : (
                 content
             )}

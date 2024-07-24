@@ -1,4 +1,4 @@
 export const RegexUntil = {
-    phoneRegex : /(84|0[3|5|7|8|9])+([0-9]{8})\b/g,
-    emailRegex : /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+  phoneRegex: /^(0|\+84)\d{9}$/,
+  emailRegex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
 };
