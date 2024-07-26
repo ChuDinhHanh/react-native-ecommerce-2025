@@ -42,7 +42,7 @@ const DetailCategoryScreen = () => {
         >
             <SessionComponent padding={10}>
                 {
-                    isFetching ? <ProductSkeleton /> : (data?.data.length !== 0) ? <ListProductOfCategoryComponent data={data?.data}/> : <NothingComponent />
+                    isFetching ? <ProductSkeleton /> : (data?.data.length !== 0) ? <ListProductOfCategoryComponent data={data?.data} /> : <NothingComponent />
                 }
             </SessionComponent>
         </ContainerComponent>

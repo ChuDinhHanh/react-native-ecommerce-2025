@@ -1,20 +1,44 @@
 import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import React, { useEffect } from 'react'
+import { setTranslations } from 'react-multi-lang'
 import { Image, Text, View } from 'react-native'
 import { Path, Svg } from 'react-native-svg'
 import { Colors } from '../../constants/Colors'
-import { AUTHENTICATION_STACK_NAVIGATOR, LOGIN_SCREEN, REGISTER_SCREEN } from '../../constants/Screens'
+import { AUTHENTICATION_STACK_NAVIGATOR, BOTTOM_TAB_NAVIGATOR } from '../../constants/Screens'
+import { useAppDispatch } from '../../redux/Hooks'
+import { getLanguage, loadUser } from '../../redux/userThunks'
 import { RootStackParamList } from '../../routes/Routes'
+import en from '../../translate/en.json'
+import jp from '../../translate/jp.json'
+import vi from '../../translate/vi.json'
 import styles from './SplashScreen.style'
+setTranslations({ vi, jp, en });
 
 const SplashScreen = () => {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+    const dispatch = useAppDispatch();
     useEffect(() => {
-        setTimeout(() => {
-            navigation.replace(AUTHENTICATION_STACK_NAVIGATOR);
-        }, 3000)
-    })
+        dispatch(getLanguage()).unwrap().then((_) => {
+            handleCheckHaveAccount();
+        })
+    }, []);
+
+    const handleCheckHaveAccount = () => {
+        dispatch(loadUser())
+            .unwrap()
+            .then((data) => {
+                if (data) {
+                    navigation.replace(BOTTOM_TAB_NAVIGATOR);
+                } else {
+                    navigation.replace(AUTHENTICATION_STACK_NAVIGATOR);
+                }
+            })
+            .catch((error) => {
+                // handle
+            });
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.container__inner}>

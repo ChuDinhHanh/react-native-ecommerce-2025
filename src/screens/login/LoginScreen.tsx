@@ -2,7 +2,7 @@ import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Formik } from 'formik';
 import React, { useEffect } from 'react';
-import { useTranslation } from 'react-multi-lang';
+import { setTranslations, useTranslation } from 'react-multi-lang';
 import { Alert, Image, View } from 'react-native';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import TextButtonComponent from '../../components/buttons/textButton/TextButtonComponent';
@@ -28,7 +28,6 @@ import { SignInByGoogle } from '../../types/request/SignInByGoogle';
 import { moderateScale, scale, verticalScale } from '../../utils/ScaleUtils';
 import { validationSchemaLoginUtils } from '../../utils/ValidationSchemaUtils';
 import { styles } from './LoginScreen.style';
-
 
 const LoginScreen = () => {
   const t = useTranslation();
@@ -72,23 +71,21 @@ const LoginScreen = () => {
   // Check process by social normal
   useEffect(() => {
     if (dataLoginNormal) {
-      Alert.alert('Thông báo', 'Đăng nhập thành công!');
       handleSaveDataAndNavigate(dataLoginNormal);
     } else if (isErrorLoginNormal) {
       const errorText = JSON.parse(JSON.stringify(errorLoginNormal));
-      Alert.alert('Cảnh báo', errorText?.data?.message);
+      Alert.alert(t("Alert.warning"), errorText?.data?.message);
     }
   }, [dataLoginNormal, isErrorLoginNormal, errorLoginNormal]);
 
   // Check process by social login
   useEffect(() => {
     if (dataLoginGoogle) {
-      Alert.alert('Thông báo ', JSON.stringify(dataLoginGoogle.message) || 'Đăng ký thành công');
       handleSaveDataAndNavigate(dataLoginGoogle);
     }
     if (isErrorLoginGoogle) {
       const textError = JSON.parse(JSON.stringify(errorLoginGoogle));
-      Alert.alert('Cảnh báo ', `${textError?.data?.message}` || 'Đăng ký thành công');
+      Alert.alert(t("Alert.warning"), `${textError?.data?.message}` || t("Alert.loginFail"));
     }
   }, [isErrorLoginGoogle, errorLoginGoogle, dataLoginGoogle]);
 
@@ -121,7 +118,6 @@ const LoginScreen = () => {
   const handleForgotPassword = () => {
     navigation.navigate(FORGOT_PASSWORD);
   }
-
 
   return (
     <ContainerComponent

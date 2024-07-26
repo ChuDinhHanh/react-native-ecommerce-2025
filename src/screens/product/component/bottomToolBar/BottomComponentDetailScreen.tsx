@@ -1,19 +1,24 @@
-import { View, Text, StyleSheet } from 'react-native'
-import React from 'react'
-import { Colors } from '../../../../constants/Colors';
-import SessionComponent from '../../../../components/session/SessionComponent';
-import RowComponent from '../../../../components/row/RowComponent';
-import TextButtonComponent from '../../../../components/buttons/textButton/TextButtonComponent';
-import TextComponent from '../../../../components/text/TextComponent';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Divider } from 'react-native-paper';
 import IconAntDesign from 'react-native-vector-icons/AntDesign';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { vietnameseCurrency } from '../../../../utils/FormatNumberUtils';
+import TextButtonComponent from '../../../../components/buttons/textButton/TextButtonComponent';
+import RowComponent from '../../../../components/row/RowComponent';
+import TextComponent from '../../../../components/text/TextComponent';
+import { Colors } from '../../../../constants/Colors';
 import { Variables } from '../../../../constants/Variables';
-import { moderateScale } from '../../../../utils/ScaleUtils';
-import { Divider } from 'react-native-paper';
 import { globalStyles } from '../../../../styles/globalStyles';
+import { vietnameseCurrency } from '../../../../utils/FormatNumberUtils';
+import { moderateScale } from '../../../../utils/ScaleUtils';
 
-const BottomComponentDetailScreen = () => {
+interface Props {
+    price: number;
+    onPress: (flag: number) => void;
+}
+
+const BottomComponentDetailScreen = (props: Props) => {
+    const { onPress, price } = props;
     return (
         <View style={styles.wrapper}>
             <Divider />
@@ -28,7 +33,7 @@ const BottomComponentDetailScreen = () => {
                         }
                         spaceAffix={5}
                         title={<TextComponent fontSize={Variables.FONT_SIZE_ERROR_TEXT} text="Cửa hàng" color={Colors.BLACK} />}
-                        onPress={() => { }}
+                        onPress={() => onPress(1)}
                     />
                     <TextButtonComponent
                         typeVertical
@@ -39,7 +44,7 @@ const BottomComponentDetailScreen = () => {
                         }
                         spaceAffix={5}
                         title={<TextComponent fontSize={Variables.FONT_SIZE_ERROR_TEXT} text="Thêm vào giỏ hàng" color={Colors.BLACK} />}
-                        onPress={() => { }}
+                        onPress={() => onPress(2)}
                     />
                 </View>
                 {/* Right */}
@@ -49,9 +54,9 @@ const BottomComponentDetailScreen = () => {
                         isTextFixed
                         title={<TextComponent fontSize={Variables.FONT_SIZE_ERROR_TEXT} text="Mua ngay" color={Colors.WHITE} />}
                         iconOrImageSuffix={
-                            <TextComponent fontWeight='bold' text={vietnameseCurrency(1500000)} color={Colors.WHITE} />
+                            <TextComponent fontWeight='bold' text={vietnameseCurrency(price)} color={Colors.WHITE} />
                         }
-                        onPress={() => { }}
+                        onPress={() => onPress(3)}
                     />
                 </View>
             </RowComponent>

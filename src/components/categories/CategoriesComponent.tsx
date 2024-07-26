@@ -32,7 +32,7 @@ const CategoriesComponent = (props: Props) => {
     useEffect(() => {
         if (isError) {
             const errorText = JSON.parse(JSON.stringify(error))
-            Alert.alert('Cảnh báo',`${errorText.messenger}`)
+            Alert.alert('Cảnh báo', `${errorText.messenger}`)
         }
     }, [data, isError, isFetching])
 

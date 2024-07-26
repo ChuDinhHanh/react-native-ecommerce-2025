@@ -1,6 +1,7 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import React, { useEffect } from 'react'
+import { useTranslation } from 'react-multi-lang'
 import { Alert, Image, View } from 'react-native'
 import TextButtonComponent from '../../../components/buttons/textButton/TextButtonComponent'
 import ContainerComponent from '../../../components/container/ContainerComponent'
@@ -13,26 +14,25 @@ import { BOTTOM_TAB_NAVIGATOR } from '../../../constants/Screens'
 import { Variables } from '../../../constants/Variables'
 import { useAppDispatch } from '../../../redux/Hooks'
 import { useLazyCheckVerifyTokenQuery } from '../../../redux/Service'
-import { setUserLogin } from '../../../redux/Slice'
+import { loginUser } from '../../../redux/userThunks'
 import { RootStackParamList } from '../../../routes/Routes'
 import { globalStyles } from '../../../styles/globalStyles'
-import { saveTokenIntoStorage } from '../../../utils/AsyncStorageUtils'
+import { SignInRedux } from '../../../types/other/SignInRedux'
 import { scale, verticalScale } from '../../../utils/ScaleUtils'
 import { styles } from './VerificationWithEmailScreen.style'
-import { SignInRedux } from '../../../types/other/SignInRedux'
-import { loginUser } from '../../../redux/userThunks'
 
 const VerificationWithEmailScreen = () => {
+    const t = useTranslation();
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const route = useRoute<RouteProp<RootStackParamList, 'VERIFY_EMAIL_SCREEN'>>();
     const token = route.params.token;
     const email = route.params.email;
-    const [triggerCheckVerifyToken, { data: dataCheckVerifyToken, error, isError, isLoading, isFetching }] = useLazyCheckVerifyTokenQuery();
+    const [checkVerifyToken, { data: dataCheckVerifyToken, error, isError, isLoading, isFetching }] = useLazyCheckVerifyTokenQuery();
     const dispatch = useAppDispatch();
 
     const handleVerifyToken = async () => {
         try {
-            await triggerCheckVerifyToken({ token: token });
+            await checkVerifyToken({ token: token });
         } catch (err) {
             // Handle
         }
@@ -40,7 +40,7 @@ const VerificationWithEmailScreen = () => {
 
     useEffect(() => {
         if (dataCheckVerifyToken) {
-            Alert.alert("Xác thực thành công!");
+            Alert.alert(t("VerificationWithEmailScreen.verifySuccess"));
             const user: SignInRedux = {
                 user: dataCheckVerifyToken.data.user,
                 token: dataCheckVerifyToken.data.token,
@@ -51,8 +51,8 @@ const VerificationWithEmailScreen = () => {
             });
         }
         if (isError) {
-            const textError = JSON.parse(JSON.stringify(error));
-            Alert.alert("Cảnh báo", textError.data.message);
+            const errorText = JSON.parse(JSON.stringify(error));
+            Alert.alert(t("Alert.warning"), errorText?.data ? errorText?.data?.message : errorText?.message);
         }
     }, [dataCheckVerifyToken, error, isError])
 
@@ -72,16 +72,16 @@ const VerificationWithEmailScreen = () => {
                 </View>
             </RowComponent>
             <SessionComponent>
-                <TextComponent fontSize={Variables.FONT_SIZE_SUBTITLE} text='Vui lòng xác minh email của bạn' color={Colors.BLACK} />
-                <TextComponent fontSize={scale(15)} text={`Bạn sắp hoàn thành! Chúng tôi đã gửi một email tới ${email}`} color={Colors.GREY1} />
+                <TextComponent fontSize={Variables.FONT_SIZE_SUBTITLE} text={t("VerificationWithEmailScreen.title1")} color={Colors.BLACK} />
+                <TextComponent fontSize={scale(15)} text={`${t("VerificationWithEmailScreen.title2")} ${email}`} color={Colors.GREY1} />
                 <SpaceComponent height={30} />
-                <TextComponent fontSize={scale(15)} text="Chỉ cần nhấp vào liên kết trong email đó để hoàn tất đăng ký của bạn. Nếu bạn không thấy, bạn có thể cần kiểm tra thư mục spam." color={Colors.GREY1} />
+                <TextComponent fontSize={scale(15)} text={t("VerificationWithEmailScreen.title3")} color={Colors.GREY1} />
                 <RowComponent>
-                    <TextComponent fontSize={scale(15)} text="Vẫn không tìm thấy email?" color={Colors.GREY1} />
+                    <TextComponent fontSize={scale(15)} text={t("VerificationWithEmailScreen.title4")} color={Colors.GREY1} />
                     <SpaceComponent width={scale(5)} />
                     <TextButtonComponent
                         onPress={() => { }}
-                        title={<TextComponent fontSize={scale(15)} color={Colors.COLOR_BTN_BLUE_PRIMARY} text='gửi lại email' />} />
+                        title={<TextComponent fontSize={scale(15)} color={Colors.COLOR_BTN_BLUE_PRIMARY} text={t("VerificationWithEmailScreen.textButtonResendEmail")} />} />
                 </RowComponent>
                 <SpaceComponent height={verticalScale(30)} />
                 <TextButtonComponent
@@ -95,7 +95,7 @@ const VerificationWithEmailScreen = () => {
                         <TextComponent
                             fontWeight='bold'
                             fontSize={Variables.FONT_SIZE_BUTTON_TEXT}
-                            text="Xác minh email"
+                            text={t("VerificationWithEmailScreen.textButtonVerification")}
                             color={Colors.WHITE}
                         />
                     } />

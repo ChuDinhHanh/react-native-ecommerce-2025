@@ -1,25 +1,28 @@
+import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
 import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React from 'react';
-import { setDefaultLanguage, setTranslations, useTranslation } from 'react-multi-lang';
+import React, { useEffect } from 'react';
+import { setDefaultLanguage, useTranslation } from 'react-multi-lang';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import TextComponent from '../components/text/TextComponent';
 import ToolbarWithBackPress from '../components/toolbars/toolbarWithBackPress/ToolbarWithBackPress';
 import { Colors } from '../constants/Colors';
 import { appInfo } from '../constants/Infos';
-import { ALL_NOTIFICATION_SCREEN, AUTHENTICATION_STACK_NAVIGATOR, BOTTOM_TAB_NAVIGATOR, CART_SCREEN, DETAIL_CATEGORY_SCREEN, DETAIL_NOTIFICATION_SCREEN, DETAIL_PRODUCT_SCREEN, FEED_BACK_SCREEN, FORGOT_PASSWORD, HOME_SCREEN, INTERMEDIATE_SCREEN, LOGIN_SCREEN, MESSENGER_SCREEN, NOTIFICATION_SCREEN, NOTIFICATION_SCREEN_OPTIONS_NAVIGATOR, PROFILE_SCREEN, PROFILE_SCREEN_OPTIONS_NAVIGATOR, REGISTER_SCREEN, RESET_PASSWORD_SCREEN, SEARCH_SCREEN, SERVICE_STACK_NAVIGATOR, SPLASH_SCREEN, UN_READ_NOTIFICATION_SCREEN, VERIFY_CAPTCHA_SEND_SMS_SCREEN, VERIFY_EMAIL_SCREEN, VERIFY_OTP_SCREEN, VERIFY_PHONE_SCREEN } from '../constants/Screens';
+import { ALL_NOTIFICATION_SCREEN, AUTHENTICATION_STACK_NAVIGATOR, BOTTOM_TAB_NAVIGATOR, CART_SCREEN, DETAIL_CATEGORY_SCREEN, DETAIL_NOTIFICATION_SCREEN, DETAIL_PRODUCT_SCREEN, FEED_BACK_SCREEN, FORGOT_PASSWORD, HOME_SCREEN, INTERMEDIATE_SCREEN, LOGIN_SCREEN, MESSENGER_SCREEN, NOTIFICATION_SCREEN, NOTIFICATION_SCREEN_OPTIONS_NAVIGATOR, PROFILE_SCREEN, PROFILE_SCREEN_OPTIONS_NAVIGATOR, REGISTER_SCREEN, RESET_PASSWORD_SCREEN, SEARCH_SCREEN, SELECT_LANGUAGE_SCREEN, SERVICE_STACK_NAVIGATOR, SHOP_SCREEN, SPLASH_SCREEN, UN_READ_NOTIFICATION_SCREEN, VERIFY_CAPTCHA_SEND_SMS_SCREEN, VERIFY_EMAIL_SCREEN, VERIFY_OTP_SCREEN, VERIFY_PHONE_SCREEN } from '../constants/Screens';
 import { Variables } from '../constants/Variables';
 import { useAppDispatch } from '../redux/Hooks';
-import { logoutUser } from '../redux/userThunks';
+import { getLanguage, logoutUser } from '../redux/userThunks';
 import CartScreen from '../screens/Cart/CartScreen';
 import DetailCategoryScreen from '../screens/categories/DetailCategoryScreen';
 import FeedbackScreen from '../screens/feedback/FeedbackScreen';
 import ForgotPassWordScreen from '../screens/forgot/ForgotPassWordScreen';
 import HomeScreen from '../screens/home/HomeScreen';
 import IntermediateScreen from '../screens/intermediate/IntermediateScreen';
+import SelectLanguageScreen from '../screens/language/SelectLanguageScreen';
 import LoginScreen from '../screens/login/LoginScreen';
 import MessengerScreen from '../screens/messenger/MessengerScreen';
 import NotificationScreen from '../screens/notifications/NotificationScreen';
@@ -35,14 +38,8 @@ import VerificationWithPhoneNumberScreen from '../screens/verification/Verificat
 import VerificationWithCaptchaAndSendSmsScreen from '../screens/verification/VerificationWithPhoneNumber/screens/VerificationWithCaptchaAndSendSmsScreen';
 import VerificationWithEmailScreen from '../screens/verification/verificationWithEmail/VerificationWithEmailScreen';
 import VerificationWithOTPScreen from '../screens/verification/verificationWithOTP/VerificationWithOTPScreen';
-import en from '../translate/en.json';
-import jp from '../translate/jp.json';
-import vi from '../translate/vi.json';
 import { moderateScale } from '../utils/ScaleUtils';
-
-
-setTranslations({ jp, en, vi })
-setDefaultLanguage('vi')
+import ShopScreen from '../screens/shop/ShopScreen';
 
 export type RootStackParamList = {
   SPLASH_SCREEN: undefined;
@@ -61,7 +58,7 @@ export type RootStackParamList = {
   RESET_PASSWORD_SCREEN: { code: string };
   INTERMEDIATE_SCREEN: undefined;
   VERIFY_EMAIL_SCREEN: { token: string; email: string; };
-  VERIFY_PHONE_SCREEN: { token: string; phone: string; confirm: any };
+  VERIFY_PHONE_SCREEN: { token: string; phone: string; confirm: FirebaseAuthTypes.ConfirmationResult };
   PROFILE_SCREEN_OPTIONS_NAVIGATOR: undefined;
   CART_SCREEN: undefined;
   DETAIL_NOTIFICATION_SCREEN: { id: number };
@@ -76,6 +73,8 @@ export type RootStackParamList = {
   DETAIL_CATEGORY_SCREEN: { code: string };
   SEARCH_SCREEN: undefined;
   VERIFY_CAPTCHA_SEND_SMS_SCREEN: { token: string; phone: string; };
+  SELECT_LANGUAGE_SCREEN: undefined;
+  SHOP_SCREEN: { id: string };
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -92,12 +91,26 @@ function CustomDrawerContent(props: any) {
     });
   }
 
+  const handleSelectLanguage = () => {
+    navigation.navigate(SERVICE_STACK_NAVIGATOR, {
+      screen: SELECT_LANGUAGE_SCREEN,
+      params: null
+    } as any);
+  }
+
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
       <DrawerItem
-        activeBackgroundColor={Colors.GREEN_500}
-        inactiveBackgroundColor={Colors.COLOR_GREY_FEEBLE}
+        activeBackgroundColor={Colors.GREY_FEEBLE}
+        inactiveBackgroundColor={Colors.WHITE}
+        icon={() => <MaterialIcons name='language' size={moderateScale(22)} color={Colors.COLOR_BTN_BLUE_PRIMARY} />}
+        label={() => (<TextComponent color={Colors.BLACK} text='Ngôn ngữ' />)}
+        onPress={handleSelectLanguage}
+      />
+      <DrawerItem
+        activeBackgroundColor={Colors.GREY_FEEBLE}
+        inactiveBackgroundColor={Colors.WHITE}
         icon={() => <SimpleLineIcons name='logout' size={moderateScale(20)} color={'red'} />}
         label={() => (<TextComponent color={Colors.BLACK} text='Đăng xuất' />)}
         onPress={handleLogout}
@@ -187,6 +200,16 @@ function ServiceStackNavigator() {
             header: () => false
           }}
           name={VERIFY_PHONE_SCREEN} component={VerificationWithPhoneNumberScreen} />
+        <RootStack.Screen
+          options={{
+            header: () => <ToolbarWithBackPress title={'Lựa chọn ngôn ngữa của bạn'} />
+          }}
+          name={SELECT_LANGUAGE_SCREEN} component={SelectLanguageScreen} />
+        <RootStack.Screen
+          options={{
+            header: () => <ToolbarWithBackPress title={'Thông tin cửa hàng'} />
+          }}
+          name={SHOP_SCREEN} component={ShopScreen} />
       </RootStack.Group>
     </RootStack.Navigator>
   )
@@ -388,9 +411,9 @@ function BottomTabNavigator() {
 function MainStackNavigator() {
   return (
     <RootStack.Navigator
-      initialRouteName={AUTHENTICATION_STACK_NAVIGATOR}>
+      initialRouteName={SPLASH_SCREEN}>
       <RootStack.Group>
-        {/* <RootStack.Screen
+        <RootStack.Screen
           name={SPLASH_SCREEN}
           component={SplashScreen}
           options={{ header: () => false }}
@@ -409,12 +432,7 @@ function MainStackNavigator() {
           name={SERVICE_STACK_NAVIGATOR}
           component={ServiceStackNavigator}
           options={{ header: () => false }}
-        /> */}
-        <RootStack.Screen
-          options={{
-            header: () => <ToolbarWithBackPress hideBackPressButton title={'Xác thực với mã capcha'} />
-          }}
-          name={VERIFY_CAPTCHA_SEND_SMS_SCREEN} component={VerificationWithCaptchaAndSendSmsScreen} />
+        />
       </RootStack.Group>
     </RootStack.Navigator >
   );

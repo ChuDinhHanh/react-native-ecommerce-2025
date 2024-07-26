@@ -9,7 +9,10 @@ import {ResetPassword} from '../types/request/ResetPassword';
 
 export const SpeedAPI = createApi({
   reducerPath: 'SpeedNetworkAPI',
-  baseQuery: fetchBaseQuery({baseUrl: SERVER_ADDRESS, timeout: 10000}),
+  baseQuery: fetchBaseQuery({
+    baseUrl: SERVER_ADDRESS,
+    timeout: 20000,
+  }),
   refetchOnReconnect: true,
   tagTypes: [''],
   endpoints: builder => ({
@@ -23,14 +26,16 @@ export const SpeedAPI = createApi({
         },
       }),
     }),
-    checkVerifyToken: builder.query<any, {token: string}>({
-      query: data => ({
-        url: `api/users/email/check-verify/${data.token}`,
-        method: 'GET',
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8',
-        },
-      }),
+    checkVerifyToken: builder.query<Data<any>, {token: string}>({
+      query: data => {
+        return {
+          url: `api/users/check-verify/${data.token}`,
+          method: 'GET',
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          },
+        };
+      },
     }),
     login: builder.query<Data<any>, SignIn>({
       query: data => ({
@@ -173,6 +178,17 @@ export const SpeedAPI = createApi({
         method: 'GET',
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
+          Authorization: `Bearer ${JSON.parse(data.token)}`,
+        },
+      }),
+    }),
+    getProductByCode: builder.query<Data<any>, {code: string; token: string}>({
+      query: data => ({
+        url: `api/products?pCode=${data.code}`,
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+          Authorization: `Bearer ${JSON.parse(data.token)}`,
         },
       }),
     }),
@@ -181,7 +197,6 @@ export const SpeedAPI = createApi({
 
 export const {
   useRegisterMutation,
-  useCheckVerifyTokenQuery,
   useLazyCheckVerifyTokenQuery,
   useLazyLoginQuery,
   useLazyLoginByGoogleQuery,
@@ -195,4 +210,5 @@ export const {
   useLazyCheckCodeResetEmailQuery,
   useResetPasswordActionMutation,
   useLazyCheckCodePhoneQuery,
+  useLazyGetProductByCodeQuery,
 } = SpeedAPI;

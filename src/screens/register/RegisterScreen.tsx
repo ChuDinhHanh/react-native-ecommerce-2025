@@ -1,4 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Formik } from 'formik';
@@ -21,23 +20,20 @@ import SocialLoginComponent from '../../components/socialLogin/socialLoginCompon
 import SpaceComponent from '../../components/space/SpaceComponent';
 import TextComponent from '../../components/text/TextComponent';
 import { Colors } from '../../constants/Colors';
-import { BOTTOM_TAB_NAVIGATOR, VERIFY_CAPTCHA_SEND_SMS_SCREEN, VERIFY_EMAIL_SCREEN, VERIFY_PHONE_SCREEN } from '../../constants/Screens';
+import { BOTTOM_TAB_NAVIGATOR, VERIFY_CAPTCHA_SEND_SMS_SCREEN, VERIFY_EMAIL_SCREEN } from '../../constants/Screens';
 import { Variables } from '../../constants/Variables';
 import { useAppDispatch } from '../../redux/Hooks';
 import { useRegisterByGoogleMutation, useRegisterMutation } from '../../redux/Service';
+import { loginUser } from '../../redux/userThunks';
 import { RootStackParamList } from '../../routes/Routes';
 import { globalStyles } from '../../styles/globalStyles';
+import { SignInRedux } from '../../types/other/SignInRedux';
 import { Data } from '../../types/request/Data';
 import { SignUpByGoogle } from '../../types/request/SignUpByGoogle';
 import { Register } from '../../types/request/UserRegister';
 import { moderateScale, verticalScale } from '../../utils/ScaleUtils';
 import { ValidateIdentifyTypePhoneOrEmail, validationSchemaRegisterUtils } from '../../utils/ValidationSchemaUtils';
 import { styles } from './RegisterScreen.style';
-import { SignInByGoogle } from '../../types/request/SignInByGoogle';
-import { SignInRedux } from '../../types/other/SignInRedux';
-import { setUserLogin } from '../../redux/Slice';
-import { loginUser } from '../../redux/userThunks';
-import { boolean } from 'yup';
 
 interface RegisterFormValues {
   name: string;
@@ -47,7 +43,6 @@ interface RegisterFormValues {
 }
 
 const RegisterScreen: React.FC = () => {
-  console.log('==============RegisterScreen======================');
   const t = useTranslation();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [isPhone, setIsPhone] = useState(false);
@@ -84,7 +79,6 @@ const RegisterScreen: React.FC = () => {
 
   useEffect(() => {
     if (dataRegister) {
-      Alert.alert('Thông báo', dataRegister.message || 'Đăng ký thành công!');
       const token = dataRegister.data;
       if (token) {
         if (isPhone) {
@@ -102,7 +96,7 @@ const RegisterScreen: React.FC = () => {
     }
     if (isErrorRegister) {
       const errorText = JSON.parse(JSON.stringify(errorRegister));
-      Alert.alert('Cảnh báo', errorText?.data?.message);
+      Alert.alert(t("Alert.warning"), errorText?.data ? errorText?.data?.message : errorText?.message);
     }
   }, [dataRegister, isErrorRegister, errorRegister, initialValues.identifier])
 
@@ -110,11 +104,11 @@ const RegisterScreen: React.FC = () => {
   const handleSubmit = async (values: RegisterFormValues) => {
     const email = ValidateIdentifyTypePhoneOrEmail('email', values.identifier);
     const phone = ValidateIdentifyTypePhoneOrEmail('phone', values.identifier);
-    Boolean(email.length) ? setIsPhone(false) : setIsPhone(true);
+    email.length ? setIsPhone(false) : setIsPhone(true);
     const registerData: Register = {
       name: values.name,
-      email: Boolean(email.length) ? email : null,
-      phone: Boolean(phone.length) ? phone : null,
+      email: email.length ? email : null,
+      phone: phone.length ? phone : null,
       password: values.password,
       avatar: imagePicker ? `${imagePicker[0].uri}` : '',
       roleCode: values.accountType
@@ -123,6 +117,7 @@ const RegisterScreen: React.FC = () => {
       await register(registerData).unwrap();
     } catch (error) {
       // Handle
+      console.error('register:', error);
     }
     // Update data
     setInitialValues({ ...values });
@@ -134,18 +129,18 @@ const RegisterScreen: React.FC = () => {
         await registerByGoogle(data)
       } catch (error) {
         // Handle
+        console.error('registerByGoogle:', error);
       }
     }
   }
 
   useEffect(() => {
     if (dataRegisterByGoogle) {
-      Alert.alert('Thông báo ', JSON.stringify(dataRegisterByGoogle.message) || 'Đăng ký thành công');
       handleSaveDataAndNavigate(dataRegisterByGoogle);
     }
     if (isErrorRegisterByGoogle) {
       const textError = JSON.parse(JSON.stringify(errorRegisterByGoogle));
-      Alert.alert('Cảnh báo ', `${textError?.data?.message}` || 'Đăng ký thành công');
+      Alert.alert(t("Alert.warning"), `${textError?.data?.message}` || t("Alert.registerFail"));
     }
   }, [isErrorRegisterByGoogle, errorRegisterByGoogle, dataRegisterByGoogle]);
 
@@ -254,7 +249,7 @@ const RegisterScreen: React.FC = () => {
                   onSetValue={setValue}
                 />
                 {errors.accountType && touched.accountType && (
-                  <TextComponent color={Colors.RED} text={errors.accountType} />
+                  <TextComponent color={Colors.RED} text={t(errors.accountType)} />
                 )}
                 <SpaceComponent height={verticalScale(20)} />
                 <TextButtonComponent

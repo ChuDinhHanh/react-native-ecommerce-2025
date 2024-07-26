@@ -1,11 +1,10 @@
-import { View, Text, ImageSourcePropType, ScrollView, Image, KeyboardAvoidingView, Platform, NativeSyntheticEvent, NativeScrollEvent } from 'react-native'
-import React, { ReactNode, useRef, useState } from 'react'
+import React, { ReactNode, useRef, useState } from 'react';
+import { ImageSourcePropType, KeyboardAvoidingView, NativeScrollEvent, NativeSyntheticEvent, Platform, ScrollView } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors } from '../../constants/Colors';
 import { appInfo } from '../../constants/Infos';
-import RowComponent from '../row/RowComponent';
-import { styles } from './ContainerComponent.style';
 import ButtonBackToTop from '../buttons/backTop/ButtonBackToTop';
+import { styles } from './ContainerComponent.style';
 
 
 interface Props {
@@ -21,6 +20,7 @@ interface Props {
     isCenterJustifyContent?: boolean;
     isCenterAlignItems?: boolean;
     haveBackButton?: boolean;
+    isCenter?: boolean;
 }
 const ContainerComponent = ({
     backgroundColor,
@@ -34,7 +34,8 @@ const ContainerComponent = ({
     isFull,
     isCenterJustifyContent,
     isCenterAlignItems,
-    haveBackButton
+    haveBackButton,
+    isCenter
 }: Props) => {
 
     const insets = useSafeAreaInsets();
@@ -71,12 +72,16 @@ const ContainerComponent = ({
                 paddingVertical,
             }}>
             <KeyboardAvoidingView
-                style={{ flex: 1 }}
+                style={{
+                    flex: 1,
+                    justifyContent: isCenter ? 'center' : undefined,
+                    alignItems: isCenter ? 'center' : undefined
+                }}
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
             >
                 {children}
             </KeyboardAvoidingView>
-        </SafeAreaView>
+        </SafeAreaView >
     );
 
     return (

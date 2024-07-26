@@ -1,9 +1,9 @@
-import auth from '@react-native-firebase/auth';
+import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-multi-lang';
-import { Alert, Button, Image, View } from 'react-native';
+import { Alert, Image, LogBox, View } from 'react-native';
 import TextButtonComponent from '../../../components/buttons/textButton/TextButtonComponent';
 import ContainerComponent from '../../../components/container/ContainerComponent';
 import OTPInputComponent from '../../../components/inputs/otp/OTPInputComponent';
@@ -12,17 +12,20 @@ import SessionComponent from '../../../components/session/SessionComponent';
 import SpaceComponent from '../../../components/space/SpaceComponent';
 import TextComponent from '../../../components/text/TextComponent';
 import { Colors } from '../../../constants/Colors';
+import { BOTTOM_TAB_NAVIGATOR } from '../../../constants/Screens';
 import { Variables } from '../../../constants/Variables';
+import { useAppDispatch } from '../../../redux/Hooks';
+import { useLazyCheckCodePhoneQuery } from '../../../redux/Service';
+import { loginUser } from '../../../redux/userThunks';
 import { RootStackParamList } from '../../../routes/Routes';
 import { globalStyles } from '../../../styles/globalStyles';
+import { SignInRedux } from '../../../types/other/SignInRedux';
 import { Verification } from '../../../types/other/Verification';
 import { moderateScale, scale, verticalScale } from '../../../utils/ScaleUtils';
 import { styles } from './VerificationWithPhoneNumberScreen.style';
-import { useLazyCheckCodePhoneQuery } from '../../../redux/Service';
-import { SignInRedux } from '../../../types/other/SignInRedux';
-import { useAppDispatch } from '../../../redux/Hooks';
-import { loginUser } from '../../../redux/userThunks';
-import { BOTTOM_TAB_NAVIGATOR } from '../../../constants/Screens';
+
+// // Bỏ qua tất cả các cảnh báo log de gui cai confirm
+LogBox.ignoreAllLogs();
 
 const initialValue: Verification[] = [
     {
@@ -67,12 +70,10 @@ function checkAllFieldHaveValue(value: Verification[]): boolean {
     return allFieldsHaveValue;
 }
 
-function getAllValueFromInput(value: Verification[]) {
-    let code = '';
-    value.forEach(item => {
-        code = code + item.value;
-    });
-    return code;
+function getAllValueFromInput(value: Verification[]): string {
+    let data = '';
+    data = value.map((item) => item.value).join("");
+    return data;
 }
 
 interface Error {
@@ -88,9 +89,10 @@ const VerificationWithPhoneNumberScreen = () => {
     const phone = route.params.phone;
     const token = route.params.token;
     const _confirm = route.params.confirm;
-    const [confirm, setConfirm] = useState<any | null>(_confirm);
+    const [confirm, setConfirm] = useState<FirebaseAuthTypes.ConfirmationResult | null>(_confirm);
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-    const [checkCodePhone, { data, isError, isFetching, isLoading, isSuccess, error }] = useLazyCheckCodePhoneQuery();
+    const [checkCodePhone, { data, isError, isFetching, isLoading: isLoadingCheckCodePhone, isSuccess, error }] = useLazyCheckCodePhoneQuery();
+    const [isLoading, setIsLoading] = useState(false);
     // CountDown
     const initialCount = 20;
     const [counter, setCounter] = useState(initialCount);
@@ -104,7 +106,6 @@ const VerificationWithPhoneNumberScreen = () => {
         if (val.length > 1) return;
         let validate = false;
         let isNotHaveValue = val.length === 0;
-        console.log(id);
         const updatedVerificationWithValue = verification.map(item => {
             if (item.id === id) {
                 return { ...item, value: val };
@@ -140,6 +141,7 @@ const VerificationWithPhoneNumberScreen = () => {
     }, [verification]);
 
     const handleVerificationActions = async () => {
+        setIsLoading(true);
         const valueFromInput = getAllValueFromInput(verification);
         confirmVerificationCode(valueFromInput);
     };
@@ -182,9 +184,6 @@ const VerificationWithPhoneNumberScreen = () => {
         const subscriber = auth().onAuthStateChanged((user) => {
             try {
                 const handle = async () => {
-                    console.log('====================================');
-                    console.log(token);
-                    console.log('====================================');
                     if (token) {
                         await checkCodePhone({ token: token });
                     }
@@ -212,9 +211,9 @@ const VerificationWithPhoneNumberScreen = () => {
             });
         } else if (isError) {
             const errorText = JSON.parse(JSON.stringify(error));
-            Alert.alert("Cảnh báo", `${errorText.data.message}`)
+            Alert.alert(t("Alert.warning"), errorText?.data ? errorText.data.message : errorText.message);
         }
-    }, [isError, error, isLoading, isFetching, data]);
+    }, [isError, error, isLoadingCheckCodePhone, isFetching, data]);
 
     const confirmVerificationCode = async (code: string) => {
         try {
@@ -223,7 +222,9 @@ const VerificationWithPhoneNumberScreen = () => {
                 setConfirm(null);
             }
         } catch (error: any) {
-            Alert.alert('Invalid code');
+            Alert.alert(t("Alert.warning"), 'Invalid code');
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -250,10 +251,10 @@ const VerificationWithPhoneNumberScreen = () => {
                     </View>
                 </RowComponent>
                 {/* Context */}
-                <TextComponent fontSize={Variables.FONT_SIZE_SUBTITLE} text='Vui lòng xác minh mã OTP của bạn' color={Colors.BLACK} />
-                <TextComponent fontSize={scale(15)} text={`Bạn sắp hoàn thành việc đăng ký! Chúng tôi đã gửi mã OTP tới ${phone}`} color={Colors.GREY1} />
+                <TextComponent fontSize={Variables.FONT_SIZE_SUBTITLE} text={t("VerificationWithPhoneScreen.title1")} color={Colors.BLACK} />
+                <TextComponent fontSize={scale(15)} text={`${t("VerificationWithPhoneScreen.title2")} ${phone}`} color={Colors.GREY1} />
                 <SpaceComponent height={30} />
-                <TextComponent fontSize={scale(15)} text="Chỉ cần nhập mã OTP vào màn hình này để hoàn tất đăng ký của bạn. Nếu bạn không thấy, bạn có thể cần kiểm tra thư mục tin nhắn spam." color={Colors.GREY1} />
+                <TextComponent fontSize={scale(15)} text={t("VerificationWithPhoneScreen.title3")} color={Colors.GREY1} />
                 <SpaceComponent height={moderateScale(20)} />
                 <RowComponent justifyContent="space-between" alignItems="center">
                     <OTPInputComponent
@@ -324,30 +325,23 @@ const VerificationWithPhoneNumberScreen = () => {
                         </>
                     ) : (
                         <TextButtonComponent
-                            title={<TextComponent fontSize={18} color={Colors.COLOR_BTN_BLUE_PRIMARY} text={"Gửi lại mã xác thực"} />}
+                            title={<TextComponent fontSize={18} color={Colors.COLOR_BTN_BLUE_PRIMARY} text={t("VerificationWithPhoneScreen.textResendCode")} />}
                             onPress={handleResendEmailVerification}
                         />
                     )}
                 </RowComponent>
                 <SpaceComponent height={verticalScale(30)} />
                 <TextButtonComponent
+                    isLoading={isLoading}
+                    disabled={isLoading}
                     borderRadius={5}
                     padding={scale(15)}
                     backgroundColor={Colors.GREEN_500}
                     onPress={handleVerificationActions}
-                    title={<TextComponent fontSize={scale(18)} text='Verify' />}
+                    title={<TextComponent fontSize={scale(18)} text={t("VerificationWithPhoneScreen.titleButtonVerify")} />}
                 />
             </SessionComponent>
         </ContainerComponent>
-    );
-};
-
-
-const Authenticated = () => {
-    return (
-        <View>
-            <Button title="Sign out" onPress={() => auth().signOut()} />
-        </View>
     );
 };
 

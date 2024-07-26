@@ -1,15 +1,18 @@
 import * as Yup from 'yup';
-import {Variables} from '../constants/Variables';
 import {RegexUntil} from './RegexUtil';
 
 export const validationSchemaLoginUtils = Yup.object().shape({
   username: Yup.string()
-    .required('Email hoặc Số điện thoại là bắt buộc')
-    .test('emailOrPhone', 'Email hoặc Số điện thoại không hợp lệ', value => {
-      const phoneRegex = /^(0|\+84)\d{9}$/; // Số điện thoại Việt Nam
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Định dạng email cơ bản
-      return phoneRegex.test(value) || emailRegex.test(value);
-    }),
+    .required('Validate.textErrorEmailOrPhoneNumberRequired')
+    .test(
+      'emailOrPhone',
+      'Validate.textErrorEmailOrPhoneNumberNotCorrectFormat',
+      value => {
+        const phoneRegex = /^(0|\+84)\d{9}$/;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return phoneRegex.test(value) || emailRegex.test(value);
+      },
+    ),
   password: Yup.string()
     .min(6, 'Validate.textErrorPasswordAtLess6Character')
     .required('Validate.textErrorPasswordRequired'),
@@ -35,32 +38,37 @@ export const validationSchemaResetPasswordUtils = Yup.object().shape({
 
 export const validationSchemaRegisterUtils = Yup.object().shape({
   name: Yup.string()
-    .required('Tên là bắt buộc')
+    .required('Validate.textErrorNameRequired')
     .test(
       'is-not-empty',
-      'Tên không được chỉ chứa khoảng trắng',
+      'Validate.textErrorNameCantJustHaveSpaceCharacter',
       value => value?.trim() !== '',
     ),
   identifier: Yup.string()
-    .required('Email hoặc Số điện thoại là bắt buộc')
-    .test('emailOrPhone', 'Email hoặc Số điện thoại không hợp lệ', value => {
-      const phoneRegex = /^(0|\+84)\d{9}$/; // Số điện thoại Việt Nam
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Định dạng email cơ bản
-      return phoneRegex.test(value) || emailRegex.test(value);
-    }),
+    .required('Validate.textErrorEmailOrPhoneNumberRequired')
+    .test(
+      'emailOrPhone',
+      'Validate.textErrorEmailOrPhoneNumberNotCorrectFormat',
+      value => {
+        const phoneRegex = /^(0|\+84)\d{9}$/; // Số điện thoại Việt Nam
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Định dạng email cơ bản
+        return phoneRegex.test(value) || emailRegex.test(value);
+      },
+    ),
   password: Yup.string()
-    .required('Mật khẩu là bắt buộc')
-    .min(6, 'Mật khẩu phải có ít nhất 6 ký tự'),
-  accountType: Yup.string().required('Loại tài khoản là bắt buộc'),
+    .required('Validate.textErrorPasswordRequired')
+    .min(6, 'Validate.textErrorPasswordAtLess6Character'),
+  accountType: Yup.string().required('Validate.textErrorTypeAccountRequired'),
 });
 
 export const ValidateIdentifyTypePhoneOrEmail = (
   type: 'phone' | 'email',
   value: string,
 ) => {
-  if (RegexUntil.phoneRegex.test(value) && type === 'phone') {
-    return value;
-  } else if (RegexUntil.emailRegex.test(value) && type === 'email') {
+  if (
+    (RegexUntil.phoneRegex.test(value) && type === 'phone') ||
+    (RegexUntil.emailRegex.test(value) && type === 'email')
+  ) {
     return value;
   }
   return '';

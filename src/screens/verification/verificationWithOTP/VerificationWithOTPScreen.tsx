@@ -134,7 +134,7 @@ const VerificationWithOTPScreen = () => {
         }
         if (isErrorCodeReset) {
             const errorText = JSON.parse(JSON.stringify(errorCheckCodeReset));
-            Alert.alert('Cảnh báo', `${errorText.data.message}`)
+            Alert.alert(t("Alert.warning"), `${errorText.data.message}`)
         }
     }, [isErrorCodeReset, errorCheckCodeReset, dataCodeReset])
 
@@ -185,13 +185,13 @@ const VerificationWithOTPScreen = () => {
             {/* Body */}
             <SessionComponent padding={scale(29)}>
                 <TextComponent
-                    text="Xác minh"
+                    text={t("VerificationWithOTPScreen.textVerification")}
                     fontSize={20}
                     color={Colors.BLACK}
                 />
                 <SpaceComponent height={verticalScale(12)} />
                 <TextComponent
-                    text={`Chúng tôi đã gửi cho bạn mã xác minh cho ${email}.`}
+                    text={`${t("VerificationWithOTPScreen.textSendVerificationFor")} ${email}.`}
                     fontSize={15}
                     color={Colors.BLACK}
                 />

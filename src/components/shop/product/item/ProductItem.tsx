@@ -3,7 +3,6 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Colors } from '../../../../constants/Colors';
 import { appInfo } from '../../../../constants/Infos';
 import { Variables } from '../../../../constants/Variables';
-import { useAppSelector } from '../../../../redux/Hooks';
 import { vietnameseCurrency } from '../../../../utils/FormatNumberUtils';
 import RateQtyProductComponent from '../../../rate/RateQtyProductComponent';
 import RowComponent from '../../../row/RowComponent';

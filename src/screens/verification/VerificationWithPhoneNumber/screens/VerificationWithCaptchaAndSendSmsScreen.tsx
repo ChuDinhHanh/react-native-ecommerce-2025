@@ -2,16 +2,14 @@ import auth from '@react-native-firebase/auth';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useEffect } from 'react';
-import { Alert, Text, View } from 'react-native';
+import { Alert } from 'react-native';
+import ContainerComponent from '../../../../components/container/ContainerComponent';
+import LoadingComponent from '../../../../components/loading/LoadingComponent';
+import { Colors } from '../../../../constants/Colors';
 import { VERIFY_PHONE_SCREEN } from '../../../../constants/Screens';
+import { Variables } from '../../../../constants/Variables';
 import { RootStackParamList } from '../../../../routes/Routes';
 import { formatPhoneNumber } from '../../../../utils/FormatNumberUtils';
-import ContainerComponent from '../../../../components/container/ContainerComponent';
-import { Colors } from '../../../../constants/Colors';
-import TextComponent from '../../../../components/text/TextComponent';
-import LoadingComponent from '../../../../components/loading/LoadingComponent';
-import { scale } from '../../../../utils/ScaleUtils';
-import { Variables } from '../../../../constants/Variables';
 
 const VerificationWithCaptchaAndSendSmsScreen = () => {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
