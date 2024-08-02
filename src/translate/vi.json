@@ -34,7 +34,7 @@
     "ForgotPasswordScreen": {
         "screenName": "Quên mật khẩu",
         "textSend": "Gửi",
-        "textPlaceHolderEmail": "Hãy nhập email"
+        "textPlaceHolderEmailOrPhone": "Hãy nhập email hoặc số điện thoại"
     },
     "ResetPasswordScreen": {
         "screenName": "Mật khẩu mới",
@@ -97,5 +97,13 @@
         "textPlaceholderSearch": "Tìm kiếm",
         "TitleIntroduce": "Chào mừng bạn đến với speed",
         "TitleIntroduce_description": "sàn thương mại điện tử uy tín số 1 việt nam"
+    },
+    "DrawerScreen": {
+        "itemLanguage": "Ngôn ngữ",
+        "itemLogout": "Đăng xuất"
+    },
+    "PaymentScreen": {
+        "createNewAddress": "Tạo mới địa chỉ",
+        "selectOldAddress": "địa chỉ từ danh sách địa chỉ của bạn"
     }
 }

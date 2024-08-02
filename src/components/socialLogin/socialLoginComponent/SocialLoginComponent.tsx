@@ -3,10 +3,12 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import React, { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-multi-lang';
 import { Image } from 'react-native';
+import { AccessToken, LoginManager } from 'react-native-fbsdk-next';
 import { Divider, IconButton, Modal, Portal } from 'react-native-paper';
 import { Colors } from '../../../constants/Colors';
 import { fontFamilies } from '../../../constants/FontFamilies';
 import { Variables } from '../../../constants/Variables';
+import { SignInByGoogle } from '../../../types/request/SignInByGoogle';
 import { SignUpByGoogle } from '../../../types/request/SignUpByGoogle';
 import { scale, verticalScale } from '../../../utils/ScaleUtils';
 import TextButtonComponent from '../../buttons/textButton/TextButtonComponent';
@@ -15,7 +17,6 @@ import RowComponent from '../../row/RowComponent';
 import SpaceComponent from '../../space/SpaceComponent';
 import TextComponent from '../../text/TextComponent';
 import { styles } from './SocialLoginComponent.style';
-import { SignInByGoogle } from '../../../types/request/SignInByGoogle';
 interface Props {
     isLogin: boolean;
     onPressLoginByGoogle: (type: SignInByGoogle) => void;
@@ -24,8 +25,33 @@ interface Props {
 
 // Google config
 GoogleSignin.configure({
-    webClientId: '741095176449-v10ft0apql9rlm9ik6ovu434e89e7rn4.apps.googleusercontent.com',
+    webClientId: '142720675289-mbr7toa7vpi2gdpr7agn5ledag6chqkd.apps.googleusercontent.com',
 });
+
+
+
+async function onFacebookButtonPress() {
+    // Attempt login with permissions
+    const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+
+    if (result.isCancelled) {
+        throw 'User cancelled the login process';
+    }
+
+    // Once signed in, get the users AccessToken
+    const data = await AccessToken.getCurrentAccessToken();
+
+    if (!data) {
+        throw 'Something went wrong obtaining access token';
+    }
+
+    // Create a Firebase credential with the AccessToken
+    const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
+
+    // Sign-in the user with the credential
+    return auth().signInWithCredential(facebookCredential);
+}
+
 
 async function onGoogleButtonPress() {
     try {
@@ -97,7 +123,6 @@ const SocialLoginComponent = (props: Props) => {
         }
     }, [user]);
 
-
     const signOutForSocialAccount = () => {
         const signOut = async () => {
             try {
@@ -153,9 +178,7 @@ const SocialLoginComponent = (props: Props) => {
                     isLogin ? t("LoginBySocial.textLoginWithFacebook") :
                         t("RegisterBySocial.textRegisterWithFacebook")
                 } />}
-                onPress={() => {
-                    console.log('Login with facebook')
-                }}
+                onPress={() => onFacebookButtonPress()}
             />
             <SpaceComponent height={verticalScale(10)} />
             <TextButtonComponent
@@ -175,6 +198,7 @@ const SocialLoginComponent = (props: Props) => {
                 />}
                 onPress={handlePressGoogleButton}
             />
+            {/* Choose type register */}
             <Portal>
                 <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
                     <>
@@ -189,6 +213,8 @@ const SocialLoginComponent = (props: Props) => {
                             values={undefined}
                             onSetFieldValue={() => { }}
                             onSetValue={handleChooseItemDropdown}
+                            placeHolder={''}
+                            FieldValue={''}
                         />
                     </>
                 </Modal>
@@ -198,53 +224,3 @@ const SocialLoginComponent = (props: Props) => {
 };
 
 export default memo(SocialLoginComponent);
-
-
-
-// import { View, Text } from 'react-native'
-// import React from 'react'
-// import { Button } from 'react-native';
-// import auth from '@react-native-firebase/auth';
-// import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
-
-// async function onFacebookButtonPress() {
-//   // Attempt login with permissions
-//   const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
-
-//   if (result.isCancelled) {
-//     throw 'User cancelled the login process';
-//   }
-
-//   // Once signed in, get the users AccessToken
-//   const data = await AccessToken.getCurrentAccessToken();
-
-//   if (!data) {
-//     throw 'Something went wrong obtaining access token';
-//   }
-
-//   // Create a Firebase credential with the AccessToken
-//   const facebookCredential = auth.FacebookAuthProvider.credential(data.accessToken);
-
-//   // Sign-in the user with the credential
-//   return auth().signInWithCredential(facebookCredential);
-// }
-
-
-// function FacebookSignIn() {
-//   return (
-//     <Button
-//       title="Facebook Sign-In"
-//       onPress={() => onFacebookButtonPress().then(() => console.log('Signed in with Facebook!'))}
-//     />
-//   );
-// }
-
-// const LoginScreen = () => {
-//   return (
-//     <View>
-//       <Text>{FacebookSignIn()}</Text>
-//     </View>
-//   )
-// }
-
-// export default LoginScreen

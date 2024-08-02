@@ -241,12 +241,14 @@ const RegisterScreen: React.FC = () => {
 
                 {/* Dropdown */}
                 <DropdownComponent
+                  FieldValue='accountType'
                   touched={touched.accountType}
                   errors={errors.accountType}
                   dropdownData={dropdownData}
                   values={values.accountType}
                   onSetFieldValue={setFieldValue}
                   onSetValue={setValue}
+                  placeHolder='ImmediateScreen.textTitleDropDown'
                 />
                 {errors.accountType && touched.accountType && (
                   <TextComponent color={Colors.RED} text={t(errors.accountType)} />

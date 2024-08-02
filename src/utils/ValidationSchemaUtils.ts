@@ -19,9 +19,20 @@ export const validationSchemaLoginUtils = Yup.object().shape({
 });
 
 export const validationSchemaForgotPasswordUtils = Yup.object().shape({
-  email: Yup.string()
-    .matches(RegexUntil.emailRegex, 'Validate.textErrorEmailNotCorrectFormat')
-    .required('Validate.textErrorEmailRequired'),
+  // email: Yup.string()
+  //   .matches(RegexUntil.emailRegex, 'Validate.textErrorEmailNotCorrectFormat')
+  //   .required('Validate.textErrorEmailRequired'),
+  identifier: Yup.string()
+    .required('Validate.textErrorEmailOrPhoneNumberRequired')
+    .test(
+      'emailOrPhone',
+      'Validate.textErrorEmailOrPhoneNumberNotCorrectFormat',
+      value => {
+        const phoneRegex = /^(0|\+84)\d{9}$/;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return phoneRegex.test(value) || emailRegex.test(value);
+      },
+    ),
 });
 
 export const validationSchemaResetPasswordUtils = Yup.object().shape({
@@ -73,3 +84,10 @@ export const ValidateIdentifyTypePhoneOrEmail = (
   }
   return '';
 };
+
+export const validationSchemaPaymentUtils = Yup.object().shape({
+  shippingUnit: Yup.string().required('don vi van chuyen khong duoc de trong'),
+  paymentMethod: Yup.string().required(
+    'phuong thuc thanh toan khong duoc de trong',
+  ),
+});

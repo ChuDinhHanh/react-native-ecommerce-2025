@@ -12,6 +12,7 @@ import en from '../../translate/en.json'
 import jp from '../../translate/jp.json'
 import vi from '../../translate/vi.json'
 import SelectLanguageScreenItemCountry from './component/item/SelectLanguageScreenItemCountry'
+import { Variables } from '../../constants/Variables'
 setTranslations({ jp, en, vi })
 
 
@@ -24,8 +25,8 @@ const SelectLanguageScreen = () => {
             id: 1,
             flag: require('../../assets/images/data/selectLanguges/vnFlag.png'),
             countryName: 'Việt Nam',
-            code: 'vi',
-            isSelected: language === 'vi'
+            code: Variables.DEFAULT_LANGUAGE,
+            isSelected: language === Variables.DEFAULT_LANGUAGE
 
         },
         {

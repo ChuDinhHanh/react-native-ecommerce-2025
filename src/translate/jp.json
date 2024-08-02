@@ -34,7 +34,7 @@
     "ForgotPasswordScreen": {
         "screenName": "パスワードを忘れた",
         "textSend": "送信",
-        "textPlaceHolderEmail": "メールを入力してください"
+        "textPlaceHolderEmailOrPhone": "メールアドレスまたは電話番号を入力してください"
     },
     "ResetPasswordScreen": {
         "screenName": "新しいパスワード",
@@ -97,5 +97,13 @@
         "textPlaceholderSearch": "検索",
         "TitleIntroduce": "Speedへようこそ",
         "TitleIntroduce_description": "ベトナムで最も信頼されているeコマースプラットフォーム"
+    },
+    "DrawerScreen": {
+        "itemLanguage": "言語",
+        "itemLogout": "ログアウト"
+    },
+    "PaymentScreen": {
+        "createNewAddress": "新しい住所を作成",
+        "selectOldAddress": "住所リストから住所を選択"
     }
 }

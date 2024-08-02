@@ -7,7 +7,6 @@ import { Colors } from '../../../constants/Colors'
 import { MessengerData } from '../../../data/CommonData'
 import InputMessengerScreenComponent from '../component/input/InputMessengerScreenComponent'
 import ConversationItemComponent from '../component/item/ConversationItemComponent'
-import { moderateScale } from '../../../utils/ScaleUtils'
 import { styles } from './ConversationScreen.style'
 
 const ConversationScreen = () => {

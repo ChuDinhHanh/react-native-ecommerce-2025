@@ -34,7 +34,7 @@
     "ForgotPasswordScreen": {
         "screenName": "Forgot password",
         "textSend": "Send",
-        "textPlaceHolderEmail": "Please enter email"
+        "textPlaceHolderEmailOrPhone": "Please enter your email or phone number"
     },
     "ResetPasswordScreen": {
         "screenName": "New password",
@@ -97,5 +97,13 @@
         "textPlaceholderSearch": "Search",
         "TitleIntroduce": "Welcome to Speed",
         "TitleIntroduce_description": "The most reputable e-commerce platform in Vietnam"
+    },
+    "DrawerScreen": {
+        "itemLanguage": "Language",
+        "itemLogout": "Logout"
+    },
+    "PaymentScreen": {
+        "createNewAddress": "Create a new address",
+        "selectOldAddress": "Select an address from your address list"
     }
 }

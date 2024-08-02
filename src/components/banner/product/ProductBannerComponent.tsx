@@ -75,6 +75,7 @@ const ProductBannerComponent = (props: Props) => {
     const renderItem = (item: any, index: number) => {
         return (
             <Pressable
+                key={index}
                 style={{
                     justifyContent: 'center',
                     alignItems: 'center'

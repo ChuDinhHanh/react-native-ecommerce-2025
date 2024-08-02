@@ -44,7 +44,7 @@ export const loginUser = createAsyncThunk(
         );
         await AsyncStorage.setItem(Variables.TOKEN_KEY, JSON.stringify(token));
       }
-      dispatch(setUserLogin(signInData));
+      return signInData;
     } catch (error) {
       console.log(error);
     }
@@ -73,6 +73,6 @@ export const getLanguage = createAsyncThunk(
     const currentLanguage = await AsyncStorage.getItem(
       Variables.USER_LANGUAGE_KEY,
     );
-    return currentLanguage;
+    return currentLanguage ?? JSON.stringify(Variables.DEFAULT_LANGUAGE);
   },
 );

@@ -17,9 +17,11 @@ import HeaderHomeComponent from './component/header/HeaderHomeComponent'
 import SearchHomeComponent from './component/search/SearchHomeComponent'
 
 const HomeScreen = () => {
+  console.log('=============HomeScreen=======================');
   const t = useTranslation();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { language } = useAppSelector((state) => state.SpeedReducer);
+  const token = useAppSelector((state) => state.SpeedReducer.token);
 
   const handlePressCategoryEvent = (code: string) => {
     navigation.navigate(SERVICE_STACK_NAVIGATOR, {

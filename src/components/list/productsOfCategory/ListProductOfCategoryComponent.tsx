@@ -14,7 +14,7 @@ const ListProductOfCategoryComponent = (props: Props) => {
     const { data } = props;
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const handlePressProductEvent = (id: string) => {
-        navigation.navigate(DETAIL_PRODUCT_SCREEN,{code:id})
+        navigation.navigate(DETAIL_PRODUCT_SCREEN, { code: id })
     }
 
     return (

@@ -1,35 +1,42 @@
-import { useNavigation } from '@react-navigation/native'
+import { useIsFocused, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import React, { useEffect } from 'react'
 import { setTranslations } from 'react-multi-lang'
-import { Image, Text, View } from 'react-native'
+import { Alert, Image, Text, View } from 'react-native'
 import { Path, Svg } from 'react-native-svg'
 import { Colors } from '../../constants/Colors'
 import { AUTHENTICATION_STACK_NAVIGATOR, BOTTOM_TAB_NAVIGATOR } from '../../constants/Screens'
 import { useAppDispatch } from '../../redux/Hooks'
-import { getLanguage, loadUser } from '../../redux/userThunks'
+import { getLanguage, loadUser, logoutUser } from '../../redux/userThunks'
 import { RootStackParamList } from '../../routes/Routes'
 import en from '../../translate/en.json'
 import jp from '../../translate/jp.json'
 import vi from '../../translate/vi.json'
 import styles from './SplashScreen.style'
+import { useLazyCheckTokenAliveQuery } from '../../redux/Service'
 setTranslations({ vi, jp, en });
 
 const SplashScreen = () => {
+    console.log('===============SplashScreen=====================');
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const dispatch = useAppDispatch();
+    const [checkTokenAlive, { isError, isFetching, isLoading, isSuccess, data, error }] = useLazyCheckTokenAliveQuery();
+    const isFocused = useIsFocused();
+
     useEffect(() => {
-        dispatch(getLanguage()).unwrap().then((_) => {
-            handleCheckHaveAccount();
-        })
-    }, []);
+        if (isFocused) {
+            dispatch(getLanguage()).unwrap().then((_) => {
+                handleCheckHaveAccount();
+            })
+        }
+    }, [isFocused]);
 
     const handleCheckHaveAccount = () => {
         dispatch(loadUser())
             .unwrap()
             .then((data) => {
                 if (data) {
-                    navigation.replace(BOTTOM_TAB_NAVIGATOR);
+                    checkTokenAlive({ token: data.token });
                 } else {
                     navigation.replace(AUTHENTICATION_STACK_NAVIGATOR);
                 }
@@ -38,6 +45,17 @@ const SplashScreen = () => {
                 // handle
             });
     }
+
+    useEffect(() => {
+        if (data) {
+            navigation.replace(BOTTOM_TAB_NAVIGATOR);
+        }
+        if (isError) {
+            Alert.alert('Cảnh báo', 'Phiên đăng nhập của bạn đã hết hạn');
+            dispatch(logoutUser());
+            navigation.replace(AUTHENTICATION_STACK_NAVIGATOR);
+        }
+    }, [error, isError, data])
 
     return (
         <View style={styles.container}>

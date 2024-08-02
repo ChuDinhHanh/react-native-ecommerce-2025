@@ -13,9 +13,11 @@ import { Variables } from '../../../../constants/Variables'
 import { RootStackParamList } from '../../../../routes/Routes'
 import { moderateScale, verticalScale } from '../../../../utils/ScaleUtils'
 import { useTranslation } from 'react-multi-lang'
+import { useAppSelector } from '../../../../redux/Hooks'
 
 const HeaderHomeComponent = () => {
     const t = useTranslation();
+    const userLogin = useAppSelector((state) => state.SpeedReducer.userLogin);
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     return (
         <React.Fragment>
@@ -23,7 +25,7 @@ const HeaderHomeComponent = () => {
                 {/* Top */}
                 <IconButtonComponent typeNoBackground onPress={() => { navigation.dispatch(DrawerActions.openDrawer()) }} icon={<Entypo name='menu' size={moderateScale(25)} color={Colors.BLACK} />} />
                 <Pressable onPress={() => { console.log("avatar") }}>
-                    <DefaultAvatar size={moderateScale(40)} name='Hanh' />
+                    <DefaultAvatar size={moderateScale(40)} name={userLogin?.name ?? userLogin?.email + ""} />
                 </Pressable>
             </RowComponent>
             <SpaceComponent height={verticalScale(16)} />

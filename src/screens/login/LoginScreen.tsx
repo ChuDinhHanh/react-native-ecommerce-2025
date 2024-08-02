@@ -2,7 +2,7 @@ import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Formik } from 'formik';
 import React, { useEffect } from 'react';
-import { setTranslations, useTranslation } from 'react-multi-lang';
+import { useTranslation } from 'react-multi-lang';
 import { Alert, Image, View } from 'react-native';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import TextButtonComponent from '../../components/buttons/textButton/TextButtonComponent';
@@ -72,7 +72,8 @@ const LoginScreen = () => {
   useEffect(() => {
     if (dataLoginNormal) {
       handleSaveDataAndNavigate(dataLoginNormal);
-    } else if (isErrorLoginNormal) {
+    }
+    if (isErrorLoginNormal) {
       const errorText = JSON.parse(JSON.stringify(errorLoginNormal));
       Alert.alert(t("Alert.warning"), errorText?.data?.message);
     }

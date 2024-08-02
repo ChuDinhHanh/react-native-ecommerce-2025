@@ -2977,6 +2977,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-community/checkbox@npm:^0.5.17":
+  version: 0.5.17
+  resolution: "@react-native-community/checkbox@npm:0.5.17"
+  peerDependencies:
+    react: "*"
+    react-native: ">= 0.62"
+    react-native-windows: ">=0.62"
+  peerDependenciesMeta:
+    react-native-windows:
+      optional: true
+  checksum: 98cddff11b976a1f712bfc4d7de946d5e102108bedc016bbcb668b3917757dd5092b5b93f651f740508dd8437ba3a0ce5ca15cef3ebf7bcfc15a490b0b7d0d6b
+  languageName: node
+  linkType: hard
+
 "@react-native-community/cli-clean@npm:13.6.9":
   version: 13.6.9
   resolution: "@react-native-community/cli-clean@npm:13.6.9"
@@ -3155,6 +3169,16 @@ __metadata:
   bin:
     rnc-cli: build/bin.js
   checksum: 5e997b50fd687b4f3fcdde6a1fd36317ffee5536649fb16e87f6e3bb1bd56a279daad57b7d904d0442425106f048a114e3987f9a0fc8dc3fadd0a784dcb83a40
+  languageName: node
+  linkType: hard
+
+"@react-native-community/geolocation@npm:^3.3.0":
+  version: 3.3.0
+  resolution: "@react-native-community/geolocation@npm:3.3.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: a0920ff7ff2f9f24300a8eabd641fd5bd9124a8a5274f0077d64bc143111c925986eaf7c29fa25b6b0daaebb780ebf1aeee12e908584fe200fc619e30de330c6
   languageName: node
   linkType: hard
 
@@ -3743,6 +3767,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/geojson@npm:^7946.0.13":
+  version: 7946.0.14
+  resolution: "@types/geojson@npm:7946.0.14"
+  checksum: ae511bee6488ae3bd5a3a3347aedb0371e997b14225b8983679284e22fa4ebd88627c6e3ff8b08bf4cc35068cb29310c89427311ffc9322c255615821a922e71
+  languageName: node
+  linkType: hard
+
 "@types/graceful-fs@npm:^4.1.3":
   version: 4.1.9
   resolution: "@types/graceful-fs@npm:4.1.9"
@@ -3841,6 +3872,16 @@ __metadata:
   dependencies:
     "@types/react": "*"
   checksum: 7bca75be218dc04af340ac73094bbc1d3bebadc85e368b419859b410eed9da4c5e5d10c2fd4356945abbb1913e207d31fc42e1700863c109ad1cf7098df56803
+  languageName: node
+  linkType: hard
+
+"@types/react-native-check-box@npm:^2.1.6":
+  version: 2.1.6
+  resolution: "@types/react-native-check-box@npm:2.1.6"
+  dependencies:
+    "@types/react": "*"
+    react-native: "*"
+  checksum: fb4118ce5bf9304a53924c1c0851d7cb7949a67ee5e7550002b0a16de5ea2bcf0306cad5158c7b72d010db6d19ed88d7bbaf0cc3d8dc4d5c346e3c5305abc9c6
   languageName: node
   linkType: hard
 
@@ -4146,6 +4187,8 @@ __metadata:
     "@fortawesome/free-solid-svg-icons": ^6.5.2
     "@fortawesome/react-native-fontawesome": ^0.3.2
     "@react-native-async-storage/async-storage": ^1.24.0
+    "@react-native-community/checkbox": ^0.5.17
+    "@react-native-community/geolocation": ^3.3.0
     "@react-native-firebase/app": ^20.1.0
     "@react-native-firebase/auth": ^20.1.0
     "@react-native-google-signin/google-signin": ^12.2.1
@@ -4165,6 +4208,7 @@ __metadata:
     "@reduxjs/toolkit": ^2.2.6
     "@types/react": ^18.2.6
     "@types/react-native-actionsheet": ^2.4.7
+    "@types/react-native-check-box": ^2.1.6
     "@types/react-native-vector-icons": ^6.4.18
     "@types/react-test-renderer": ^18.0.0
     axios: ^1.7.2
@@ -4182,14 +4226,18 @@ __metadata:
     react-multi-lang: ^2.2.0
     react-native: 0.74.3
     react-native-actionsheet: ^2.4.2
+    react-native-check-box: ^2.1.7
     react-native-document-picker: ^9.3.0
+    react-native-dotenv: ^3.4.11
     react-native-drawer-layout: ^3.3.2
     react-native-element-dropdown: ^2.12.1
     react-native-fbsdk-next: ^13.0.0
     react-native-gesture-handler: ^2.17.1
+    react-native-google-places-autocomplete: ^2.5.6
     react-native-image-crop-picker: ^0.41.2
     react-native-image-picker: ^7.1.2
     react-native-linear-gradient: ^2.8.3
+    react-native-maps: ^1.17.3
     react-native-pager-view: ^6.3.3
     react-native-paper: ^5.12.3
     react-native-popup-menu: ^0.16.1
@@ -5900,6 +5948,13 @@ __metadata:
     domelementtype: ^2.3.0
     domhandler: ^5.0.3
   checksum: e5757456ddd173caa411cfc02c2bb64133c65546d2c4081381a3bafc8a57411a41eed70494551aa58030be9e58574fcc489828bebd673863d39924fb4878f416
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^16.4.5":
+  version: 16.4.5
+  resolution: "dotenv@npm:16.4.5"
+  checksum: 301a12c3d44fd49888b74eb9ccf9f07a1f5df43f489e7fcb89647a2edcd84c42d6bc349dc8df099cd18f07c35c7b04685c1a4f3e6a6a9e6b30f8d48c15b7f49c
   languageName: node
   linkType: hard
 
@@ -10556,7 +10611,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.5.10, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.5.10, prop-types@npm:^15.5.7, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -10612,6 +10667,13 @@ __metadata:
   version: 6.1.0
   resolution: "pure-rand@npm:6.1.0"
   checksum: 8d53bc02bed99eca0b65b505090152ee7e9bd67dd74f8ff32ba1c883b87234067c5bf68d2614759fb217d82594d7a92919e6df80f97885e7b12b42af4bd3316a
+  languageName: node
+  linkType: hard
+
+"qs@npm:~6.9.1":
+  version: 6.9.7
+  resolution: "qs@npm:6.9.7"
+  checksum: 5bbd263332ccf320a1f36d04a2019a5834dc20bcb736431eaccde2a39dcba03fb26d2fd00174f5d7bc26aaad1cad86124b18440883ac042ea2a0fca6170c1bf1
   languageName: node
   linkType: hard
 
@@ -10746,6 +10808,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-check-box@npm:^2.1.7":
+  version: 2.1.7
+  resolution: "react-native-check-box@npm:2.1.7"
+  dependencies:
+    prop-types: ^15.5.7
+  peerDependencies:
+    react-native: ">=0.20.0"
+  checksum: 2f303308df139637b70a0ddef39bd702a3331cacb6328026ab84cb407a59f8eb413c37fbf3624f91f272e1f5efc8962d6f15e46512a1b6b233d91140acef6b69
+  languageName: node
+  linkType: hard
+
 "react-native-codegen@npm:^0.0.7":
   version: 0.0.7
   resolution: "react-native-codegen@npm:0.0.7"
@@ -10780,6 +10853,17 @@ __metadata:
     react-native-windows:
       optional: true
   checksum: 622c9bd3a17b7b92ff6b13571ccf2a916dd2477f2aa8c22b79e4b204156742ba95680dea912ee5ee56718f13c537107f5937e5bcf88d93cdf2142d508dc16351
+  languageName: node
+  linkType: hard
+
+"react-native-dotenv@npm:^3.4.11":
+  version: 3.4.11
+  resolution: "react-native-dotenv@npm:3.4.11"
+  dependencies:
+    dotenv: ^16.4.5
+  peerDependencies:
+    "@babel/runtime": ^7.20.6
+  checksum: 3ebac2c2ed79dd7e4920fd3fc2da9187413b7190231618e4858b46c47833677838b96d531afe7bd5c4b0a60454dba40cb8708722210df5d522e30aefbf41da05
   languageName: node
   linkType: hard
 
@@ -10837,6 +10921,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-google-places-autocomplete@npm:^2.5.6":
+  version: 2.5.6
+  resolution: "react-native-google-places-autocomplete@npm:2.5.6"
+  dependencies:
+    lodash.debounce: ^4.0.8
+    prop-types: ^15.7.2
+    qs: ~6.9.1
+  peerDependencies:
+    react-native: ">= 0.59"
+  checksum: 132911198f217eff064f658517a06d3b57cba2081f40462f9cec7eabfe0409dc30a9ea519377eff77924f69ceb94662fb88105e87bf5071c02120292519a64eb
+  languageName: node
+  linkType: hard
+
 "react-native-image-crop-picker@npm:^0.41.2":
   version: 0.41.2
   resolution: "react-native-image-crop-picker@npm:0.41.2"
@@ -10863,6 +10960,22 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: f980d324e551bbc475c6406bdc5250a08242020cbe653412fa169bbdf51e28a502e225de105b4d696d6a1a1b733d44782469020f4936d8b3ce0e2c78e51cf58f
+  languageName: node
+  linkType: hard
+
+"react-native-maps@npm:^1.17.3":
+  version: 1.17.3
+  resolution: "react-native-maps@npm:1.17.3"
+  dependencies:
+    "@types/geojson": ^7946.0.13
+  peerDependencies:
+    react: ">= 17.0.1"
+    react-native: ">= 0.64.3"
+    react-native-web: ">= 0.11"
+  peerDependenciesMeta:
+    react-native-web:
+      optional: true
+  checksum: b23500627f02e1ef2257a2ffdb2bdda126c01e2ecb14cba919e8b9236a0b6a751bdcc86008e28ffad51a17ea12f819d3669af12be43eb9310cf06f311f6d3f34
   languageName: node
   linkType: hard
 
@@ -11069,7 +11182,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native@npm:0.74.3":
+"react-native@npm:*, react-native@npm:0.74.3":
   version: 0.74.3
   resolution: "react-native@npm:0.74.3"
   dependencies:

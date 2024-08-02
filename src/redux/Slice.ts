@@ -1,6 +1,8 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {User} from '../types/other/User';
+import {setDefaultLanguage} from 'react-multi-lang';
+import {Variables} from '../constants/Variables';
 import {SignInRedux} from '../types/other/SignInRedux';
+import {User} from '../types/other/User';
 import {
   getLanguage,
   loadUser,
@@ -8,20 +10,21 @@ import {
   logoutUser,
   saveLanguage,
 } from './userThunks';
-import {setDefaultLanguage} from 'react-multi-lang';
 
 export interface SpeedState {
   token: string | null;
   userLogin: User | null;
   currentlyNotificationScreen: 0 | 1;
   language: string;
+  numberProductInCart: number;
 }
 
 const initialState: SpeedState = {
   token: null,
   userLogin: null,
   currentlyNotificationScreen: 0,
-  language: 'vi',
+  language: Variables.DEFAULT_LANGUAGE,
+  numberProductInCart: 0,
 };
 
 export const SpeedSlice = createSlice({
@@ -45,19 +48,25 @@ export const SpeedSlice = createSlice({
     setLanguage: (state, action: PayloadAction<string>) => {
       state.language = action.payload;
     },
+    setNumberProductInCart: (state, action: PayloadAction<number>) => {
+      state.numberProductInCart = action.payload;
+    },
   },
   extraReducers: builder => {
     builder.addCase(loadUser.fulfilled, (state, action) => {
       if (action.payload) {
         state.userLogin = action.payload.user;
-        state.token = action.payload.token;
+        state.token = JSON.parse(action.payload.token);
       }
     });
     builder.addCase(logoutUser.fulfilled, (state, action) => {
       // Handle
     });
     builder.addCase(loginUser.fulfilled, (state, action) => {
-      // Handle
+      if (action.payload) {
+        state.userLogin = action.payload.user;
+        state.token = action.payload.token;
+      }
     });
     builder.addCase(getLanguage.fulfilled, (state, action) => {
       if (action.payload) {
@@ -79,5 +88,6 @@ export const {
   setCurrentlyNotificationScreen,
   setUserLogout,
   setLanguage,
+  setNumberProductInCart,
 } = SpeedSlice.actions;
 export default SpeedSlice.reducer;

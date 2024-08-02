@@ -6,6 +6,7 @@ import {SignInByGoogle} from '../types/request/SignInByGoogle';
 import {SignUpByGoogle} from '../types/request/SignUpByGoogle';
 import {Register} from '../types/request/UserRegister';
 import {ResetPassword} from '../types/request/ResetPassword';
+import {Bill} from '../types/request/Bill';
 
 export const SpeedAPI = createApi({
   reducerPath: 'SpeedNetworkAPI',
@@ -14,7 +15,9 @@ export const SpeedAPI = createApi({
     timeout: 20000,
   }),
   refetchOnReconnect: true,
-  tagTypes: [''],
+  // Global
+  // keepUnusedDataFor:30,
+  tagTypes: ['Cart', 'User'],
   endpoints: builder => ({
     register: builder.mutation<Data<any>, Register>({
       query: data => ({
@@ -24,6 +27,8 @@ export const SpeedAPI = createApi({
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
         },
+        // Local
+        // keepUnusedDataFor: 30,
       }),
     }),
     checkVerifyToken: builder.query<Data<any>, {token: string}>({
@@ -104,7 +109,7 @@ export const SpeedAPI = createApi({
           method: 'GET',
           headers: {
             'Content-type': 'application/json; charset=UTF-8',
-            Authorization: `Bearer ${JSON.parse(data.token)}`,
+            Authorization: `Bearer ${data.token}`,
           },
         };
       },
@@ -119,7 +124,7 @@ export const SpeedAPI = createApi({
           method: 'GET',
           headers: {
             'Content-type': 'application/json; charset=UTF-8',
-            Authorization: `Bearer ${JSON.parse(data.token)}`,
+            Authorization: `Bearer ${data.token}`,
           },
         };
       },
@@ -132,10 +137,11 @@ export const SpeedAPI = createApi({
           body: data.cart,
           headers: {
             'Content-type': 'application/json; charset=UTF-8',
-            Authorization: `Bearer ${JSON.parse(data.token)}`,
+            Authorization: `Bearer ${data.token}`,
           },
         };
       },
+      invalidatesTags: ['Cart'],
     }),
     getCartByUserName: builder.query<
       Data<any>,
@@ -147,10 +153,17 @@ export const SpeedAPI = createApi({
           method: 'GET',
           headers: {
             'Content-type': 'application/json; charset=UTF-8',
-            Authorization: `Bearer ${JSON.parse(data.token)}`,
+            Authorization: `Bearer ${data.token}`,
           },
         };
       },
+      providesTags: result =>
+        result
+          ? [
+              ...result.data.items.map(({id}: any) => ({type: 'Cart', id})),
+              'Cart',
+            ]
+          : ['Cart'],
     }),
     checkCodeResetEmail: builder.query<Data<any>, {code: string}>({
       query: data => ({
@@ -183,14 +196,104 @@ export const SpeedAPI = createApi({
       }),
     }),
     getProductByCode: builder.query<Data<any>, {code: string; token: string}>({
+      query: data => {
+        return {
+          url: `api/products?pCode=${data.code}`,
+          method: 'GET',
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+    }),
+    addCartChecked: builder.mutation<
+      Data<any>,
+      {code: string[]; token: string}
+    >({
+      query: data => {
+        const cart = {
+          cartItemCode: data.code,
+        };
+        return {
+          url: `api/carts/check`,
+          method: 'POST',
+          body: cart,
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${JSON.parse(data.token)}`,
+          },
+        };
+      },
+    }),
+    payment: builder.mutation<Data<any>, {bill: Bill; token: string}>({
       query: data => ({
-        url: `api/products?pCode=${data.code}`,
-        method: 'GET',
+        url: `api/bills/check-out`,
+        method: 'POST',
+        body: data.bill,
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
-          Authorization: `Bearer ${JSON.parse(data.token)}`,
+          Authorization: `Bearer ${data.token}`,
         },
       }),
+    }),
+    checkTokenAlive: builder.query<Data<any>, {token: string}>({
+      query: data => {
+        return {
+          url: `api/users/token`,
+          method: 'GET',
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${JSON.parse(data.token)}`,
+          },
+        };
+      },
+    }),
+    updateProductInCarts: builder.mutation<
+      Data<any>,
+      {carts: UpdateCart; token: string}
+    >({
+      query: data => {
+        console.log(data.carts, data.token);
+        return {
+          url: `api/carts`,
+          method: 'PUT',
+          body: data.carts,
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+      // invalidatesTags: ['Cart'],
+    }),
+    getUserAddress: builder.query<Data<any>, {user: string; token: string}>({
+      query: data => {
+        return {
+          url: `api/users/address/${data.user}`,
+          method: 'GET',
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+    }),
+    createNewAddress: builder.mutation<
+      Data<any>,
+      {address: Address; token: string}
+    >({
+      query: data => {
+        return {
+          url: `api/users/address`,
+          method: 'POST',
+          body: data.address,
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
     }),
   }),
 });
@@ -211,4 +314,10 @@ export const {
   useResetPasswordActionMutation,
   useLazyCheckCodePhoneQuery,
   useLazyGetProductByCodeQuery,
+  useAddCartCheckedMutation,
+  usePaymentMutation,
+  useLazyCheckTokenAliveQuery,
+  useUpdateProductInCartsMutation,
+  useLazyGetUserAddressQuery,
+  useCreateNewAddressMutation,
 } = SpeedAPI;

@@ -1,9 +1,8 @@
 import React, { ReactNode, useMemo } from 'react';
-import { ActivityIndicator, FlexAlignType, Pressable, StyleProp, View, ViewStyle } from 'react-native';
+import { ActivityIndicator, DimensionValue, FlexAlignType, Pressable, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { Colors } from '../../../constants/Colors';
-import { styles } from './TextButtonComponent.style';
 import SpaceComponent from '../../space/SpaceComponent';
-import { globalStyles } from '../../../styles/globalStyles';
+import { styles } from './TextButtonComponent.style';
 
 type Props = {
     title: ReactNode;
@@ -27,10 +26,12 @@ type Props = {
     spaceAffix?: number;
     spaceSuffix?: number;
     typeVertical?: boolean;
-    width?: number;
-    height?: number;
+    width?: DimensionValue | undefined;
+    height?: DimensionValue | undefined;
     justifyContent?: "flex-start" | "flex-end" | "center" | "space-between" | "space-around" | "space-evenly" | undefined;
-    alignItems?: FlexAlignType | undefined
+    alignItems?: FlexAlignType | undefined;
+    marginHorizontal?: number;
+    marginRight?: number;
 }
 
 export default function TextButtonComponent(props: Readonly<Props>) {
@@ -40,7 +41,7 @@ export default function TextButtonComponent(props: Readonly<Props>) {
             {
                 marginVertical: props.marginVertical,
                 alignSelf: props.alignSelf,
-                backgroundColor: props.disabled ? Colors.GREY1 : props.backgroundColor,
+                backgroundColor: props.disabled ? Colors.COLOR_GREY_FEEBLE : props.backgroundColor,
                 borderRadius: props.borderRadius,
                 padding: props.padding,
                 borderWidth: props.borderWidth,
@@ -50,14 +51,16 @@ export default function TextButtonComponent(props: Readonly<Props>) {
                 width: props.width,
                 height: props.height,
                 justifyContent: props.justifyContent,
-                alignItems: props.alignItems
+                alignItems: props.alignItems,
+                marginHorizontal: props.marginHorizontal,
+                marginRight: props.marginRight
             }
         ];
     }, [props]);
 
     if (props.isTextFixed) {
         return (
-            <Pressable
+            <TouchableOpacity
                 disabled={props.disabled ?? false}
                 style={[btnStyle, props.typeVertical ? { alignItems: "center" } : { flexDirection: "row", alignItems: 'center' }]}
                 onPress={props.onPress}>
@@ -83,11 +86,11 @@ export default function TextButtonComponent(props: Readonly<Props>) {
                         }
                     </View>
                 }
-            </Pressable>
+            </TouchableOpacity>
         )
     } else {
         return (
-            <Pressable
+            <TouchableOpacity
                 disabled={props.disabled ?? false}
                 style={[btnStyle, styles.container]}
                 onPress={props.onPress}>
@@ -111,7 +114,7 @@ export default function TextButtonComponent(props: Readonly<Props>) {
                         }
                     </View>
                 }
-            </Pressable>
+            </TouchableOpacity>
         )
     }
 

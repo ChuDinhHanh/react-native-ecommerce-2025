@@ -21,21 +21,21 @@ import { validationSchemaForgotPasswordUtils } from '../../utils/ValidationSchem
 import { styles } from './ForgotPassWordScreen.style'
 
 interface ForgotPassWordFormValidate {
-  email: string
+  identifier: string
 }
 
 const ForgotPassWordScreen = () => {
   console.log('=================ForgotPassWordScreen===================');
   const t = useTranslation();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const [initialValue, setInitialValue] = useState<ForgotPassWordFormValidate>({ email: "" });
+  const [initialValue, setInitialValue] = useState<ForgotPassWordFormValidate>({ identifier: "" });
   const [forgotPassword, { data, isFetching, error, isError, isSuccess }] = useLazyForgotPasswordQuery();
 
   const handleSubmit = async (values: ForgotPassWordFormValidate) => {
     console.log('===========handleSubmit=========================');
     try {
       setInitialValue({ ...values });
-      await forgotPassword({ email: values.email });
+      // await forgotPassword({ email: values.identifier });
     } catch (error) {
       // hanlde
     }
@@ -44,7 +44,7 @@ const ForgotPassWordScreen = () => {
   useEffect(() => {
     if (data && !isFetching) {
       Alert.alert("Thông báo", data.message);
-      navigation.navigate(VERIFY_OTP_SCREEN, initialValue);
+      // navigation.navigate(VERIFY_OTP_SCREEN, initialValue);
     }
     if (isError) {
       const textError = JSON.parse(JSON.stringify(error));
@@ -79,12 +79,12 @@ const ForgotPassWordScreen = () => {
                 suffix={
                   <FontistoIcons name='email' size={Variables.ICON_SIZE_SMALL} color={Colors.GREY1} />
                 }
-                placeholder={t("ForgotPasswordScreen.textPlaceHolderEmail")}
-                onChangeText={handleChange('email')}
-                onBlur={handleBlur('email')}
-                value={values.email}
-                error={errors.email}
-                touched={touched.email}
+                placeholder={t("ForgotPasswordScreen.textPlaceHolderEmailOrPhone")}
+                onChangeText={handleChange('identifier')}
+                onBlur={handleBlur('identifier')}
+                value={values.identifier}
+                error={errors.identifier}
+                touched={touched.identifier}
               />
               <SpaceComponent height={verticalScale(20)} />
               <TextButtonComponent

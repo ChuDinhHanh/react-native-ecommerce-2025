@@ -25,4 +25,8 @@ export const Variables = {
   FAST_DELIVERY: 'hỏa tốc',
   // Language
   USER_LANGUAGE_KEY: 'language',
+  DEFAULT_LANGUAGE: 'vi',
+  // Address
+  CREATE_NEW_ADDRESS: '1',
+  SELECT_ADDRESS_FROM_DATA: '2',
 };

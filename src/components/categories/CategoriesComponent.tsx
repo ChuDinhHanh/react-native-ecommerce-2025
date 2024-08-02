@@ -10,6 +10,7 @@ import SessionComponent from '../session/SessionComponent'
 import CategorySkeleton from '../skeletons/category/CategorySkeleton'
 import SpaceComponent from '../space/SpaceComponent'
 import TextComponent from '../text/TextComponent'
+import { useAppSelector } from '../../redux/Hooks'
 
 interface Props {
     onPress: (code: 'string') => void;
@@ -18,21 +19,24 @@ const CategoriesComponent = (props: Props) => {
     const { onPress } = props;
     const isFocused = useIsFocused();
     const [getCategories, { data, isError, isFetching, isLoading, isSuccess, error }] = useLazyGetCategoriesQuery();
+    const token = useAppSelector((state) => state.SpeedReducer.token);
     useEffect(() => {
-        const x = async () => {
-            await AsyncStorage.getItem(Variables.TOKEN_KEY).then((res) => {
-                if (res) {
-                    getCategories({ token: res })
+        const handleGetCategories = async () => {
+            try {
+                if (token) {
+                    await getCategories({ token: token })
                 }
-            })
+            } catch (error) {
+
+            }
         }
-        x();
-    }, [isFocused]);
+        handleGetCategories();
+    }, [isFocused, token]);
 
     useEffect(() => {
         if (isError) {
             const errorText = JSON.parse(JSON.stringify(error))
-            Alert.alert('Cảnh báo', `${errorText.messenger}`)
+            Alert.alert('Cảnh báo', `${errorText?.data ? errorText?.data?.messenger : errorText?.messenger}`)
         }
     }, [data, isError, isFetching])
 

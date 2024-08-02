@@ -17,10 +17,12 @@ interface Props {
     values: TypeItemDropdown | string | null | undefined;
     onSetFieldValue: (title: string, item: any) => void;
     onSetValue: (item: any) => void;
+    placeHolder: string;
+    FieldValue: string;
 }
 
 const DropdownComponent = (props: Props) => {
-    const { errors, touched, dropdownData, values, onSetFieldValue, onSetValue } = props;
+    const { errors, touched, dropdownData, values, onSetFieldValue, onSetValue, placeHolder, FieldValue } = props;
     const t = useTranslation();
     return (
         <Dropdown
@@ -33,10 +35,10 @@ const DropdownComponent = (props: Props) => {
             data={dropdownData}
             labelField="name"
             valueField="value"
-            placeholder={t('ImmediateScreen.textTitleDropDown')}
+            placeholder={t(placeHolder)}
             value={values}
             onChange={item => {
-                onSetFieldValue('accountType', item.value);
+                onSetFieldValue(FieldValue, item.value);
                 onSetValue(item.value);
             }}
         />

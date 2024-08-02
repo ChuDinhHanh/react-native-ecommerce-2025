@@ -1,11 +1,19 @@
-import { View, Text } from 'react-native'
 import React from 'react'
+import ContainerComponent from '../../components/container/ContainerComponent'
+import SessionComponent from '../../components/session/SessionComponent'
+import SearchBarComponent from './component/searchBar/SearchBarComponent'
+import { Colors } from '../../constants/Colors'
 
 const SearchScreen = () => {
   return (
-    <View>
-      <Text>SearchScreen</Text>
-    </View>
+    <ContainerComponent
+      isFull
+      backgroundColor={Colors.WHITE}
+    >
+      <SessionComponent>
+        <SearchBarComponent />
+      </SessionComponent>
+    </ContainerComponent>
   )
 }
 
