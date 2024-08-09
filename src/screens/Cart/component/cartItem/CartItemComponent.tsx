@@ -21,10 +21,11 @@ interface Props {
     onPress: (index: number) => void;
     onDelete: (itemCartCode: string, qty: number) => void;
     onChangeQty: (itemCartCode: string, qty: number) => void;
+    onUpdate: () => void;
 }
 
 const CartItemComponent = (props: Props) => {
-    const { item, index, onPress, onDelete, onChangeQty } = props;
+    const { item, index, onPress, onDelete, onChangeQty, onUpdate } = props;
     const [btnChangeQtyIsDisabled, setBtnChangeQtyIsDisabled] = useState(false);
 
     useEffect(() => {
@@ -38,23 +39,23 @@ const CartItemComponent = (props: Props) => {
     }, [btnChangeQtyIsDisabled])
 
     return (
-        (<SessionComponent>
+        <SessionComponent>
             {/* Top */}
             <RowComponent justifyContent='space-between' alignItems='center'>
                 <TextButtonComponent title={<TextComponent color={Colors.BLACK} text={item.shop.name} />} onPress={() => { }} />
-                <RowComponent justifyContent='flex-end' alignItems='center'>
+                <RowComponent justifyContent='center' alignItems='center'>
                     <IconButtonComponent
                         typeNoBackground
                         icon={
-                            <FontAwesome size={Variables.ICON_SIZE_SMALL} name='pencil' color={Colors.GREEN_500} />
+                            <FontAwesome size={Variables.ICON_SIZE_SMALL} name='pencil-square-o' color={Colors.BLACK} />
                         }
-                        onPress={() => { }}
+                        onPress={() => onUpdate()}
                     />
                     <SpaceComponent width={moderateScale(16)} />
                     <IconButtonComponent
                         typeNoBackground
                         icon={
-                            <FontAwesome size={Variables.ICON_SIZE_SMALL} name='trash' color={Colors.RED} />
+                            <FontAwesome size={Variables.ICON_SIZE_SMALL} name='trash' color={Colors.BLACK} />
                         }
                         onPress={() => {
                             onDelete(item.itemCartCode, 0);
@@ -69,7 +70,7 @@ const CartItemComponent = (props: Props) => {
                 <RowComponent justifyContent='center' alignItems='center'>
                     <CheckBox
                         onClick={() => onPress(index)}
-                        isChecked={item.status}
+                        isChecked={Boolean(item.status)}
                         checkBoxColor={item.status ? Colors.COLOR_BTN_BLUE_PRIMARY : undefined}
                         leftText={"CheckBox"}
                     />
@@ -101,6 +102,7 @@ const CartItemComponent = (props: Props) => {
                                 setBtnChangeQtyIsDisabled(true);
                             }
                         }}
+                        colorDisable={Colors.WHITE}
                         title={<TextComponent text='-' color={Colors.BLACK} />}
                         borderWidth={.5}
                         paddingHorizontal={moderateScale(12)}
@@ -121,6 +123,7 @@ const CartItemComponent = (props: Props) => {
                                 setBtnChangeQtyIsDisabled(true);
                             }
                         }}
+                        colorDisable={Colors.WHITE}
                         title={<TextComponent text='+' color={Colors.BLACK} />}
                         borderWidth={.5}
                         paddingHorizontal={moderateScale(10)}
@@ -129,7 +132,7 @@ const CartItemComponent = (props: Props) => {
             </RowComponent>
             <SpaceComponent height={verticalScale(10)} />
             <Divider />
-        </SessionComponent>)
+        </SessionComponent>
     )
 }
 

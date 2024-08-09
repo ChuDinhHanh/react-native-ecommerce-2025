@@ -1,4 +1,4 @@
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
+import { RouteProp, useIsFocused, useNavigation, useRoute } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-multi-lang'
@@ -10,7 +10,6 @@ import LoadingComponent from '../../../components/loading/LoadingComponent'
 import RateQtyProductComponent from '../../../components/rate/RateQtyProductComponent'
 import SessionComponent from '../../../components/session/SessionComponent'
 import ShopProductsComponent from '../../../components/shop/product/normal/ShopProductsComponent'
-import AllProductComponent from '../../../components/shop/product/suggestion/AllProductComponent'
 import SpaceComponent from '../../../components/space/SpaceComponent'
 import TextComponent from '../../../components/text/TextComponent'
 import { Colors } from '../../../constants/Colors'
@@ -21,6 +20,7 @@ import { SingleProductData } from '../../../data/SingleProductData'
 import { useAppSelector } from '../../../redux/Hooks'
 import { useAddToCartMutation, useLazyGetProductByCodeQuery } from '../../../redux/Service'
 import { RootStackParamList } from '../../../routes/Routes'
+import { useAuthService } from '../../../services/authService'
 import { moderateScale, scale } from '../../../utils/ScaleUtils'
 import BottomComponentDetailScreen from '../component/bottomToolBar/BottomComponentDetailScreen'
 import DeliveryComponent from '../component/delivery/DeliveryComponent'
@@ -28,10 +28,11 @@ import SelectOptionProductComponent from '../component/optionProduct/SelectOptio
 import ShopComponent from '../component/shop/ShopComponent'
 
 const DetailProductScreen = () => {
-    console.log('==================DetailProductScreen==================');
     const t = useTranslation();
+    const { handleCheckTokenAlive } = useAuthService();
+    const refreshToken = useAppSelector((state) => state.SpeedReducer.userLogin?.refreshToken) ?? "";
+    const token = useAppSelector((state) => state.SpeedReducer.token) ?? "";
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-    const token = useAppSelector((state) => state.SpeedReducer.token);
     const route = useRoute<RouteProp<RootStackParamList, 'DETAIL_PRODUCT_SCREEN'>>();
     const code = route.params.code;
     const userLogin = useAppSelector((state) => state.SpeedReducer.userLogin);
@@ -39,6 +40,8 @@ const DetailProductScreen = () => {
     const [dataOptionSelect, setDataOptionSelect] = useState<string[]>();
     const [addToCart, { isError: isErrorAddToCart, isLoading: isLoadingAddToCart, isSuccess: isSuccessAddToCart, data: dataAddToCart, error: errorAddToCart }] = useAddToCartMutation();
     const [numberOptionSelectRequired, setNumberOptionSelectRequired] = useState(0);
+    const isFocused = useIsFocused();
+
     useEffect(() => {
         const getProductData = async () => {
             try {
@@ -54,24 +57,16 @@ const DetailProductScreen = () => {
         if (dataAddToCart) {
             Alert.alert(t("Alert.notification"), "Add to Cart successfully");
         }
-
-        if (isErrorAddToCart) {
-            const textError = JSON.parse(JSON.stringify(errorAddToCart));
-            Alert.alert(t("Alert.notification"), textError?.data ? textError.data.message : textError.message);
+        if (isErrorAddToCart && isFocused) {
+            handleCheckTokenAlive(token, refreshToken);
         }
-
-    }, [isErrorAddToCart, isLoadingAddToCart, dataAddToCart, errorAddToCart])
+    }, [isErrorAddToCart, isLoadingAddToCart, dataAddToCart, errorAddToCart, isFocused])
 
     useEffect(() => {
-        if (data) {
-            //Handle
+        if (isError && isFocused) {
+            handleCheckTokenAlive(token, refreshToken);
         }
-        if (isError) {
-            const errorText = JSON.parse(JSON.stringify(error));
-            // Alert.alert(t("Alert.warning"), errorText?.data ? errorText?.data?.messenger : errorText?.messenger)
-            Alert.alert(t("Alert.warning"), `${JSON.stringify(error)}`);
-        }
-    }, [isFetching, data, error, isError])
+    }, [isFetching, data, error, isError, isFocused])
 
     const handlePressButtonEvent = (flag: number) => {
         switch (flag) {
@@ -232,9 +227,9 @@ const DetailProductScreen = () => {
                                     color={Colors.BLACK}
                                     fontWeight="bold"
                                 />
-                                <AllProductComponent
+                                {/* <AllProductComponent
                                     onPressOnProduct={() => console.log('suggestion product')}
-                                />
+                                /> */}
                             </SessionComponent>
                         </ScrollView>
                         <BottomComponentDetailScreen

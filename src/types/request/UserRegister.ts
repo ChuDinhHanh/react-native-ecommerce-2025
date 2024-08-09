@@ -5,4 +5,5 @@ export interface Register {
   password: string;
   avatar: string;
   roleCode: string;
+  deviceToken: string;
 }

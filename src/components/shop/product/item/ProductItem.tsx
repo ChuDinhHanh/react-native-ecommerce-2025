@@ -9,18 +9,20 @@ import RowComponent from '../../../row/RowComponent';
 import SessionComponent from '../../../session/SessionComponent';
 import SpaceComponent from '../../../space/SpaceComponent';
 import TextComponent from '../../../text/TextComponent';
+import AllProductComponent from '../suggestion/AllProductComponent';
+import { styles } from './ProductItem.style';
 
 interface Props {
     item: any;
     onPress: (id: string) => void;
+    marginLeft?: number;
 }
 
 const ProductItem = (props: Props) => {
-    const { item, onPress } = props;
-
+    const { item, onPress, marginLeft } = props;
     return (
         <TouchableOpacity onPress={() => onPress(item.code)}>
-            <View key={item.id} style={styles.container}>
+            <View key={item.id} style={[styles.container, { marginLeft }]}>
                 <View style={styles.wrapperImage}>
                     <Image style={styles.image} source={{ uri: item.image ?? 'https://vsmall.vn/wp-content/uploads/2022/07/cach-chup-anh-quan-ao-dep-bang-dien-thoai.png' }} />
                 </View>
@@ -66,36 +68,5 @@ const ProductItem = (props: Props) => {
     )
 }
 
-
-const styles = StyleSheet.create({
-    container: {
-        marginVertical: 5,
-        borderRadius: 6,
-        overflow: 'hidden',
-        backgroundColor: Colors.WHITE,
-    },
-    text: {
-        overflow: 'hidden',
-    },
-    image: {
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
-    },
-    wrapperImage: {
-        width: (appInfo.sizes.WIDTH - 10) / 2 - 10,
-        height: 200,
-    },
-    imageTruck: {
-        width: 20,
-        height: 20,
-    },
-    cod: {
-        borderWidth: 0.5,
-        borderColor: Colors.GREY1,
-        borderRadius: 2,
-        paddingHorizontal: 2,
-    },
-});
 
 export default ProductItem

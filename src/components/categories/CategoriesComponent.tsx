@@ -1,25 +1,27 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useIsFocused } from '@react-navigation/native'
 import React, { useEffect } from 'react'
-import { Alert, FlatList, Image, Pressable, View } from 'react-native'
+import { FlatList, View } from 'react-native'
 import { Colors } from '../../constants/Colors'
-import { Variables } from '../../constants/Variables'
+import { useAppSelector } from '../../redux/Hooks'
 import { useLazyGetCategoriesQuery } from '../../redux/Service'
+import { useAuthService } from '../../services/authService'
 import { moderateScale } from '../../utils/ScaleUtils'
 import SessionComponent from '../session/SessionComponent'
 import CategorySkeleton from '../skeletons/category/CategorySkeleton'
 import SpaceComponent from '../space/SpaceComponent'
 import TextComponent from '../text/TextComponent'
-import { useAppSelector } from '../../redux/Hooks'
+import CategoryItemComponent from './component/item/CategoryItemComponent'
 
 interface Props {
     onPress: (code: 'string') => void;
 }
 const CategoriesComponent = (props: Props) => {
     const { onPress } = props;
+    const { handleCheckTokenAlive } = useAuthService();
     const isFocused = useIsFocused();
+    const token = useAppSelector((state) => state.SpeedReducer.token) ?? "";
+    const refreshToken = useAppSelector((state) => state.SpeedReducer.userLogin?.refreshToken) ?? "";
     const [getCategories, { data, isError, isFetching, isLoading, isSuccess, error }] = useLazyGetCategoriesQuery();
-    const token = useAppSelector((state) => state.SpeedReducer.token);
     useEffect(() => {
         const handleGetCategories = async () => {
             try {
@@ -27,21 +29,20 @@ const CategoriesComponent = (props: Props) => {
                     await getCategories({ token: token })
                 }
             } catch (error) {
-
+                //    Handle
             }
         }
         handleGetCategories();
-    }, [isFocused, token]);
+    }, [token]);
 
     useEffect(() => {
-        if (isError) {
-            const errorText = JSON.parse(JSON.stringify(error))
-            Alert.alert('Cảnh báo', `${errorText?.data ? errorText?.data?.messenger : errorText?.messenger}`)
+        if (isError && isFocused) {
+            handleCheckTokenAlive(token, refreshToken);
         }
-    }, [data, isError, isFetching])
+    }, [data, isError, isFetching, isFocused])
 
     return (
-        <React.Fragment>
+        <View>
             {/* Title */}
             <SessionComponent>
                 <TextComponent fontWeight='bold' text='Danh mục' color={Colors.BLACK} />
@@ -56,27 +57,20 @@ const CategoriesComponent = (props: Props) => {
                         data={data?.data}
                         showsHorizontalScrollIndicator={false}
                         contentContainerStyle={{
-                            marginLeft: 16
+                            marginLeft: 16,
                         }}
                         renderItem={({ item, index }) => {
-                            return index !== 0 && item.level == 1 ?
-                                <Pressable onPress={() => onPress(item.code)}>
-                                    <View style={{ backgroundColor: Colors.WHITE, borderWidth: 1, height: 200, minWidth: 170, marginRight: 10, borderRadius: 5, justifyContent: 'center', alignItems: 'center', borderColor: Colors.COLOR_GREY_FEEBLE }}>
-                                        <View style={{ width: 120, height: 120, backgroundColor: Colors.COLOR_GREY_FEEBLE, borderRadius: 100, overflow: 'hidden' }}>
-                                            <Image style={{ width: '100%', height: '100%', objectFit: 'cover' }} source={{ uri: 'https://vsmall.vn/wp-content/uploads/2022/07/cach-chup-anh-quan-ao-dep-bang-dien-thoai.png' }} />
-                                        </View>
-                                        <SpaceComponent height={moderateScale(10)} />
-                                        <View style={{ width: 120, justifyContent: 'center', alignItems: 'center' }}>
-                                            <TextComponent numberOfLines={2} color={Colors.BLACK} text={item.name} />
-                                        </View>
-                                    </View>
-                                </Pressable>
+                            return item.level === 1 ?
+                                <CategoryItemComponent
+                                    item={item}
+                                    onPress={onPress}
+                                />
                                 :
-                                null
+                                index === (data?.data.length! - 1) ? <SpaceComponent width={moderateScale(20)} /> : null
                         }}
                     />
             }
-        </React.Fragment>
+        </View>
     )
 }
 

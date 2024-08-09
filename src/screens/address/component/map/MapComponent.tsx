@@ -10,6 +10,8 @@ import TextComponent from '../../../../components/text/TextComponent';
 import { Colors } from '../../../../constants/Colors';
 import { Variables } from '../../../../constants/Variables';
 import { moderateScale } from '../../../../utils/ScaleUtils';
+import LoadingComponent from '../../../../components/loading/LoadingComponent';
+import { getAddressFromCoordinates } from '../../../../utils/LocationUtils';
 
 interface Place {
     lat: string;
@@ -47,6 +49,7 @@ const MapComponent = (props: Props) => {
     const [places, setPlaces] = useState<PlaceItem[]>([]);
     const [selectedPlace, setSelectedPlace] = useState<SelectedPlace>();
     const [selectedLocation, setSelectedLocation] = useState<LocationMark | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
     const handleLongPress = (event: any) => {
         const { coordinate } = event.nativeEvent;
         setSelectedLocation(coordinate);
@@ -58,6 +61,7 @@ const MapComponent = (props: Props) => {
 
 
     const searchPlaces = async () => {
+        setIsLoading(true);
         try {
             const response = await axios.get('https://nominatim.openstreetmap.org/search', {
                 params: {
@@ -71,6 +75,7 @@ const MapComponent = (props: Props) => {
         } catch (error) {
             console.error(error);
         }
+        setIsLoading(false);
     };
 
     const handlePlaceSelect = (place: Omit<PlaceItem, 'place_id'>) => {
@@ -80,20 +85,6 @@ const MapComponent = (props: Props) => {
         });
         setQuery(place.display_name);
         setPlaces([]);
-    };
-
-
-    // Get address
-    const getAddressFromCoordinates = async (latitude: number, longitude: number) => {
-        const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
-        try {
-            const response = await fetch(url);
-            const data = await response.json();
-            return data.display_name;
-        } catch (error) {
-            console.error("Geocoding error:", error);
-            return null;
-        }
     };
 
     // Get current location
@@ -195,6 +186,16 @@ const MapComponent = (props: Props) => {
                     }}
                 />
             </View>
+            {
+                isLoading && <LoadingComponent
+                    title={'Đang tìm kiếm địa điểm...'}
+                    size={Variables.FONT_SIZE_ERROR_TEXT}
+                    color={Colors.WHITE}
+                    icon={''}
+                    iconSize={moderateScale(25)}
+                    iconColor={Colors.GREEN_500}
+                />
+            }
         </View>
     );
 };

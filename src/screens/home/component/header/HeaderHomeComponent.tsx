@@ -1,6 +1,7 @@
 import { DrawerActions, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import React from 'react'
+import { useTranslation } from 'react-multi-lang'
 import { Pressable } from 'react-native'
 import Entypo from 'react-native-vector-icons/Entypo'
 import IconButtonComponent from '../../../../components/buttons/iconButton/IconButtonComponent'
@@ -10,10 +11,9 @@ import SpaceComponent from '../../../../components/space/SpaceComponent'
 import TextComponent from '../../../../components/text/TextComponent'
 import { Colors } from '../../../../constants/Colors'
 import { Variables } from '../../../../constants/Variables'
+import { useAppSelector } from '../../../../redux/Hooks'
 import { RootStackParamList } from '../../../../routes/Routes'
 import { moderateScale, verticalScale } from '../../../../utils/ScaleUtils'
-import { useTranslation } from 'react-multi-lang'
-import { useAppSelector } from '../../../../redux/Hooks'
 
 const HeaderHomeComponent = () => {
     const t = useTranslation();
@@ -25,7 +25,7 @@ const HeaderHomeComponent = () => {
                 {/* Top */}
                 <IconButtonComponent typeNoBackground onPress={() => { navigation.dispatch(DrawerActions.openDrawer()) }} icon={<Entypo name='menu' size={moderateScale(25)} color={Colors.BLACK} />} />
                 <Pressable onPress={() => { console.log("avatar") }}>
-                    <DefaultAvatar size={moderateScale(40)} name={userLogin?.name ?? userLogin?.email + ""} />
+                    <DefaultAvatar image={userLogin?.avatar} size={moderateScale(40)} name={userLogin?.name ?? userLogin?.email ?? ""} />
                 </Pressable>
             </RowComponent>
             <SpaceComponent height={verticalScale(16)} />

@@ -14,7 +14,7 @@ import TextComponent from '../../components/text/TextComponent';
 import { Colors } from '../../constants/Colors';
 import { RootStackParamList } from '../../routes/Routes';
 import { scale, verticalScale } from '../../utils/ScaleUtils';
-import { validationSchemaResetPasswordUtils } from '../../utils/ValidationSchemaUtils';
+import { validationSchemaResetPasswordUtils } from '../../utils/Rules';
 import { styles } from './ResetPasswordScreen.style';
 import { ResetPassword } from '../../types/request/ResetPassword';
 import { useResetPasswordActionMutation, useResetPasswordMutation } from '../../redux/Service';

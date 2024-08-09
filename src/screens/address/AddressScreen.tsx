@@ -23,6 +23,7 @@ import { RootStackParamList } from '../../routes/Routes';
 import { moderateScale, verticalScale } from '../../utils/ScaleUtils';
 import MapComponent, { LocationMarkAndAddress } from './component/map/MapComponent';
 import { Address } from '../../types/request/Address';
+import { tokens } from 'react-native-paper/lib/typescript/styles/themes/v3/tokens';
 
 type AddressWithShow = Address & {
     addressShow: string;
@@ -52,7 +53,7 @@ const AddressScreen = () => {
 
     const handleSubmit = (values: AddressWithShow) => {
         const { addressShow, ...restValues } = values;
-        const AddAddressData: Address = { ...restValues, status: toggleCheckBox ? 'mac-dinh' : 'lua-chon' };
+        const AddAddressData: Address = { ...restValues, status: toggleCheckBox ? '1' : '0' };
         const createNewAddressAction = async () => {
             try {
                 await createNewAddress({
@@ -69,9 +70,11 @@ const AddressScreen = () => {
     useEffect(() => {
         if (data) {
             Alert.alert("Thông báo", "Tạo địa chỉ thành công");
+            navigation.goBack();
         }
         if (isError) {
-            Alert.alert("Cảnh báo", "Lỗi không thể thêm địa chỉ");
+            const errorText = JSON.parse(JSON.stringify(data));
+            Alert.alert("Cảnh báo", errorText?.data ? errorText?.data?.message : errorText?.message);
         }
     }, [isError, error, data])
 
@@ -152,6 +155,8 @@ const AddressScreen = () => {
                                     <TextComponent text='Địa chỉ mặc định?' color={Colors.BLACK} />
                                 </RowComponent>
                                 <TextButtonComponent
+                                    disabled={isLoading}
+                                    isLoading={isLoading}
                                     borderRadius={5}
                                     padding={moderateScale(15)}
                                     width={'100%'}

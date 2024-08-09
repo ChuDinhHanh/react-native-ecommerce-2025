@@ -44,7 +44,8 @@ const VerificationWithEmailScreen = () => {
             const user: SignInRedux = {
                 user: dataCheckVerifyToken.data.user,
                 token: dataCheckVerifyToken.data.token,
-                isFirstTime: true
+                isFirstTime: true,
+                refreshToken: dataCheckVerifyToken.data.refreshToken
             }
             dispatch(loginUser(user)).then((res) => {
                 navigation.replace(BOTTOM_TAB_NAVIGATOR)

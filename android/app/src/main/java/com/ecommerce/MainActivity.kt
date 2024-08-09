@@ -10,6 +10,11 @@ class MainActivity : ReactActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(null)
+      // Khởi tạo ZaloPay SDK
+      //ZaloPaySDK.getInstance().initWithAppId(
+      //    YOUR_SANDBOX_APP_ID, // Thay bằng App ID sandbox của bạn
+      //    Environment.SANDBOX
+      //)
   }
 
   /**

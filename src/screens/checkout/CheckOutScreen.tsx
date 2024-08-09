@@ -1,6 +1,6 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-multi-lang'
 import { FlatList, Image, ScrollView, View } from 'react-native'
 import ContainerComponent from '../../components/container/ContainerComponent'
@@ -26,8 +26,6 @@ const CheckOutScreen = () => {
     const listCodeCartChecked = route.params.listCodeCartChecked;
     const totalPrice = route.params.totalPrice;
 
-
-
     const addCartCheckedAction = async () => {
         navigation.navigate(PAYMENT_SCREEN, { listCodeCartChecked: listCodeCartChecked });
     }
@@ -40,6 +38,7 @@ const CheckOutScreen = () => {
         >
             <ScrollView>
                 {/* List Product checked */}
+                <SpaceComponent height={verticalScale(15)} />
                 <FlatList
                     contentContainerStyle={{
                         paddingBottom: verticalScale(100)
@@ -79,7 +78,7 @@ const CheckOutScreen = () => {
                     }}
                 />
             </ScrollView>
-            <FooterComponent onPress={addCartCheckedAction} totalPrice={totalPrice} titleRightButton="Thanh toán" />
+            <FooterComponent showSelectAllButton={false} onPress={addCartCheckedAction} totalPrice={totalPrice} titleRightButton="Thanh toán" />
         </ContainerComponent>
     )
 }

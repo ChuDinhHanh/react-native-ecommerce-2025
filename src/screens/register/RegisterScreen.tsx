@@ -32,14 +32,26 @@ import { Data } from '../../types/request/Data';
 import { SignUpByGoogle } from '../../types/request/SignUpByGoogle';
 import { Register } from '../../types/request/UserRegister';
 import { moderateScale, verticalScale } from '../../utils/ScaleUtils';
-import { ValidateIdentifyTypePhoneOrEmail, validationSchemaRegisterUtils } from '../../utils/ValidationSchemaUtils';
+import { ValidateIdentifyTypePhoneOrEmail, validationSchemaRegisterUtils } from '../../utils/Rules';
 import { styles } from './RegisterScreen.style';
+import { RegisterByGoogleResponse } from '../../types/response/RegisterByGoogleResponse';
+import { getDeviceToken } from '../../utils/DeviceTokenUtils';
 
 interface RegisterFormValues {
   name: string;
   identifier: string;
   password: string;
   accountType: string;
+}
+
+function isAllFileValidate(data: Register, skip: string[]) {
+  let key: keyof Register;
+  for (key in data) {
+    if (!skip.includes(key)) {
+      if (!data[key]) return false;
+    }
+  }
+  return true;
 }
 
 const RegisterScreen: React.FC = () => {
@@ -105,16 +117,20 @@ const RegisterScreen: React.FC = () => {
     const email = ValidateIdentifyTypePhoneOrEmail('email', values.identifier);
     const phone = ValidateIdentifyTypePhoneOrEmail('phone', values.identifier);
     email.length ? setIsPhone(false) : setIsPhone(true);
+    const deviceToken = await getDeviceToken() ?? "";
     const registerData: Register = {
       name: values.name,
       email: email.length ? email : null,
       phone: phone.length ? phone : null,
       password: values.password,
       avatar: imagePicker ? `${imagePicker[0].uri}` : '',
-      roleCode: values.accountType
+      roleCode: values.accountType,
+      deviceToken: deviceToken,
     }
     try {
-      await register(registerData).unwrap();
+      if (isAllFileValidate(registerData, ['avatar', 'phone'])) {
+        await register(registerData).unwrap();
+      }
     } catch (error) {
       // Handle
       console.error('register:', error);
@@ -129,7 +145,6 @@ const RegisterScreen: React.FC = () => {
         await registerByGoogle(data)
       } catch (error) {
         // Handle
-        console.error('registerByGoogle:', error);
       }
     }
   }
@@ -144,11 +159,12 @@ const RegisterScreen: React.FC = () => {
     }
   }, [isErrorRegisterByGoogle, errorRegisterByGoogle, dataRegisterByGoogle]);
 
-  const handleSaveDataAndNavigate = (data: Data<any>) => {
+  const handleSaveDataAndNavigate = (data: Data<RegisterByGoogleResponse>) => {
     const user: SignInRedux = {
       user: data.data.user,
       token: data.data.token,
-      isFirstTime: true
+      isFirstTime: true,
+      refreshToken: data.data.user.refreshToken
     }
     dispatch(loginUser(user)).then((res) => {
       navigation.replace(BOTTOM_TAB_NAVIGATOR);

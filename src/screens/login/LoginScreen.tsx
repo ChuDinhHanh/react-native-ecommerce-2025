@@ -25,8 +25,9 @@ import { SignInRedux } from '../../types/other/SignInRedux';
 import { Data } from '../../types/request/Data';
 import { SignIn } from '../../types/request/SignIn';
 import { SignInByGoogle } from '../../types/request/SignInByGoogle';
+import { getDeviceToken } from '../../utils/DeviceTokenUtils';
+import { validationSchemaLoginUtils } from '../../utils/Rules';
 import { moderateScale, scale, verticalScale } from '../../utils/ScaleUtils';
-import { validationSchemaLoginUtils } from '../../utils/ValidationSchemaUtils';
 import { styles } from './LoginScreen.style';
 
 const LoginScreen = () => {
@@ -34,7 +35,7 @@ const LoginScreen = () => {
   const isFocussed = useIsFocused();
   const dispatch = useAppDispatch();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const initialValues: SignIn = { username: '', password: '' };
+  const initialValues: SignIn = { username: '', password: '', deviceToken: '' };
   const [
     login,
     { data: dataLoginNormal, isLoading: isLoadingLoginNormal, isError: isErrorLoginNormal, error: errorLoginNormal, isFetching: isFetchingLoginNormal },
@@ -47,22 +48,31 @@ const LoginScreen = () => {
   // Check account still remain 
   useEffect(() => {
     // Gọi hàm loadUser khi component mount
-    dispatch(loadUser())
-      .unwrap()
-      .then((data) => {
-        if (data) {
-          navigation.replace(BOTTOM_TAB_NAVIGATOR);
-        }
-      })
-      .catch((error) => {
-        // handle
-      });
-  }, [useIsFocused]);
+    if (isFocussed) {
+      dispatch(loadUser())
+        .unwrap()
+        .then((data) => {
+          if (data) {
+            navigation.replace(BOTTOM_TAB_NAVIGATOR);
+          }
+        })
+        .catch((error) => {
+          // handle
+        });
+    }
+  }, [isFocussed]);
 
   const handleSubmit = async (values: SignIn) => {
     if (!isFocussed) return;
     try {
-      await login(values).unwrap();
+      const deviceToken = await getDeviceToken() ?? "";
+      const newData: SignIn = { ...values, deviceToken: deviceToken };
+      if (newData.password && newData.deviceToken && newData.username) {
+        console.log(newData)
+        await login(newData).unwrap()
+      } else {
+        // Handle
+      }
     } catch (error) {
       // Handle
     }
@@ -96,9 +106,10 @@ const LoginScreen = () => {
     const user: SignInRedux = {
       user: data.data.user,
       token: data.data.token,
-      isFirstTime: true
+      isFirstTime: true,
+      refreshToken: data.data.user.refreshToken
     };
-    dispatch(loginUser(user)).then((res) => {
+    dispatch(loginUser(user)).unwrap().then((res) => {
       if (res) {
         // Change screen
         navigation.replace(BOTTOM_TAB_NAVIGATOR);
@@ -106,12 +117,15 @@ const LoginScreen = () => {
     });
   }
 
-  const handleLoginWithGoogle = async (data: SignInByGoogle) => {
+  const handleLoginWithGoogle = async (values: SignInByGoogle) => {
     if (isFocussed) {
-      try {
-        await loginByGoogle(data);
-      } catch (error) {
-        // Handle
+      if (values.deviceToken && values.email && values.emailVerified) {
+        console.log(values.deviceToken)
+        try {
+          await loginByGoogle(values);
+        } catch (error) {
+          // Handle
+        }
       }
     }
   }

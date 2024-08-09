@@ -10,10 +10,11 @@ import { Variables } from '../../../../constants/Variables'
 import { moderateScale, scale } from '../../../../utils/ScaleUtils'
 
 interface Props {
-    onPress: () => void
+    onPress: () => void;
+    addressDisplay: string;
 }
 const AddressComponent = (props: Props) => {
-    const { onPress } = props;
+    const { onPress, addressDisplay } = props;
     return (
         <>
             <RowComponent
@@ -34,7 +35,7 @@ const AddressComponent = (props: Props) => {
             >
                 <View style={{ width: '10%' }} />
                 <View style={{ flex: 1 }}>
-                    <TextComponent fontSize={scale(14)} color={Colors.BLACK} text='20 Tăng Nhơn Phú, Phước Long B, Tp. Thủ Đức, Hồ Chí Minh 715939, Việt Nam' />
+                    <TextComponent fontSize={scale(14)} color={Colors.BLACK} text={addressDisplay} />
                 </View>
                 <View style={{ width: '5%', alignItems: 'flex-end' }}>
                     <IconButtonComponent

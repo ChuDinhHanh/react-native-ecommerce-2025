@@ -1,4 +1,4 @@
-import { useIsFocused, useNavigation } from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { Formik } from 'formik'
 import React, { useEffect, useState } from 'react'
@@ -12,13 +12,13 @@ import SessionComponent from '../../components/session/SessionComponent'
 import SpaceComponent from '../../components/space/SpaceComponent'
 import TextComponent from '../../components/text/TextComponent'
 import { Colors } from '../../constants/Colors'
-import { VERIFY_OTP_SCREEN } from '../../constants/Screens'
 import { Variables } from '../../constants/Variables'
 import { useLazyForgotPasswordQuery } from '../../redux/Service'
 import { RootStackParamList } from '../../routes/Routes'
 import { scale, verticalScale } from '../../utils/ScaleUtils'
-import { validationSchemaForgotPasswordUtils } from '../../utils/ValidationSchemaUtils'
+import { validationSchemaForgotPasswordUtils } from '../../utils/Rules'
 import { styles } from './ForgotPassWordScreen.style'
+import { VERIFY_OTP_SCREEN } from '../../constants/Screens'
 
 interface ForgotPassWordFormValidate {
   identifier: string
@@ -35,7 +35,7 @@ const ForgotPassWordScreen = () => {
     console.log('===========handleSubmit=========================');
     try {
       setInitialValue({ ...values });
-      // await forgotPassword({ email: values.identifier });
+      await forgotPassword({ email: values.identifier });
     } catch (error) {
       // hanlde
     }
@@ -44,7 +44,7 @@ const ForgotPassWordScreen = () => {
   useEffect(() => {
     if (data && !isFetching) {
       Alert.alert("Thông báo", data.message);
-      // navigation.navigate(VERIFY_OTP_SCREEN, initialValue);
+      navigation.navigate(VERIFY_OTP_SCREEN, { email: initialValue.identifier });
     }
     if (isError) {
       const textError = JSON.parse(JSON.stringify(error));

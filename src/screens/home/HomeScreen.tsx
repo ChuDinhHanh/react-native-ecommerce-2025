@@ -13,15 +13,15 @@ import { SingleProductData } from '../../data/SingleProductData'
 import { useAppSelector } from '../../redux/Hooks'
 import { RootStackParamList } from '../../routes/Routes'
 import { moderateScale } from '../../utils/ScaleUtils'
+import BestSellingComponent from './component/bestSelling/BestSellingComponent'
 import HeaderHomeComponent from './component/header/HeaderHomeComponent'
+import NewWestProduceComponent from './component/newest/NewWestProduceComponent'
 import SearchHomeComponent from './component/search/SearchHomeComponent'
 
 const HomeScreen = () => {
-  console.log('=============HomeScreen=======================');
   const t = useTranslation();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { language } = useAppSelector((state) => state.SpeedReducer);
-  const token = useAppSelector((state) => state.SpeedReducer.token);
 
   const handlePressCategoryEvent = (code: string) => {
     navigation.navigate(SERVICE_STACK_NAVIGATOR, {
@@ -64,6 +64,12 @@ const HomeScreen = () => {
       <CategoriesComponent
         onPress={handlePressCategoryEvent}
       />
+      <SessionComponent>
+        {/* best selling product */}
+        <BestSellingComponent />
+        {/* New west product */}
+        <NewWestProduceComponent />
+      </SessionComponent>
     </ContainerComponent>
   )
 }

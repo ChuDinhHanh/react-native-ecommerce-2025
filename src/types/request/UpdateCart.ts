@@ -1,9 +1,10 @@
-interface UpdateCartItems {
+interface UpdateCartItem {
   itemCode: string;
   quantity: number;
+  classifyCodes?: string[];
 }
 
-interface UpdateCart {
+export interface CartUpdate {
   username: string;
-  updateCartItems: UpdateCartItems[];
+  updateCartItems: UpdateCartItem[];
 }

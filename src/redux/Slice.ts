@@ -17,6 +17,7 @@ export interface SpeedState {
   currentlyNotificationScreen: 0 | 1;
   language: string;
   numberProductInCart: number;
+  hadGetInApp: boolean;
 }
 
 const initialState: SpeedState = {
@@ -25,6 +26,7 @@ const initialState: SpeedState = {
   currentlyNotificationScreen: 0,
   language: Variables.DEFAULT_LANGUAGE,
   numberProductInCart: 0,
+  hadGetInApp: false,
 };
 
 export const SpeedSlice = createSlice({
@@ -51,27 +53,33 @@ export const SpeedSlice = createSlice({
     setNumberProductInCart: (state, action: PayloadAction<number>) => {
       state.numberProductInCart = action.payload;
     },
+    setGetInApp: (state, action: PayloadAction<boolean>) => {
+      state.hadGetInApp = action.payload;
+    },
   },
   extraReducers: builder => {
     builder.addCase(loadUser.fulfilled, (state, action) => {
       if (action.payload) {
         state.userLogin = action.payload.user;
-        state.token = JSON.parse(action.payload.token);
+        state.token = action.payload.token;
+        state.hadGetInApp = false;
       }
     });
     builder.addCase(logoutUser.fulfilled, (state, action) => {
+      state.hadGetInApp = false;
       // Handle
     });
     builder.addCase(loginUser.fulfilled, (state, action) => {
       if (action.payload) {
         state.userLogin = action.payload.user;
         state.token = action.payload.token;
+        state.hadGetInApp = true;
       }
     });
     builder.addCase(getLanguage.fulfilled, (state, action) => {
       if (action.payload) {
-        state.language = JSON.parse(action.payload);
-        setDefaultLanguage(JSON.parse(action.payload));
+        state.language = action.payload;
+        setDefaultLanguage(action.payload);
       }
     });
     builder.addCase(saveLanguage.fulfilled, (state, action) => {
@@ -89,5 +97,6 @@ export const {
   setUserLogout,
   setLanguage,
   setNumberProductInCart,
+  setGetInApp,
 } = SpeedSlice.actions;
 export default SpeedSlice.reducer;

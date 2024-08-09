@@ -3,9 +3,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
 import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { t, useTranslation } from 'react-multi-lang';
-import { AppState, AppStateStatus } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
@@ -13,7 +12,7 @@ import TextComponent from '../components/text/TextComponent';
 import ToolbarWithBackPress from '../components/toolbars/toolbarWithBackPress/ToolbarWithBackPress';
 import { Colors } from '../constants/Colors';
 import { appInfo } from '../constants/Infos';
-import { ADDRESS_SCREEN, ALL_NOTIFICATION_SCREEN, AUTHENTICATION_STACK_NAVIGATOR, BOTTOM_TAB_NAVIGATOR, CART_SCREEN, CHECK_OUT_SCREEN, DETAIL_CATEGORY_SCREEN, DETAIL_NOTIFICATION_SCREEN, DETAIL_PRODUCT_SCREEN, FEED_BACK_SCREEN, FORGOT_PASSWORD, HOME_SCREEN, INTERMEDIATE_SCREEN, LOGIN_SCREEN, MAP_SCREEN, MESSENGER_SCREEN, NOTIFICATION_SCREEN, NOTIFICATION_SCREEN_OPTIONS_NAVIGATOR, PAYMENT_SCREEN, PROFILE_SCREEN, PROFILE_SCREEN_OPTIONS_NAVIGATOR, REGISTER_SCREEN, RESET_PASSWORD_SCREEN, SEARCH_SCREEN, SELECT_LANGUAGE_SCREEN, SERVICE_STACK_NAVIGATOR, SHOP_SCREEN, SPLASH_SCREEN, UN_READ_NOTIFICATION_SCREEN, VERIFY_CAPTCHA_SEND_SMS_SCREEN, VERIFY_EMAIL_SCREEN, VERIFY_OTP_SCREEN, VERIFY_PHONE_SCREEN } from '../constants/Screens';
+import { ADDRESS_SCREEN, ALL_NOTIFICATION_SCREEN, AUTHENTICATION_STACK_NAVIGATOR, BOTTOM_TAB_NAVIGATOR, CART_SCREEN, CHECK_OUT_SCREEN, DETAIL_CATEGORY_SCREEN, DETAIL_NOTIFICATION_SCREEN, DETAIL_PRODUCT_SCREEN, FEED_BACK_SCREEN, FORGOT_PASSWORD, HOME_SCREEN, INTERMEDIATE_SCREEN, LATEST_PRODUCT_LIST_AND_BEST_SELLING_PRODUCT_LIST, LOGIN_SCREEN, MESSENGER_SCREEN, NOTIFICATION_SCREEN, NOTIFICATION_SCREEN_OPTIONS_NAVIGATOR, PAYMENT_SCREEN, PROFILE_SCREEN, PROFILE_SCREEN_OPTIONS_NAVIGATOR, REGISTER_SCREEN, RESET_PASSWORD_SCREEN, SEARCH_SCREEN, SELECT_LANGUAGE_SCREEN, SERVICE_STACK_NAVIGATOR, SHOP_SCREEN, SPLASH_SCREEN, UN_READ_NOTIFICATION_SCREEN, VERIFY_CAPTCHA_SEND_SMS_SCREEN, VERIFY_EMAIL_SCREEN, VERIFY_OTP_SCREEN, VERIFY_PHONE_SCREEN } from '../constants/Screens';
 import { Variables } from '../constants/Variables';
 import { useAppDispatch, useAppSelector } from '../redux/Hooks';
 import { logoutUser } from '../redux/userThunks';
@@ -21,6 +20,7 @@ import CartScreen from '../screens/Cart/CartScreen';
 import AddressScreen from '../screens/address/AddressScreen';
 import DetailCategoryScreen from '../screens/categories/DetailCategoryScreen';
 import CheckOutScreen from '../screens/checkout/CheckOutScreen';
+import DetailBestSellingAndLatestProduct from '../screens/details/bestSellingAndlatest/DetailBestSellingProductScreen';
 import FeedbackScreen from '../screens/feedback/FeedbackScreen';
 import ForgotPassWordScreen from '../screens/forgot/ForgotPassWordScreen';
 import HomeScreen from '../screens/home/HomeScreen';
@@ -44,8 +44,8 @@ import VerificationWithCaptchaAndSendSmsScreen from '../screens/verification/Ver
 import VerificationWithEmailScreen from '../screens/verification/verificationWithEmail/VerificationWithEmailScreen';
 import VerificationWithOTPScreen from '../screens/verification/verificationWithOTP/VerificationWithOTPScreen';
 import { CartItem } from '../types/other/CartItem';
+import { Product } from '../types/other/Product';
 import { moderateScale } from '../utils/ScaleUtils';
-import MapComponent from '../screens/address/component/map/MapComponent';
 
 export type RootStackParamList = {
   SPLASH_SCREEN: undefined;
@@ -89,6 +89,7 @@ export type RootStackParamList = {
   ADDRESS_SCREEN: undefined;
   PAYMENT_SCREEN: { listCodeCartChecked: string[] };
   MAP_SCREEN: undefined;
+  LATEST_PRODUCT_LIST_AND_BEST_SELLING_PRODUCT_LIST: { products: Product[] },
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -207,7 +208,7 @@ function ServiceStackNavigator() {
         />
         <RootStack.Screen
           options={{
-            header: () => false,
+            header: () => <ToolbarWithBackPress title={'Tìm kiếm'} />,
           }}
           name={SEARCH_SCREEN} component={SearchScreen}
         />
@@ -241,6 +242,11 @@ function ServiceStackNavigator() {
             header: () => <ToolbarWithBackPress title={'Địa chỉ nhận hàng'} />
           }}
           name={PAYMENT_SCREEN} component={PaymentScreen} />
+        <RootStack.Screen
+          options={{
+            header: () => <ToolbarWithBackPress title={'Danh sách sản phẩm mới nhất '} />
+          }}
+          name={LATEST_PRODUCT_LIST_AND_BEST_SELLING_PRODUCT_LIST} component={DetailBestSellingAndLatestProduct} />
       </RootStack.Group>
     </RootStack.Navigator>
   )
@@ -469,20 +475,19 @@ function MainStackNavigator() {
   );
 }
 const Routes = () => {
-  const token = useAppSelector((state) => state.SpeedReducer.token);
-  useEffect(() => {
-    const handleAppStateChange = (nextAppState: AppStateStatus) => {
-      if (nextAppState === 'active') {
-        console.log('App has come to the foreground (resumed)', token);
-      }
-    };
+  // const token = useAppSelector((state) => state.SpeedReducer.token);
+  // useEffect(() => {
+  //   const handleAppStateChange = (nextAppState: AppStateStatus) => {
+  //     if (nextAppState === 'active') {
+  //       console.log('App has come to the foreground (resumed)', token);
+  //     }
+  //   };
 
-    const subscription = AppState.addEventListener('change', handleAppStateChange);
-    return () => {
-      subscription.remove();
-    };
-  }, []);
-
+  //   const subscription = AppState.addEventListener('change', handleAppStateChange);
+  //   return () => {
+  //     subscription.remove();
+  //   };
+  // }, []);
   return <MainStackNavigator />;
 }
 

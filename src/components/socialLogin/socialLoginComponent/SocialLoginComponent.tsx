@@ -17,6 +17,7 @@ import RowComponent from '../../row/RowComponent';
 import SpaceComponent from '../../space/SpaceComponent';
 import TextComponent from '../../text/TextComponent';
 import { styles } from './SocialLoginComponent.style';
+import { getDeviceToken } from '../../../utils/DeviceTokenUtils';
 interface Props {
     isLogin: boolean;
     onPressLoginByGoogle: (type: SignInByGoogle) => void;
@@ -25,7 +26,8 @@ interface Props {
 
 // Google config
 GoogleSignin.configure({
-    webClientId: '142720675289-mbr7toa7vpi2gdpr7agn5ledag6chqkd.apps.googleusercontent.com',
+    // webClientId: '142720675289-mbr7toa7vpi2gdpr7agn5ledag6chqkd.apps.googleusercontent.com',
+    webClientId: '293467528862-klol63mkf42s9s93n01rh8si4pt9eold.apps.googleusercontent.com',
 });
 
 
@@ -98,12 +100,14 @@ const SocialLoginComponent = (props: Props) => {
     }, []);
 
     useEffect(() => {
-        if (user) {
-            let dataLoginOrRegisterByGoogle;
+        const handleGoogleLoginOrRegister = async () => {
+            const getToken = await getDeviceToken() ?? ""
+            let dataLoginOrRegisterByGoogle: SignInByGoogle | SignUpByGoogle;
             if (isLogin) {
                 dataLoginOrRegisterByGoogle = {
                     email: user.email,
-                    emailVerified: user.emailVerified
+                    emailVerified: user.emailVerified,
+                    deviceToken: getToken
                 }
             } else {
                 dataLoginOrRegisterByGoogle = {
@@ -111,7 +115,8 @@ const SocialLoginComponent = (props: Props) => {
                     avatar: user.photoURL,
                     roleCode: typeAccount,
                     email: user.email,
-                    emailVerified: user.emailVerified
+                    emailVerified: user.emailVerified,
+                    deviceToken: getToken
                 }
             }
             if (isLogin) {
@@ -120,6 +125,9 @@ const SocialLoginComponent = (props: Props) => {
                 onPressRegisterByGoogle(dataLoginOrRegisterByGoogle as SignUpByGoogle);
             }
             signOutForSocialAccount();
+        }
+        if (user) {
+            handleGoogleLoginOrRegister();
         }
     }, [user]);
 

@@ -8,6 +8,7 @@ export const Variables = {
   TYPE_ADMIN: 'quan-tri-vien',
   TOKEN_KEY: 'token',
   USER_LOGIN_KEY: 'user-login',
+  REFRESH_TOKEN: 'refresh-token',
   // Font sizes
   FONT_SIZE_MAIN_TITLE: scale(22),
   FONT_SIZE_SUBTITLE: scale(20),

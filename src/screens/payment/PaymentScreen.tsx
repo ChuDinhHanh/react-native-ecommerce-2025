@@ -1,6 +1,7 @@
 
 
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Formik } from 'formik';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-multi-lang';
@@ -12,31 +13,51 @@ import SessionComponent from '../../components/session/SessionComponent';
 import SpaceComponent from '../../components/space/SpaceComponent';
 import TextComponent from '../../components/text/TextComponent';
 import { Colors } from '../../constants/Colors';
+import { ADDRESS_SCREEN, BOTTOM_TAB_NAVIGATOR, HOME_SCREEN } from '../../constants/Screens';
 import { Variables } from '../../constants/Variables';
 import { useAppSelector } from '../../redux/Hooks';
-import { useAddCartCheckedMutation, useLazyGetUserAddressQuery, usePaymentMutation } from '../../redux/Service';
+import { useAddCartCheckedMutation, useCreateBillMutation, useLazyGetShippingMethodQuery, useLazyGetUserAddressQuery } from '../../redux/Service';
 import { RootStackParamList } from '../../routes/Routes';
-import { Bill } from '../../types/request/Bill';
+import { Bill, Order } from '../../types/request/Bill';
+import { calculateDistance } from '../../utils/DistanceUtils';
 import { vietnameseCurrency } from '../../utils/FormatNumberUtils';
 import { moderateScale, verticalScale } from '../../utils/ScaleUtils';
-import { validationSchemaPaymentUtils } from '../../utils/ValidationSchemaUtils';
+import { validationSchemaPaymentUtils } from '../../utils/Rules';
 import AddressComponent from '../checkout/component/address/AddressComponent';
-import { IconButton, Modal, Portal } from 'react-native-paper';
-import RowComponent from '../../components/row/RowComponent';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Text } from 'react-native';
-import { ADDRESS_SCREEN } from '../../constants/Screens';
+import SelectAddressComponent from './component/address/SelectAddressComponent';
+
+
+interface ShippingUnit {
+    name: string;
+    value: string;
+}
+
+interface Address {
+    addressCode: string;
+    addressDisplayName: string;
+    lat: string;
+    long: string;
+}
 
 const PaymentScreen = () => {
     const t = useTranslation();
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const [visible, setVisible] = React.useState(false);
-    const [getUserAddress, { isError, isFetching, isLoading, data }] = useLazyGetUserAddressQuery();
+    const [getUserAddress, { isError: isErrorGetUserAddress, isFetching: isFetchingGetUserAddress, isLoading: isLoadingGetUserAddress, data: dataGetUserAddress, error: errorGetUserAddress }] = useLazyGetUserAddressQuery();
+    const [getShippingMethod, {
+        isError: isErrorGetShippingMethod,
+        isFetching: isFetchingGetShippingMethod,
+        isLoading: isLoadingGetShippingMethod,
+        data: dataGetShippingMethod,
+        error: errorGetShippingMethod
+    }] = useLazyGetShippingMethodQuery();
     // Modal
     const showModal = () => setVisible(true);
     const hideModal = () => setVisible(false);
     const route = useRoute<RouteProp<RootStackParamList, 'PAYMENT_SCREEN'>>();
-    const containerStyle = { backgroundColor: 'white', paddingTop: 10, paddingHorizontal: 20, marginHorizontal: 15, borderRadius: 5 };
+    const listCodeCartChecked = route.params.listCodeCartChecked;
+    const [addressDisplay, setAddressDisplay] = useState<Address>();
+
     const [addCartChecked,
         {
             isError: isErrorAddCartChecked,
@@ -46,63 +67,53 @@ const PaymentScreen = () => {
         }
     ] = useAddCartCheckedMutation();
 
-    const [paymentMutation, {
-        isError: isErrorPayment,
-        isLoading: isLoadingPayment,
-        error: errorPayment,
-        data: dataPayment
-    }] = usePaymentMutation();
+    const [createBill, {
+        isError: isErrorCreateBill,
+        isLoading: isLoadingCreateBill,
+        error: errorCreateBill,
+        data: dataCreateBill
+    }] = useCreateBillMutation();
+
 
     const userLogin = useAppSelector((state) => state.SpeedReducer.userLogin);
     const token = useAppSelector((state) => state.SpeedReducer.token);
     const [selectShippingUnit, setSelectShippingUnit] = useState();
-    const listCodeCartChecked = route.params.listCodeCartChecked;
     const [initialValues, setInitialValues] = useState<Bill>({
         username: userLogin?.email ?? "",
         shippingUnit: '',
         paymentMethod: '',
-        shippingUnitPrice: 0
     });
-
-    const shippingUnit = [
-        { name: 'Giao hàng hỏa tốc', value: 'Giao hàng hỏa tốc' },
-        { name: 'Giao hàng bình thường', value: 'Giao hàng bình thường' },
-    ];
+    const [shippingUnit, setShippingUnit] = useState<ShippingUnit[]>([]);
 
     const paymentMethod = [
         { name: 'Tiền mặt', value: 'Tiền mặt' },
         { name: 'Thẻ tín dụng', value: 'Thẻ tín dụng' },
     ];
 
-    const priceOfDelivery = [
-        { name: 'Giao hàng hỏa tốc', value: '1231231231' },
-        { name: 'Giao hàng bình thường', value: '12312321312' },
-    ]
-
-    const dropdownData = [
-        { name: t('PaymentScreen.createNewAddress'), value: Variables.CREATE_NEW_ADDRESS },
-        { name: t('PaymentScreen.selectOldAddress'), value: Variables.SELECT_ADDRESS_FROM_DATA },
-    ];
-
     const totalPriceOfDeliveryOfProduct = useMemo(() => {
-        let price = '0';
-        priceOfDelivery.map((item) => {
-            if (item.name == selectShippingUnit) {
-                price = item.value
-            }
-        })
-        return price;
-    }, [selectShippingUnit, priceOfDelivery])
+        let price = 0;
+        let distance = 0;
+        const shippingUnitLocation = dataGetShippingMethod?.data?.find((item: any) => (
+            item.code === selectShippingUnit
+        ))
 
-    const handleChooseItemDropdown = (item: string) => {
-        hideModal();
-        if (item === Variables.CREATE_NEW_ADDRESS) {
-            navigation.navigate(ADDRESS_SCREEN);
-        } else {
-
+        if (shippingUnitLocation && addressDisplay) {
+            distance = calculateDistance(
+                Number(shippingUnitLocation.lat),
+                Number(shippingUnitLocation.long),
+                Number(addressDisplay.lat),
+                Number(addressDisplay.long)
+            );
+            const pricePerKm = shippingUnitLocation.price;
+            price = distance * 500 + pricePerKm;
         }
 
-    }
+        return {
+            price,
+            distance
+        };
+    }, [dataGetShippingMethod, selectShippingUnit, addressDisplay]);
+
 
     useEffect(() => {
         if (isErrorAddCartChecked && errorAddCartChecked) {
@@ -112,34 +123,18 @@ const PaymentScreen = () => {
     }, [isErrorAddCartChecked, errorAddCartChecked]);
 
     useEffect(() => {
-        if (isErrorPayment && errorPayment) {
-            const errorText = JSON.parse(JSON.stringify(errorPayment))
-            Alert.alert('Payment Error', errorText?.data ? errorText?.data?.message : errorText?.message || 'An error occurred during payment');
+        if (dataCreateBill) {
+            Alert.alert('Thông báo', 'Mua hàng thành công!');
+            navigation.replace(BOTTOM_TAB_NAVIGATOR, {
+                screen: HOME_SCREEN,
+                params: null
+            } as any);
         }
-    }, [isErrorPayment, errorPayment]);
-
-    const handlePaymentRequest = (values: Bill) => {
-        const addCheckCart: Bill = values;
-        addCheckCart.username = userLogin?.email!
-        addCheckCart.shippingUnitPrice = parseInt(totalPriceOfDeliveryOfProduct)
-        // Send to server
-        const paymentAction = async () => {
-            try {
-                const addCartData = { code: listCodeCartChecked, token: token ?? "" }
-                const response = await addCartChecked(addCartData);
-                if (response) {
-                    const payment = {
-                        bill: addCheckCart,
-                        token: token ?? ""
-                    }
-                    await paymentMutation(payment);
-                }
-            } catch (error) {
-                console.error("Payment request failed:", error);
-            }
+        if (isErrorCreateBill && errorCreateBill) {
+            const errorText = JSON.parse(JSON.stringify(errorCreateBill));
+            Alert.alert('Create Bill Error', errorText?.data ? errorText?.data?.message : errorText?.message || 'An error occurred while creating the bill');
         }
-        paymentAction();
-    }
+    }, [isErrorCreateBill, errorCreateBill, dataCreateBill]);
 
     // Address
     useEffect(() => {
@@ -148,20 +143,107 @@ const PaymentScreen = () => {
                 await getUserAddress({
                     user: userLogin?.email ?? "",
                     token: token ?? ""
+                }).then((res) => {
+                    //   Handle
                 });
             } catch (error) {
 
             }
         }
-        getAddress();
-    }, []);
 
+        const getShippingMethods = async () => {
+            try {
+                await getShippingMethod({
+                    token: token ?? ""
+                }).then((res) => {
+                    //   Handle
+                });
+            } catch (error) {
+
+            }
+        }
+
+        if (userLogin?.email && token) getAddress();
+        if (token) getShippingMethods();
+
+    }, [userLogin?.email, token, getUserAddress]);
+
+    useEffect(() => {
+        if (isErrorGetUserAddress) {
+            const textError = JSON.parse(JSON.stringify(errorGetUserAddress));
+            Alert.alert("Cảnh báo", textError?.data ? textError?.data?.message : textError?.message)
+        }
+    }, [isErrorGetUserAddress, errorGetUserAddress]);
+
+    useEffect(() => {
+        if (dataGetShippingMethod) {
+            const convertedData: ShippingUnit[] = dataGetShippingMethod?.data?.map((item: any) => ({
+                name: item.name,
+                value: item.code,
+            }));
+            setShippingUnit(convertedData);
+        }
+        if (isErrorGetShippingMethod) {
+            const textError = JSON.parse(JSON.stringify(errorGetShippingMethod));
+            Alert.alert("Cảnh báo", textError?.data ? textError?.data?.message : textError?.message)
+        }
+    }, [isErrorGetShippingMethod, errorGetShippingMethod, dataGetShippingMethod]);
+
+    const handleSelectAddress = (item: Address) => {
+        hideModal();
+        setAddressDisplay(item);
+    }
+
+    const handleCreateNewAddress = () => {
+        hideModal();
+        navigation.navigate(ADDRESS_SCREEN);
+    }
+
+    useEffect(() => {
+        if (isErrorAddCartChecked) {
+            const textError = JSON.parse(JSON.stringify(errorAddCartChecked));
+            Alert.alert("Cảnh báo", textError?.data ? textError?.data?.message : textError?.message || 'Đã xảy ra lỗi khi thêm vào giỏ hàng');
+        }
+    }, [isErrorAddCartChecked, errorAddCartChecked]);
+
+    const handlePaymentRequest = async (values: Bill) => {
+        try {
+            await addCartChecked({
+                code: listCodeCartChecked,
+                token: token ?? ""
+            }).then((response) => {
+                if (response) {
+                    const order: Omit<Order, 'shippingUnit'> = {
+                        shippingCode: values.shippingUnit,
+                        addressCode: addressDisplay?.addressCode ?? "",
+                        kilometers: totalPriceOfDeliveryOfProduct.distance ?? 0,
+                        username: values.username,
+                        paymentMethod: values.paymentMethod
+                    }
+                    // Send to server
+                    const paymentAction = async () => {
+                        try {
+                            await createBill({
+                                order: order,
+                                token: token ?? ""
+                            })
+                        } catch (error) {
+                            console.error("Payment request failed:", error);
+                        }
+                    }
+                    paymentAction();
+                };
+            });
+        } catch (error) {
+            // Handle
+        }
+    }
 
     return (
         <ContainerComponent isFull backgroundColor={Colors.WHITE}>
             <SessionComponent>
                 {/* Address */}
-                <AddressComponent onPress={showModal} />
+                <AddressComponent onPress={showModal} addressDisplay={addressDisplay?.addressDisplayName ?? ""} />
                 <Formik
                     initialValues={initialValues}
                     validationSchema={validationSchemaPaymentUtils}
@@ -171,7 +253,7 @@ const PaymentScreen = () => {
                     {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
                         <View>
                             <DropdownComponent
-                                placeHolder='Hãy chọn phương thức thanh toán'
+                                placeHolder='Hãy chọn đơn vị giao hàng'
                                 touched={touched.shippingUnit}
                                 errors={errors.shippingUnit}
                                 dropdownData={shippingUnit}
@@ -184,7 +266,7 @@ const PaymentScreen = () => {
                                 <TextComponent color={Colors.RED} text={t(errors.shippingUnit)} />
                             )}
                             <DropdownComponent
-                                placeHolder='Hãy chọn đơn vị giao hàng'
+                                placeHolder='Hãy chọn phương thức thanh toán'
                                 touched={touched.paymentMethod}
                                 errors={errors.paymentMethod}
                                 dropdownData={paymentMethod}
@@ -196,9 +278,11 @@ const PaymentScreen = () => {
                             {errors.paymentMethod && touched.paymentMethod && (
                                 <TextComponent color={Colors.RED} text={t(errors.paymentMethod)} />
                             )}
-                            <TextComponent color={Colors.BLACK} text={`Chi phí giao hàng: ${vietnameseCurrency(parseInt(totalPriceOfDeliveryOfProduct))}`} />
+                            <TextComponent color={Colors.BLACK} text={`Chi phí giao hàng: ${vietnameseCurrency(totalPriceOfDeliveryOfProduct.price)}`} />
                             <SpaceComponent height={verticalScale(16)} />
                             <TextButtonComponent
+                                disabled={isLoadingCreateBill || isLoadingAddCartChecked}
+                                isLoading={isLoadingCreateBill || isLoadingAddCartChecked}
                                 padding={moderateScale(15)}
                                 borderRadius={5}
                                 backgroundColor={Colors.GREEN_500}
@@ -216,26 +300,17 @@ const PaymentScreen = () => {
                     )}
                 </Formik>
             </SessionComponent>
-            <Portal>
-                <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
-                    <>
-                        <RowComponent alignItems='center' justifyContent='space-between'>
-                            <TextComponent fontSize={Variables.FONT_SIZE_BUTTON_TEXT} text='Vui lòng lựa chọn địa chỉ nhận hàng' color={Colors.BLACK} />
-                            <IconButton icon={'close'} onPress={hideModal} />
-                        </RowComponent>
-                        <DropdownComponent
-                            touched={undefined}
-                            errors={undefined}
-                            dropdownData={dropdownData}
-                            values={undefined}
-                            onSetFieldValue={() => { }}
-                            onSetValue={handleChooseItemDropdown}
-                            placeHolder={''}
-                            FieldValue={''}
-                        />
-                    </>
-                </Modal>
-            </Portal>
+            <SelectAddressComponent
+                token={token ?? ""}
+                user={userLogin?.email ?? ""}
+                onSelect={handleSelectAddress}
+                onCreate={handleCreateNewAddress}
+                visible={visible}
+                hideModal={hideModal}
+                ListAddress={dataGetUserAddress?.data}
+                isLoading={isLoadingGetUserAddress}
+                isFetching={isFetchingGetUserAddress}
+            />
         </ContainerComponent>
     );
 };

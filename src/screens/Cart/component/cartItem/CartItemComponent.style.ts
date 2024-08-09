@@ -1,6 +1,7 @@
 import {StyleSheet} from 'react-native';
 import {Colors} from '../../../../constants/Colors';
 import {moderateScale} from '../../../../utils/ScaleUtils';
+import {appInfo} from '../../../../constants/Infos';
 
 export const styles = StyleSheet.create({
   body__image: {

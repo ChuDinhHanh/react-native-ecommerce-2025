@@ -1,4 +1,4 @@
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
+import { RouteProp, useIsFocused, useNavigation, useRoute } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import React, { useEffect, useMemo } from 'react'
 import { Alert, FlatList } from 'react-native'
@@ -12,32 +12,33 @@ import { useAppSelector } from '../../redux/Hooks'
 import { useLazyGetProductsOfCategoryQuery } from '../../redux/Service'
 import { RootStackParamList } from '../../routes/Routes'
 import { styles } from './DetailCategoryScreen.style'
+import { useAuthService } from '../../services/authService'
 
 const DetailCategoryScreen = () => {
+    const { handleCheckTokenAlive } = useAuthService();
+    const refreshToken = useAppSelector((state) => state.SpeedReducer.userLogin?.refreshToken) ?? "";
+    const token = useAppSelector((state) => state.SpeedReducer.token) ?? "";
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const route = useRoute<RouteProp<RootStackParamList, 'DETAIL_CATEGORY_SCREEN'>>();
     const code = route.params.code;
+    const isFocused = useIsFocused();
     const [getProductsOfCategory, { data, isError, isFetching, isLoading, error }] = useLazyGetProductsOfCategoryQuery();
-    const token = useAppSelector((state) => state.SpeedReducer.token);
+
     useEffect(() => {
-        const x = async () => {
-            if (token) getProductsOfCategory({ token: token, code: code });
+        const getProducts = async () => {
+            getProductsOfCategory({ token: token, code: code });
         }
-        x();
+        if (token) {
+            getProducts();
+        }
     }, [code, token]);
 
     useEffect(() => {
-        if (isError) {
-            const errorText = JSON.parse(JSON.stringify(error));
-            if (errorText.name === 'AbortError') {
-                Alert.alert('Cảnh báo kết nối không thành công!');
-            } else {
-                Alert.alert('Cảnh báo', `${errorText?.data ? errorText?.data?.message : errorText?.message}`)
-            }
+        if (isError && isFocused) {
+            handleCheckTokenAlive(token, refreshToken);
         }
     }, [data, isError, error])
 
-    // 
     const handlePressProductEvent = (id: string) => {
         navigation.navigate(DETAIL_PRODUCT_SCREEN, { code: id })
     }

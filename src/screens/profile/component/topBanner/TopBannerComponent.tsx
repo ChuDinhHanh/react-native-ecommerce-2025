@@ -9,8 +9,10 @@ import HeaderToolbarComponent from '../../../../components/toolbars/headerToolba
 import { Colors } from '../../../../constants/Colors'
 import { Variables } from '../../../../constants/Variables'
 import { moderateScale, scale } from '../../../../utils/ScaleUtils'
+import { useAppSelector } from '../../../../redux/Hooks'
 
 const TopBannerComponent = () => {
+    const userLogin = useAppSelector((state) => state.SpeedReducer.userLogin);
     return (
         <View style={{ backgroundColor: Colors.GREEN_500 }}>
             <SessionComponent>
@@ -19,7 +21,7 @@ const TopBannerComponent = () => {
                 {/* User info */}
                 <RowComponent justifyContent='flex-start' alignItems='center'>
                     {/* Left */}
-                    <DefaultAvatar image='https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-xinh-cuc-dep.jpg' name={'H'} />
+                    <DefaultAvatar image={userLogin?.avatar} name={userLogin?.name ?? userLogin?.email ?? ""} />
                     {/* Space */}
                     <SpaceComponent width={moderateScale(10)} />
                     {/* Right */}

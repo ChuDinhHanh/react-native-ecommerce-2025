@@ -8,8 +8,11 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import IconButtonComponent from '../../../../components/buttons/iconButton/IconButtonComponent'
 import { styles } from './SearchBarComponent.style'
 
-
-const SearchBarComponent = () => {
+interface Props {
+    onSubmit: (value: string) => void;
+}
+const SearchBarComponent = (props: Props) => {
+    const { onSubmit } = props;
     const [content, setContent] = useState('');
     return (
         <RowComponent
@@ -32,7 +35,7 @@ const SearchBarComponent = () => {
             <IconButtonComponent
                 customStyle={styles.container__right}
                 typeNoBackground
-                onPress={() => { console.log(content) }}
+                onPress={() => onSubmit(content)}
                 icon={<AntDesign name='search1' color={Colors.BLACK} size={moderateScale(20)} />}
             />
         </RowComponent>

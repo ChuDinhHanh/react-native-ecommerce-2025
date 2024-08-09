@@ -21,7 +21,7 @@ const AllProductComponent = (props: Props) => {
             extraData={NewOfferData}
             // ItemSeparatorComponent={}
             renderItem={({ item }) => (
-                <ProductItem item={item} onPressProduct={()=>{}}/>
+                <ProductItem item={item} onPress={() => { }} />
             )}
         />
     )

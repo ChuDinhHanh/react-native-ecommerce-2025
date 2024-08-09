@@ -4,7 +4,8 @@
     <!--  2164176007285539-->
     <string name="fb_login_protocol_scheme">fb2164176007285539</string>
     <string name="facebook_client_token">a44a2966f9f38a388358245635a664cf</string>
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDE6J31ezKB9IdPtrb6nmeWBc58QMQDYJI</string>
+    <!-- <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDE6J31ezKB9IdPtrb6nmeWBc58QMQDYJI</string> -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyCC00r7Ymed6ihv8weIsWv0lVsVZ5on7Qk</string>
       <!-- Facebook application ID and custom URL scheme (app ID prefixed by 'fb'). -->
   <string name="facebook_application_id" translatable="false">2164176007285539</string>
   <string name="facebook_login_protocol_scheme" translatable="false">fb2164176007285539</string>

@@ -1,12 +1,25 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
 import {SERVER_ADDRESS} from '../constants/System';
+import {Token} from '../types/common/Token';
+import {Product} from '../types/other/Product';
+import {Address} from '../types/request/Address';
+import {Order} from '../types/request/Bill';
+import {CheckTokenAlive} from '../types/request/CheckTokenAlive';
 import {Data} from '../types/request/Data';
+import {GetHostProduce} from '../types/request/GetHostProduce';
+import {GetNewProduce} from '../types/request/GetNewProduce';
+import {ResetPassword} from '../types/request/ResetPassword';
+import {SearchProduct} from '../types/request/SearchProduct';
 import {SignIn} from '../types/request/SignIn';
 import {SignInByGoogle} from '../types/request/SignInByGoogle';
 import {SignUpByGoogle} from '../types/request/SignUpByGoogle';
+import {CartUpdate} from '../types/request/UpdateCart';
 import {Register} from '../types/request/UserRegister';
-import {ResetPassword} from '../types/request/ResetPassword';
-import {Bill} from '../types/request/Bill';
+import {CheckVerifyTokenResponse} from '../types/response/CheckVerifyTokenResponse';
+import {LoginByGoogleResponse} from '../types/response/LoginByGoogleResponse';
+import {LoginResponse} from '../types/response/loginResponse';
+import {RegisterByGoogleResponse} from '../types/response/RegisterByGoogleResponse';
+import {Category} from '../types/response/Category';
 
 export const SpeedAPI = createApi({
   reducerPath: 'SpeedNetworkAPI',
@@ -17,9 +30,9 @@ export const SpeedAPI = createApi({
   refetchOnReconnect: true,
   // Global
   // keepUnusedDataFor:30,
-  tagTypes: ['Cart', 'User'],
+  tagTypes: ['Cart', 'Address'],
   endpoints: builder => ({
-    register: builder.mutation<Data<any>, Register>({
+    register: builder.mutation<Data<string>, Register>({
       query: data => ({
         url: `api/register`,
         method: 'POST',
@@ -27,11 +40,9 @@ export const SpeedAPI = createApi({
         headers: {
           'Content-type': 'application/json; charset=UTF-8',
         },
-        // Local
-        // keepUnusedDataFor: 30,
       }),
     }),
-    checkVerifyToken: builder.query<Data<any>, {token: string}>({
+    checkVerifyToken: builder.query<Data<CheckVerifyTokenResponse>, Token>({
       query: data => {
         return {
           url: `api/users/check-verify/${data.token}`,
@@ -42,7 +53,7 @@ export const SpeedAPI = createApi({
         };
       },
     }),
-    login: builder.query<Data<any>, SignIn>({
+    login: builder.query<Data<LoginResponse>, SignIn>({
       query: data => ({
         url: `api/login`,
         method: 'POST',
@@ -52,7 +63,7 @@ export const SpeedAPI = createApi({
         },
       }),
     }),
-    loginByGoogle: builder.query<Data<any>, SignInByGoogle>({
+    loginByGoogle: builder.query<Data<LoginByGoogleResponse>, SignInByGoogle>({
       query: data => ({
         url: 'api/users/google-login',
         method: 'POST',
@@ -62,7 +73,10 @@ export const SpeedAPI = createApi({
         },
       }),
     }),
-    registerByGoogle: builder.mutation<Data<any>, SignUpByGoogle>({
+    registerByGoogle: builder.mutation<
+      Data<RegisterByGoogleResponse>,
+      SignUpByGoogle
+    >({
       query: data => ({
         url: 'api/users/google-register',
         method: 'POST',
@@ -102,7 +116,7 @@ export const SpeedAPI = createApi({
         },
       }),
     }),
-    getCategories: builder.query<Data<any>, {token: string}>({
+    getCategories: builder.query<Data<Category[]>, {token: string}>({
       query: data => {
         return {
           url: `api/categories/true`,
@@ -221,42 +235,31 @@ export const SpeedAPI = createApi({
           body: cart,
           headers: {
             'Content-type': 'application/json; charset=UTF-8',
-            Authorization: `Bearer ${JSON.parse(data.token)}`,
+            Authorization: `Bearer ${data.token}`,
           },
         };
       },
     }),
-    payment: builder.mutation<Data<any>, {bill: Bill; token: string}>({
-      query: data => ({
-        url: `api/bills/check-out`,
-        method: 'POST',
-        body: data.bill,
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8',
-          Authorization: `Bearer ${data.token}`,
-        },
-      }),
-    }),
-    checkTokenAlive: builder.query<Data<any>, {token: string}>({
+    checkTokenAlive: builder.query<Data<any>, CheckTokenAlive>({
       query: data => {
         return {
           url: `api/users/token`,
-          method: 'GET',
+          method: 'POST',
+          body: data,
           headers: {
             'Content-type': 'application/json; charset=UTF-8',
-            Authorization: `Bearer ${JSON.parse(data.token)}`,
           },
         };
       },
     }),
     updateProductInCarts: builder.mutation<
       Data<any>,
-      {carts: UpdateCart; token: string}
+      {carts: CartUpdate; token: string}
     >({
       query: data => {
         console.log(data.carts, data.token);
         return {
-          url: `api/carts`,
+          url: `api/carts/update`,
           method: 'PUT',
           body: data.carts,
           headers: {
@@ -265,7 +268,6 @@ export const SpeedAPI = createApi({
           },
         };
       },
-      // invalidatesTags: ['Cart'],
     }),
     getUserAddress: builder.query<Data<any>, {user: string; token: string}>({
       query: data => {
@@ -278,6 +280,7 @@ export const SpeedAPI = createApi({
           },
         };
       },
+      providesTags: (result, error, {user}) => [{type: 'Address', id: user}],
     }),
     createNewAddress: builder.mutation<
       Data<any>,
@@ -288,6 +291,91 @@ export const SpeedAPI = createApi({
           url: `api/users/address`,
           method: 'POST',
           body: data.address,
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+      invalidatesTags: ['Address'],
+    }),
+    getShippingMethod: builder.query<Data<any>, {token: string}>({
+      query: data => {
+        return {
+          url: `api/shippingMethods`,
+          method: 'GET',
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+    }),
+    createBill: builder.mutation<
+      Data<any>,
+      {order: Omit<Order, 'shippingUnit'>; token: string}
+    >({
+      query: data => {
+        return {
+          url: `api/bills/check-out`,
+          method: 'POST',
+          body: data.order,
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+    }),
+    searchProduct: builder.query<Data<any>, SearchProduct>({
+      query: data => {
+        return {
+          url: `api/products/search?name=${data.name}`,
+          method: 'GET',
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+    }),
+    getNewProduct: builder.query<
+      Data<Product[]>,
+      {data: GetNewProduce; token: Token}
+    >({
+      query: data => {
+        return {
+          url: `api/products/new`,
+          method: 'POST',
+          body: data.data,
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${data.token.token}`,
+          },
+        };
+      },
+    }),
+    getHostProduct: builder.query<
+      Data<any>,
+      {data: GetHostProduce; token: Token}
+    >({
+      query: data => {
+        return {
+          url: `api/products/hot`,
+          method: 'POST',
+          body: data.data,
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${data.token.token}`,
+          },
+        };
+      },
+    }),
+    getNotification: builder.query<Data<any>, Token>({
+      query: data => {
+        return {
+          url: `api/products/hot`,
+          method: 'GET',
           headers: {
             'Content-type': 'application/json; charset=UTF-8',
             Authorization: `Bearer ${data.token}`,
@@ -315,9 +403,14 @@ export const {
   useLazyCheckCodePhoneQuery,
   useLazyGetProductByCodeQuery,
   useAddCartCheckedMutation,
-  usePaymentMutation,
   useLazyCheckTokenAliveQuery,
   useUpdateProductInCartsMutation,
   useLazyGetUserAddressQuery,
   useCreateNewAddressMutation,
+  useLazyGetShippingMethodQuery,
+  useCreateBillMutation,
+  useLazySearchProductQuery,
+  useCheckTokenAliveQuery,
+  useLazyGetNewProductQuery,
+  useLazyGetHostProductQuery,
 } = SpeedAPI;

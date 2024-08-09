@@ -32,6 +32,7 @@ type Props = {
     alignItems?: FlexAlignType | undefined;
     marginHorizontal?: number;
     marginRight?: number;
+    colorDisable?: string;
 }
 
 export default function TextButtonComponent(props: Readonly<Props>) {
@@ -41,7 +42,7 @@ export default function TextButtonComponent(props: Readonly<Props>) {
             {
                 marginVertical: props.marginVertical,
                 alignSelf: props.alignSelf,
-                backgroundColor: props.disabled ? Colors.COLOR_GREY_FEEBLE : props.backgroundColor,
+                backgroundColor: (props.disabled) ? (props.colorDisable ?? Colors.COLOR_GREY_FEEBLE) : props.backgroundColor,
                 borderRadius: props.borderRadius,
                 padding: props.padding,
                 borderWidth: props.borderWidth,

@@ -1,67 +1,53 @@
-import { useIsFocused, useNavigation } from '@react-navigation/native'
-import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import React, { useEffect } from 'react'
-import { setTranslations } from 'react-multi-lang'
-import { Alert, Image, Text, View } from 'react-native'
-import { Path, Svg } from 'react-native-svg'
-import { Colors } from '../../constants/Colors'
-import { AUTHENTICATION_STACK_NAVIGATOR, BOTTOM_TAB_NAVIGATOR } from '../../constants/Screens'
-import { useAppDispatch } from '../../redux/Hooks'
-import { getLanguage, loadUser, logoutUser } from '../../redux/userThunks'
-import { RootStackParamList } from '../../routes/Routes'
-import en from '../../translate/en.json'
-import jp from '../../translate/jp.json'
-import vi from '../../translate/vi.json'
-import styles from './SplashScreen.style'
-import { useLazyCheckTokenAliveQuery } from '../../redux/Service'
+import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import React, { useEffect } from 'react';
+import { setTranslations } from 'react-multi-lang';
+import { Alert, Image, Text, View } from 'react-native';
+import { Path, Svg } from 'react-native-svg';
+import { Colors } from '../../constants/Colors';
+import { AUTHENTICATION_STACK_NAVIGATOR } from '../../constants/Screens';
+import { useAppDispatch } from '../../redux/Hooks';
+import { getLanguage, loadUser } from '../../redux/userThunks';
+import { RootStackParamList } from '../../routes/Routes';
+import { useAuthService } from '../../services/authService';
+import en from '../../translate/en.json';
+import jp from '../../translate/jp.json';
+import vi from '../../translate/vi.json';
+import styles from './SplashScreen.style';
+
 setTranslations({ vi, jp, en });
 
 const SplashScreen = () => {
-    console.log('===============SplashScreen=====================');
+    const { handleCheckTokenAlive } = useAuthService();
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const dispatch = useAppDispatch();
-    const [checkTokenAlive, { isError, isFetching, isLoading, isSuccess, data, error }] = useLazyCheckTokenAliveQuery();
     const isFocused = useIsFocused();
 
     useEffect(() => {
         if (isFocused) {
-            dispatch(getLanguage()).unwrap().then((_) => {
+            dispatch(getLanguage()).unwrap().then(() => {
                 handleCheckHaveAccount();
-            })
+            });
         }
     }, [isFocused]);
 
-    const handleCheckHaveAccount = () => {
-        dispatch(loadUser())
-            .unwrap()
-            .then((data) => {
-                if (data) {
-                    checkTokenAlive({ token: data.token });
-                } else {
-                    navigation.replace(AUTHENTICATION_STACK_NAVIGATOR);
-                }
-            })
-            .catch((error) => {
-                // handle
-            });
-    }
-
-    useEffect(() => {
-        if (data) {
-            navigation.replace(BOTTOM_TAB_NAVIGATOR);
+    const handleCheckHaveAccount = async () => {
+        try {
+            const data = await dispatch(loadUser()).unwrap();
+            if (data && isFocused) {
+                await handleCheckTokenAlive(data.token, data.refreshToken);
+            } else {
+                navigation.replace(AUTHENTICATION_STACK_NAVIGATOR);
+            }
+        } catch (error) {
+            Alert.alert('Cảnh báo', 'Lỗi khi tải người dùng. Vui lòng thử lại sau.');
         }
-        if (isError) {
-            Alert.alert('Cảnh báo', 'Phiên đăng nhập của bạn đã hết hạn');
-            dispatch(logoutUser());
-            navigation.replace(AUTHENTICATION_STACK_NAVIGATOR);
-        }
-    }, [error, isError, data])
+    };
 
     return (
         <View style={styles.container}>
             <View style={styles.container__inner}>
                 <View style={styles['container__inner--content']}>
-                    {/* Title block*/}
                     <View>
                         <Image style={styles['inner__content--image']} source={require('../../assets/images/logo/logoSplashScreen.png')} />
                         <View style={styles['inner__content--text']}>
@@ -69,7 +55,6 @@ const SplashScreen = () => {
                             <Text style={styles['inner__content--description']}>Explore new shopping method</Text>
                         </View>
                     </View>
-                    {/* Rectangle block*/}
                     <View style={styles['content__rectangle--first']}>
                         <Svg width={200} height={200} viewBox='0 0 200 200' fill="none">
                             <Path d='M 0 0 L 300 300 L 0 300 Z' fill={Colors.GREEN_FIRST} opacity={0.15} />
@@ -98,7 +83,7 @@ const SplashScreen = () => {
                 </View>
             </View>
         </View>
-    )
-}
+    );
+};
 
-export default SplashScreen
+export default SplashScreen;
