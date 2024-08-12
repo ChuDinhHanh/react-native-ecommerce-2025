@@ -110,8 +110,5 @@
     </receiver>
     <service android:name="com.zalopay.sdk.PaymentService" /> -->
        <!-- Thêm meta-data cho ZaloPay SDK -->
-    <meta-data
-        android:name="vn.com.vng.zalopay.API_KEY"
-        android:value="sdngKKJmqEMzvh5QQcdD2A9XBSKUNaYn" />
   </application>
 </manifest>

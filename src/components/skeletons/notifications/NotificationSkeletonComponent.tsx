@@ -1,14 +1,13 @@
 import React, { useMemo } from 'react';
 import { ScrollView } from 'react-native';
 import SessionComponent from '../../session/SessionComponent';
-import CartSkeletonItem from './item/CartSkeletonItem';
+import NotificationSkeletonItem from './item/NotificationSkeletonItem';
 
-const CartSkeletonComponent = () => {
-
+const NotificationSkeletonComponent = () => {
     const handlePrintfSkeleton = useMemo(() => {
         const qty = Math.round(Math.random() * 5) + 2;
         const skeleton = Array.from({ length: qty }, (_, i) => (
-            <CartSkeletonItem key={i} />
+            <NotificationSkeletonItem key={i} />
         ))
         return skeleton;
     }, []);
@@ -24,4 +23,4 @@ const CartSkeletonComponent = () => {
     )
 }
 
-export default CartSkeletonComponent
+export default NotificationSkeletonComponent

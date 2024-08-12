@@ -25,14 +25,12 @@ interface ForgotPassWordFormValidate {
 }
 
 const ForgotPassWordScreen = () => {
-  console.log('=================ForgotPassWordScreen===================');
   const t = useTranslation();
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [initialValue, setInitialValue] = useState<ForgotPassWordFormValidate>({ identifier: "" });
   const [forgotPassword, { data, isFetching, error, isError, isSuccess }] = useLazyForgotPasswordQuery();
 
   const handleSubmit = async (values: ForgotPassWordFormValidate) => {
-    console.log('===========handleSubmit=========================');
     try {
       setInitialValue({ ...values });
       await forgotPassword({ email: values.identifier });

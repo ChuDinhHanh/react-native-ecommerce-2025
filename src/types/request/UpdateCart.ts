@@ -1,6 +1,6 @@
 interface UpdateCartItem {
   itemCode: string;
-  quantity: number;
+  quantity?: string;
   classifyCodes?: string[];
 }
 

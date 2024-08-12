@@ -139,8 +139,6 @@ dependencies {
     //  implementation 'com.facebook.android:facebook-android-sdk:8.x'
     // Notification
     implementation 'com.google.firebase:firebase-messaging:23.0.0'
-     // Các dependencies khác của bạn
-    implementation(name: 'zpdk-release', ext: 'aar') // Đảm bảo rằng tên và phần mở rộng đúng
 }
 
 repositories {

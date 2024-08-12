@@ -54,7 +54,6 @@ const NotificationScreen = () => {
   return (
     <ContainerComponent
       isFull
-      isScrollEnable
       backgroundColor={Colors.GREEN_500}
     >
       <SessionComponent>

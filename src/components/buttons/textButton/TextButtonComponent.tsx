@@ -1,5 +1,5 @@
 import React, { ReactNode, useMemo } from 'react';
-import { ActivityIndicator, DimensionValue, FlexAlignType, Pressable, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { ActivityIndicator, DimensionValue, FlexAlignType, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
 import { Colors } from '../../../constants/Colors';
 import SpaceComponent from '../../space/SpaceComponent';
 import { styles } from './TextButtonComponent.style';

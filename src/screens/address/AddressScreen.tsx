@@ -20,18 +20,20 @@ import { Variables } from '../../constants/Variables';
 import { useAppSelector } from '../../redux/Hooks';
 import { useCreateNewAddressMutation } from '../../redux/Service';
 import { RootStackParamList } from '../../routes/Routes';
+import { useAuthService } from '../../services/authService';
+import { Address } from '../../types/request/Address';
 import { moderateScale, verticalScale } from '../../utils/ScaleUtils';
 import MapComponent, { LocationMarkAndAddress } from './component/map/MapComponent';
-import { Address } from '../../types/request/Address';
-import { tokens } from 'react-native-paper/lib/typescript/styles/themes/v3/tokens';
 
 type AddressWithShow = Address & {
     addressShow: string;
 };
 
 const AddressScreen = () => {
+    const { handleCheckTokenAlive } = useAuthService();
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-    const token = useAppSelector(state => state.SpeedReducer.token);
+    const token = useAppSelector(state => state.SpeedReducer.token) ?? "";
+    const refreshToken = useAppSelector(state => state.SpeedReducer.userLogin?.refreshToken) ?? "";
     const userLogin = useAppSelector((state) => state.SpeedReducer.userLogin);
     const [visible, setVisible] = useState(false);
     const [toggleCheckBox, setToggleCheckBox] = useState(false);
@@ -53,7 +55,7 @@ const AddressScreen = () => {
 
     const handleSubmit = (values: AddressWithShow) => {
         const { addressShow, ...restValues } = values;
-        const AddAddressData: Address = { ...restValues, status: toggleCheckBox ? '1' : '0' };
+        const AddAddressData: Address = { ...restValues, status: toggleCheckBox ? '1' : '0', location: addressShow };
         const createNewAddressAction = async () => {
             try {
                 await createNewAddress({
@@ -61,7 +63,7 @@ const AddressScreen = () => {
                     token: token ?? ""
                 });
             } catch (error) {
-
+                // Handle
             }
         }
         createNewAddressAction();
@@ -73,8 +75,11 @@ const AddressScreen = () => {
             navigation.goBack();
         }
         if (isError) {
-            const errorText = JSON.parse(JSON.stringify(data));
-            Alert.alert("Cảnh báo", errorText?.data ? errorText?.data?.message : errorText?.message);
+            try {
+                handleCheckTokenAlive(token, refreshToken);
+            } catch (error) {
+                // Handle
+            }
         }
     }, [isError, error, data])
 
@@ -95,7 +100,8 @@ const AddressScreen = () => {
                             phoneGet: "",
                             nameGet: "",
                             status: "",
-                            addressShow: ""
+                            addressShow: "",
+                            location: ""
                         }}
                         validationSchema={validationSchema}
                         onSubmit={handleSubmit}

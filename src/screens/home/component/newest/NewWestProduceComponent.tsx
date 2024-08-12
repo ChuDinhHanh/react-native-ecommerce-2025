@@ -27,10 +27,8 @@ const NewWestProduceComponent = () => {
     const email = useAppSelector((state) => state.SpeedReducer.userLogin?.email) ?? "";
     const refreshToken = useAppSelector((state) => state.SpeedReducer.userLogin?.refreshToken) ?? "";
     const [getNewProduct, { data, isError, isFetching, isLoading, error }] = useLazyGetNewProductQuery();
-    console.log('====================================');
-    console.log(token, email);
-    console.log('====================================');
     const isFocused = useIsFocused();
+
     useEffect(() => {
         const handleGetCategories = async () => {
             try {
@@ -54,6 +52,7 @@ const NewWestProduceComponent = () => {
 
     useEffect(() => {
         if (isError && isFocused) {
+            console.log('=================NewWestProduceComponent===================');
             handleCheckTokenAlive(token, refreshToken);
         }
     }, [data, isError, isFetching, isFocused]);

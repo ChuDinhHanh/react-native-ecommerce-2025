@@ -2,7 +2,7 @@ import { RouteProp, useIsFocused, useNavigation, useRoute } from '@react-navigat
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-multi-lang'
-import { Alert, ScrollView, StyleSheet } from 'react-native'
+import { Alert, ScrollView } from 'react-native'
 import ProductBannerComponent from '../../../components/banner/product/ProductBannerComponent'
 import ContainerComponent from '../../../components/container/ContainerComponent'
 import FeedBackComponent from '../../../components/feedback/FeedBackComponent'
@@ -14,7 +14,7 @@ import SpaceComponent from '../../../components/space/SpaceComponent'
 import TextComponent from '../../../components/text/TextComponent'
 import { Colors } from '../../../constants/Colors'
 import { appInfo } from '../../../constants/Infos'
-import { SHOP_SCREEN } from '../../../constants/Screens'
+import { BOTTOM_TAB_NAVIGATOR, CART_SCREEN, SHOP_SCREEN } from '../../../constants/Screens'
 import { Variables } from '../../../constants/Variables'
 import { SingleProductData } from '../../../data/SingleProductData'
 import { useAppSelector } from '../../../redux/Hooks'
@@ -78,14 +78,22 @@ const DetailProductScreen = () => {
                 handleAddToCart();
                 break;
             case 3:
-
+                handleAddToCart().then((res) => {
+                    if (res) {
+                        navigation.navigate(BOTTOM_TAB_NAVIGATOR, {
+                            screen: CART_SCREEN,
+                            params: { code: data?.data?.code, cartItem_ProductClassifies: dataOptionSelect?.join(',') }
+                        } as any)
+                    }
+                });
                 break;
             default:
                 break;
         }
     }
 
-    const handleAddToCart = () => {
+    const handleAddToCart = async () => {
+        let result = true;
         try {
             if (dataOptionSelect?.length != 0 && userLogin?.email && token && numberOptionSelectRequired !== 0 && dataOptionSelect?.length == numberOptionSelectRequired) {
                 const cart: Cart = {
@@ -94,16 +102,18 @@ const DetailProductScreen = () => {
                     quantity: 1,
                     productClassifyCodes: dataOptionSelect ?? []
                 }
-                addToCart({
+                await addToCart({
                     cart: cart,
                     token: token
                 });
             } else {
+                result = false;
                 Alert.alert(t("Alert.warning"), "Hãy chọn đầy đủ các thông số của sản phẩm");
             }
         } catch (error) {
             console.log(error);
         }
+        return result;
     }
 
     const handleSelect = (select: string[], optionSelectQtyRequire: number) => {
@@ -155,11 +165,13 @@ const DetailProductScreen = () => {
                                     color={Colors.BLACK}
                                 />
                             </SessionComponent>
-                            {/* Select option of product */}
-                            <SelectOptionProductComponent
-                                data={data?.data?.classifies}
-                                onPress={handleSelect}
-                            />
+                            <SessionComponent>
+                                {/* Select option of product */}
+                                <SelectOptionProductComponent
+                                    data={data?.data?.classifies}
+                                    onPress={handleSelect}
+                                />
+                            </SessionComponent>
                             {/* Return produce policy */}
                             <SessionComponent>
                                 <TextComponent text='Chính Sách Trả Hàng:' color={Colors.BLACK} />
@@ -251,24 +263,5 @@ const DetailProductScreen = () => {
         </ContainerComponent >
     )
 }
-
-
-const styles = StyleSheet.create({
-    lineUnderBanner: {
-        borderBottomWidth: 0.2,
-        borderColor: Colors.GREY1,
-        paddingTop: 10,
-    },
-    wrapperVoucherAndSaleOff: {
-        backgroundColor: Colors.WHITE,
-        marginVertical: 10,
-    },
-    wrapperOptionsAndSelect: {
-        marginTop: 10,
-    },
-    wrapperDeliveryInfo: {
-        paddingVertical: 10,
-    },
-});
 
 export default DetailProductScreen

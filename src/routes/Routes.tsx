@@ -66,7 +66,7 @@ export type RootStackParamList = {
   VERIFY_EMAIL_SCREEN: { token: string; email: string; };
   VERIFY_PHONE_SCREEN: { token: string; phone: string; confirm: FirebaseAuthTypes.ConfirmationResult };
   PROFILE_SCREEN_OPTIONS_NAVIGATOR: undefined;
-  CART_SCREEN: undefined;
+  CART_SCREEN: undefined | { code: string, cartItem_ProductClassifies: string };
   DETAIL_NOTIFICATION_SCREEN: { id: number };
   NOTIFICATION_SCREEN_OPTIONS_NAVIGATOR: undefined;
   ALL_NOTIFICATION_SCREEN: undefined;

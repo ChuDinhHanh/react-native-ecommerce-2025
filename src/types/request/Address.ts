@@ -6,4 +6,5 @@ export interface Address {
   phoneGet: string;
   nameGet: string;
   status: string;
+  location: string;
 }

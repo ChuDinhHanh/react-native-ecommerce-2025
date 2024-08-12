@@ -1,4 +1,4 @@
-import { useIsFocused } from '@react-navigation/native'
+import { useIsFocused, useNavigation } from '@react-navigation/native'
 import React, { useEffect } from 'react'
 import { FlatList, View } from 'react-native'
 import { Colors } from '../../constants/Colors'
@@ -11,13 +11,14 @@ import CategorySkeleton from '../skeletons/category/CategorySkeleton'
 import SpaceComponent from '../space/SpaceComponent'
 import TextComponent from '../text/TextComponent'
 import CategoryItemComponent from './component/item/CategoryItemComponent'
+import { RootStackParamList } from '../../routes/Routes'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { DETAIL_CATEGORY_SCREEN, SERVICE_STACK_NAVIGATOR } from '../../constants/Screens'
 
-interface Props {
-    onPress: (code: 'string') => void;
-}
-const CategoriesComponent = (props: Props) => {
-    const { onPress } = props;
+
+const CategoriesComponent = () => {
     const { handleCheckTokenAlive } = useAuthService();
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const isFocused = useIsFocused();
     const token = useAppSelector((state) => state.SpeedReducer.token) ?? "";
     const refreshToken = useAppSelector((state) => state.SpeedReducer.userLogin?.refreshToken) ?? "";
@@ -39,7 +40,16 @@ const CategoriesComponent = (props: Props) => {
         if (isError && isFocused) {
             handleCheckTokenAlive(token, refreshToken);
         }
-    }, [data, isError, isFetching, isFocused])
+    }, [data, isError, isFetching, isFocused]);
+
+    const handlePressCategoryEvent = (code: string) => {
+        navigation.navigate(SERVICE_STACK_NAVIGATOR, {
+            screen: DETAIL_CATEGORY_SCREEN,
+            params: {
+                code: code
+            }
+        } as any)
+    }
 
     return (
         <View>
@@ -63,7 +73,7 @@ const CategoriesComponent = (props: Props) => {
                             return item.level === 1 ?
                                 <CategoryItemComponent
                                     item={item}
-                                    onPress={onPress}
+                                    onPress={handlePressCategoryEvent}
                                 />
                                 :
                                 index === (data?.data.length! - 1) ? <SpaceComponent width={moderateScale(20)} /> : null

@@ -1,9 +1,9 @@
 import React from 'react';
-import { View } from 'react-native';
+import { DimensionValue, View } from 'react-native';
 
 interface Props {
-  width?: number;
-  height?: number;
+  width?: DimensionValue;
+  height?: DimensionValue;
   backgroundColor?: string;
 }
 

@@ -6,7 +6,7 @@ import { Colors } from '../../../constants/Colors'
 
 const NothingComponent = () => {
     return (
-        <View style={{ width: appInfo.sizes.WIDTH - 16, height: appInfo.sizes.HEIGHT - 16, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
             <TextComponent text='Danh mục chưa có sản phẩm' color={Colors.BLACK} />
         </View>
     )

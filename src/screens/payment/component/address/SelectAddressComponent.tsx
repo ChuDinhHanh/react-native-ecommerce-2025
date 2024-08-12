@@ -1,5 +1,5 @@
 import React, { memo, useEffect } from 'react';
-import { Alert, FlatList, Pressable, Text } from 'react-native';
+import { FlatList, Pressable, Text } from 'react-native';
 import { IconButton, Modal, Portal, RadioButton } from 'react-native-paper';
 import TextButtonComponent from '../../../../components/buttons/textButton/TextButtonComponent';
 import RowComponent from '../../../../components/row/RowComponent';
@@ -8,8 +8,6 @@ import SpaceComponent from '../../../../components/space/SpaceComponent';
 import TextComponent from '../../../../components/text/TextComponent';
 import { Colors } from '../../../../constants/Colors';
 import { Variables } from '../../../../constants/Variables';
-import { useLazyGetUserAddressQuery } from '../../../../redux/Service';
-import { getAddressFromCoordinates } from '../../../../utils/LocationUtils';
 import { moderateScale, scale, verticalScale } from '../../../../utils/ScaleUtils';
 
 interface Props {
@@ -40,20 +38,32 @@ const SelectAddressComponent = (props: Props) => {
     useEffect(() => {
         const fetchAddresses = async () => {
             const addresses = await Promise.all(ListAddress.map(async (item: any) => {
-                const address = await getAddressFromCoordinates(item.lat, item.long);
                 return {
                     addressCode: item.code,
-                    addressDisplayName: address,
+                    addressDisplayName: item.location,
                     lat: item.lat,
                     long: item.long
                 };
             }));
             setAddrest(addresses);
         };
-
         fetchAddresses();
     }, [ListAddress]);
 
+    useEffect(() => {
+        if (ListAddress?.length <= 0) return;
+        const result = ListAddress?.filter((element: any) => element.status === '1');
+        if (result?.length) {
+            const dataSelect: Address = {
+                addressCode: result[0].code,
+                addressDisplayName: result[0].location,
+                lat: result[0].lat,
+                long: result[0].long
+            }
+            onSelect(dataSelect);
+            setChecked(dataSelect);
+        }
+    }, [ListAddress?.length]);
 
     return (
         <Portal>

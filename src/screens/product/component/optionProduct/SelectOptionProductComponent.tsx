@@ -1,5 +1,5 @@
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, Text } from 'react-native';
 import TextButtonComponent from '../../../../components/buttons/textButton/TextButtonComponent';
 import SessionComponent from '../../../../components/session/SessionComponent';
 import SpaceComponent from '../../../../components/space/SpaceComponent';
@@ -9,7 +9,8 @@ import { Variables } from '../../../../constants/Variables';
 import { moderateScale, verticalScale } from '../../../../utils/ScaleUtils';
 
 interface Props {
-    data: any,
+    data: any;
+    productClassifyCodes?: string[];
     onPress: (codeOption: string[], qtyOption: number) => void
 }
 
@@ -28,7 +29,7 @@ type SelectOption = {
 }
 
 const SelectOptionProductComponent = (props: Props) => {
-    const { data, onPress } = props;
+    const { data, onPress, productClassifyCodes } = props;
     const [dataOption, setDataOption] = useState<DataOption[]>();
     const [optionSelectData, setOptionSelectData] = useState<SelectOption[]>([]);
 
@@ -37,13 +38,13 @@ const SelectOptionProductComponent = (props: Props) => {
         onPress(result, dataOption?.length ?? 0);
     }, [optionSelectData]);
 
-    const handleCheckSelectOption = (select: SelectOption, prevData: SelectOption[]) => {
+    const handleCheckSelectOptionByName = (select: SelectOption, prevData: SelectOption[]) => {
         return prevData.findIndex((item: SelectOption) => item.groupName == select.groupName);
     }
 
     const handleAddOption = useCallback((select: SelectOption) => {
         setOptionSelectData((prev) => {
-            const index = handleCheckSelectOption(select, prev);
+            const index = handleCheckSelectOptionByName(select, prev);
             if (index == -1) {
                 return [...prev, select];
             } else {
@@ -52,8 +53,18 @@ const SelectOptionProductComponent = (props: Props) => {
                 return newData;
             }
         })
-    }, [handleCheckSelectOption]);
+    }, [handleCheckSelectOptionByName]);
 
+
+    useEffect(() => {
+        const newData = data.filter((item: any) => (productClassifyCodes?.includes(item.code)));
+        newData.forEach((item: any) => {
+            handleAddOption({
+                groupName: item.groupName,
+                option: item.code
+            })
+        })
+    }, [productClassifyCodes])
 
     useMemo(() => {
         if (data) {
@@ -97,6 +108,7 @@ const SelectOptionProductComponent = (props: Props) => {
                         <TextComponent text={item1.groupName} color={Colors.BLACK} />
                         <SpaceComponent height={verticalScale(10)} />
                         <FlatList
+                            scrollEnabled={false}
                             horizontal
                             showsHorizontalScrollIndicator={false}
                             key={index.toString()}
@@ -126,11 +138,7 @@ const SelectOptionProductComponent = (props: Props) => {
 
 
     return (
-        <SessionComponent>
-            {
-                handlePrintOptions
-            }
-        </SessionComponent>
+        handlePrintOptions
     )
 }
 

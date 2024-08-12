@@ -162,6 +162,7 @@ export const SpeedAPI = createApi({
       {username: string; token: string}
     >({
       query: data => {
+        console.log('================addToCart====================');
         return {
           url: `api/carts/${data.username}`,
           method: 'GET',
@@ -371,10 +372,10 @@ export const SpeedAPI = createApi({
         };
       },
     }),
-    getNotification: builder.query<Data<any>, Token>({
+    getNotification: builder.query<Data<any>, {name: string; token: string}>({
       query: data => {
         return {
-          url: `api/products/hot`,
+          url: `api/users/notifications/${data.name}`,
           method: 'GET',
           headers: {
             'Content-type': 'application/json; charset=UTF-8',
@@ -413,4 +414,5 @@ export const {
   useCheckTokenAliveQuery,
   useLazyGetNewProductQuery,
   useLazyGetHostProductQuery,
+  useLazyGetNotificationQuery,
 } = SpeedAPI;

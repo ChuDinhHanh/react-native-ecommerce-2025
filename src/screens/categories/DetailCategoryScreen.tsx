@@ -25,6 +25,9 @@ const DetailCategoryScreen = () => {
     const [getProductsOfCategory, { data, isError, isFetching, isLoading, error }] = useLazyGetProductsOfCategoryQuery();
 
     useEffect(() => {
+        console.log('====================================');
+        console.log(token, code);
+        console.log('====================================');
         const getProducts = async () => {
             getProductsOfCategory({ token: token, code: code });
         }

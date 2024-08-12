@@ -23,14 +23,6 @@ const HomeScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { language } = useAppSelector((state) => state.SpeedReducer);
 
-  const handlePressCategoryEvent = (code: string) => {
-    navigation.navigate(SERVICE_STACK_NAVIGATOR, {
-      screen: DETAIL_CATEGORY_SCREEN,
-      params: {
-        code: code
-      }
-    } as any)
-  }
   const handleClickSearchEvent = useCallback(() => {
     navigation.navigate(SERVICE_STACK_NAVIGATOR, {
       screen: SEARCH_SCREEN,
@@ -61,9 +53,7 @@ const HomeScreen = () => {
         paddingHorizontal={16}
       />
       {/* Categories */}
-      <CategoriesComponent
-        onPress={handlePressCategoryEvent}
-      />
+      <CategoriesComponent />
       <SessionComponent>
         {/* best selling product */}
         <BestSellingComponent />

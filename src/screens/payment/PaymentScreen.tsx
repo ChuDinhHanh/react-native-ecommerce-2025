@@ -2,10 +2,10 @@
 
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Formik } from 'formik';
-import React, { useEffect, useMemo, useState } from 'react';
+import { Formik, FormikProps } from 'formik';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-multi-lang';
-import { Alert, View } from 'react-native';
+import { Alert, Image, View } from 'react-native';
 import TextButtonComponent from '../../components/buttons/textButton/TextButtonComponent';
 import ContainerComponent from '../../components/container/ContainerComponent';
 import DropdownComponent from '../../components/dropdown/DropdownComponent';
@@ -18,13 +18,18 @@ import { Variables } from '../../constants/Variables';
 import { useAppSelector } from '../../redux/Hooks';
 import { useAddCartCheckedMutation, useCreateBillMutation, useLazyGetShippingMethodQuery, useLazyGetUserAddressQuery } from '../../redux/Service';
 import { RootStackParamList } from '../../routes/Routes';
+import { useAuthService } from '../../services/authService';
 import { Bill, Order } from '../../types/request/Bill';
 import { calculateDistance } from '../../utils/DistanceUtils';
 import { vietnameseCurrency } from '../../utils/FormatNumberUtils';
-import { moderateScale, verticalScale } from '../../utils/ScaleUtils';
 import { validationSchemaPaymentUtils } from '../../utils/Rules';
+import { moderateScale, verticalScale } from '../../utils/ScaleUtils';
 import AddressComponent from '../checkout/component/address/AddressComponent';
 import SelectAddressComponent from './component/address/SelectAddressComponent';
+import PayPalPayment from './component/paypal/PayPalPayment ';
+import { IconButton, Modal, Portal } from 'react-native-paper';
+import RowComponent from '../../components/row/RowComponent';
+import { TouchableOpacity } from 'react-native';
 
 
 interface ShippingUnit {
@@ -40,9 +45,12 @@ interface Address {
 }
 
 const PaymentScreen = () => {
+    const { handleCheckTokenAlive } = useAuthService();
     const t = useTranslation();
+    const formikRef = useRef<FormikProps<any>>(null);
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const [visible, setVisible] = React.useState(false);
+    const [visiblePaypal, setVisiblePaypal] = React.useState(false);
     const [getUserAddress, { isError: isErrorGetUserAddress, isFetching: isFetchingGetUserAddress, isLoading: isLoadingGetUserAddress, data: dataGetUserAddress, error: errorGetUserAddress }] = useLazyGetUserAddressQuery();
     const [getShippingMethod, {
         isError: isErrorGetShippingMethod,
@@ -54,6 +62,8 @@ const PaymentScreen = () => {
     // Modal
     const showModal = () => setVisible(true);
     const hideModal = () => setVisible(false);
+    const showModalPaypal = () => setVisiblePaypal(true);
+    const hideModalPaypal = () => setVisiblePaypal(false);
     const route = useRoute<RouteProp<RootStackParamList, 'PAYMENT_SCREEN'>>();
     const listCodeCartChecked = route.params.listCodeCartChecked;
     const [addressDisplay, setAddressDisplay] = useState<Address>();
@@ -74,10 +84,12 @@ const PaymentScreen = () => {
         data: dataCreateBill
     }] = useCreateBillMutation();
 
-
     const userLogin = useAppSelector((state) => state.SpeedReducer.userLogin);
-    const token = useAppSelector((state) => state.SpeedReducer.token);
+    const token = useAppSelector((state) => state.SpeedReducer.token) ?? "";
+    const refreshToken = useAppSelector((state) => state.SpeedReducer.userLogin?.refreshToken) ?? "";
     const [selectShippingUnit, setSelectShippingUnit] = useState();
+    const [selectPaymentMethod, setPaymentMethod] = useState();
+
     const [initialValues, setInitialValues] = useState<Bill>({
         username: userLogin?.email ?? "",
         shippingUnit: '',
@@ -140,6 +152,9 @@ const PaymentScreen = () => {
     useEffect(() => {
         const getAddress = async () => {
             try {
+                console.log('====================================');
+                console.log(userLogin?.email ?? "", token ?? "");
+                console.log('====================================');
                 await getUserAddress({
                     user: userLogin?.email ?? "",
                     token: token ?? ""
@@ -170,8 +185,13 @@ const PaymentScreen = () => {
 
     useEffect(() => {
         if (isErrorGetUserAddress) {
-            const textError = JSON.parse(JSON.stringify(errorGetUserAddress));
-            Alert.alert("Cảnh báo", textError?.data ? textError?.data?.message : textError?.message)
+            const handleCheckTokenExpired = async () => {
+                try {
+                    await handleCheckTokenAlive(token, refreshToken);
+                } catch (error) {
+                    // Handle
+                }
+            }
         }
     }, [isErrorGetUserAddress, errorGetUserAddress]);
 
@@ -205,6 +225,22 @@ const PaymentScreen = () => {
             Alert.alert("Cảnh báo", textError?.data ? textError?.data?.message : textError?.message || 'Đã xảy ra lỗi khi thêm vào giỏ hàng');
         }
     }, [isErrorAddCartChecked, errorAddCartChecked]);
+
+    useEffect(() => {
+        if (selectPaymentMethod === 'Thẻ tín dụng') {
+            showModalPaypal();
+        }
+    }, [selectPaymentMethod])
+
+    const paymentByPalpalSuccess = () => {
+        hideModalPaypal();
+        Alert.alert("Thông báo", 'Thanh toán thành công!');
+        formikRef.current?.submitForm();
+    }
+
+    const paymentByPalpalUnSuccess = () => {
+        Alert.alert("Thông báo", 'Thanh toán thất bại!')
+    }
 
     const handlePaymentRequest = async (values: Bill) => {
         try {
@@ -245,6 +281,7 @@ const PaymentScreen = () => {
                 {/* Address */}
                 <AddressComponent onPress={showModal} addressDisplay={addressDisplay?.addressDisplayName ?? ""} />
                 <Formik
+                    innerRef={formikRef}
                     initialValues={initialValues}
                     validationSchema={validationSchemaPaymentUtils}
                     onSubmit={handlePaymentRequest}
@@ -272,7 +309,7 @@ const PaymentScreen = () => {
                                 dropdownData={paymentMethod}
                                 values={values.paymentMethod}
                                 onSetFieldValue={setFieldValue}
-                                onSetValue={(value) => { console.log(value) }}
+                                onSetValue={(value) => setPaymentMethod(value)}
                                 FieldValue={'paymentMethod'}
                             />
                             {errors.paymentMethod && touched.paymentMethod && (
@@ -311,6 +348,26 @@ const PaymentScreen = () => {
                 isLoading={isLoadingGetUserAddress}
                 isFetching={isFetchingGetUserAddress}
             />
+            <Portal>
+                <Modal visible={visiblePaypal} onDismiss={hideModalPaypal} contentContainerStyle={{ width: '100%', height: '100%' }}>
+                    <RowComponent justifyContent='space-between' alignItems='center' backgroundColor={Colors.WHITE}>
+                        <TextComponent paddingHorizontal={moderateScale(16)} fontWeight='bold' color={Colors.BLACK} text='Chọn thanh toán bằng paypal' />
+                        <IconButton icon={'close'}
+                            onPress={hideModalPaypal}
+                        />
+                    </RowComponent>
+                    <PayPalPayment
+                        currency="USD"
+                        total="26"
+                        shipping="6"
+                        subtotal="20"
+                        shipping_discount="0"
+                        tax="0"
+                        successPayment={paymentByPalpalSuccess}
+                        failPayment={paymentByPalpalUnSuccess}
+                    />
+                </Modal>
+            </Portal>
         </ContainerComponent>
     );
 };

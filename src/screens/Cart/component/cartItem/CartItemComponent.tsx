@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Image, View } from 'react-native'
+import { Image, Text, View } from 'react-native'
 import CheckBox from 'react-native-check-box'
 import { Divider } from 'react-native-paper'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -14,14 +14,15 @@ import { Variables } from '../../../../constants/Variables'
 import { vietnameseCurrency } from '../../../../utils/FormatNumberUtils'
 import { moderateScale, verticalScale } from '../../../../utils/ScaleUtils'
 import { styles } from './CartItemComponent.style'
+import { CartItem } from '../../../../types/other/CartItem'
 
 interface Props {
-    item: any;
+    item: CartItem;
     index: number;
-    onPress: (index: number) => void;
+    onPress: (code: string) => void;
     onDelete: (itemCartCode: string, qty: number) => void;
     onChangeQty: (itemCartCode: string, qty: number) => void;
-    onUpdate: () => void;
+    onUpdate: (item: CartItem, index: number) => void;
 }
 
 const CartItemComponent = (props: Props) => {
@@ -49,7 +50,7 @@ const CartItemComponent = (props: Props) => {
                         icon={
                             <FontAwesome size={Variables.ICON_SIZE_SMALL} name='pencil-square-o' color={Colors.BLACK} />
                         }
-                        onPress={() => onUpdate()}
+                        onPress={() => onUpdate(item, index)}
                     />
                     <SpaceComponent width={moderateScale(16)} />
                     <IconButtonComponent
@@ -69,7 +70,7 @@ const CartItemComponent = (props: Props) => {
                 {/*Body left */}
                 <RowComponent justifyContent='center' alignItems='center'>
                     <CheckBox
-                        onClick={() => onPress(index)}
+                        onClick={() => onPress(item.itemCartCode)}
                         isChecked={Boolean(item.status)}
                         checkBoxColor={item.status ? Colors.COLOR_BTN_BLUE_PRIMARY : undefined}
                         leftText={"CheckBox"}
@@ -92,7 +93,7 @@ const CartItemComponent = (props: Props) => {
             <SpaceComponent height={verticalScale(10)} />
             <RowComponent paddingVertical={moderateScale(10)} justifyContent='space-between' alignItems='center'>
                 {/* Price */}
-                <TextComponent color={Colors.BLACK} fontWeight='bold' text={vietnameseCurrency(item.totalPrice * item.qty)} />
+                <TextComponent color={Colors.BLACK} fontWeight='bold' text={vietnameseCurrency(Number(item.totalPrice) * item.qty)} />
                 <RowComponent>
                     <TextButtonComponent
                         disabled={btnChangeQtyIsDisabled}
@@ -110,7 +111,7 @@ const CartItemComponent = (props: Props) => {
                     <SpaceComponent width={moderateScale(1)} />
                     <TextButtonComponent
                         onPress={() => { }}
-                        title={<TextComponent text={item.qty} color={Colors.BLACK} />}
+                        title={<TextComponent text={`${item.qty}`} color={Colors.BLACK} />}
                         borderWidth={.5}
                         paddingHorizontal={moderateScale(10)}
                     />

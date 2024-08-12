@@ -13,6 +13,7 @@ import { useAuthService } from '../../../services/authService';
 import { Token } from '../../../types/common/Token';
 import { GetNewProduce } from '../../../types/request/GetNewProduce';
 import { moderateScale, verticalScale } from '../../../utils/ScaleUtils';
+import ContainerComponent from '../../../components/container/ContainerComponent';
 
 const DetailBestSellingAndLatestProduct = () => {
     const [getNewProduct, { data, isError, isFetching, isLoading, error }] = useLazyGetNewProductQuery();
@@ -45,7 +46,6 @@ const DetailBestSellingAndLatestProduct = () => {
 
     const handleScrollToEndEvent = async () => {
         if (!stillProducts || isLoading) return;
-        console.log('===============handleScrollToEndEvent=====================');
         const getNewProductData: GetNewProduce = {
             page: page + 1,
             productInPage: 6,
@@ -60,14 +60,15 @@ const DetailBestSellingAndLatestProduct = () => {
     }
 
     return (
-        <View
-            style={{ backgroundColor: Colors.WHITE }}
+        <ContainerComponent
+            isFull
+            backgroundColor={Colors.WHITE}
         >
             <FlatList
                 style={{ padding: 16 }}
                 numColumns={2}
                 columnWrapperStyle={{ justifyContent: 'space-between' }}
-                contentContainerStyle={{ paddingBottom: verticalScale(30) }}
+                contentContainerStyle={{ paddingBottom: verticalScale(50) }}
                 keyExtractor={(item, index) => index.toString()}
                 ItemSeparatorComponent={() => <SpaceComponent height={verticalScale(15)} />}
                 data={product}
@@ -91,7 +92,7 @@ const DetailBestSellingAndLatestProduct = () => {
 
                 )}
             />
-        </View>
+        </ContainerComponent>
     )
 }
 
