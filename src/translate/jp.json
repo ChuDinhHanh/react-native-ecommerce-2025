@@ -96,7 +96,11 @@
     "HomeScreen": {
         "textPlaceholderSearch": "検索",
         "TitleIntroduce": "Speedへようこそ",
-        "TitleIntroduce_description": "ベトナムで最も信頼されているeコマースプラットフォーム"
+        "TitleIntroduce_description": "ベトナムで最も信頼されているeコマースプラットフォーム",
+        "categories_title": "カテゴリー",
+        "best_selling_title": "ベストセラー",
+        "see_all_button": "すべて見る",
+        "latest_title": "最新"
     },
     "DrawerScreen": {
         "itemLanguage": "言語",
@@ -105,5 +109,10 @@
     "PaymentScreen": {
         "createNewAddress": "新しい住所を作成",
         "selectOldAddress": "住所リストから住所を選択"
+    },
+    "SearchScreen": {
+        "inputSearchRequired": "キーワードを入力してください！",
+        "productNotFoundTitle": "商品が見つかりません!",
+        "placeholder": "商品を検索"
     }
 }

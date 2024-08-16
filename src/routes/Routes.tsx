@@ -12,7 +12,7 @@ import TextComponent from '../components/text/TextComponent';
 import ToolbarWithBackPress from '../components/toolbars/toolbarWithBackPress/ToolbarWithBackPress';
 import { Colors } from '../constants/Colors';
 import { appInfo } from '../constants/Infos';
-import { ADDRESS_SCREEN, ALL_NOTIFICATION_SCREEN, AUTHENTICATION_STACK_NAVIGATOR, BOTTOM_TAB_NAVIGATOR, CART_SCREEN, CHECK_OUT_SCREEN, DETAIL_CATEGORY_SCREEN, DETAIL_NOTIFICATION_SCREEN, DETAIL_PRODUCT_SCREEN, FEED_BACK_SCREEN, FORGOT_PASSWORD, HOME_SCREEN, INTERMEDIATE_SCREEN, LATEST_PRODUCT_LIST_AND_BEST_SELLING_PRODUCT_LIST, LOGIN_SCREEN, MESSENGER_SCREEN, NOTIFICATION_SCREEN, NOTIFICATION_SCREEN_OPTIONS_NAVIGATOR, PAYMENT_SCREEN, PROFILE_SCREEN, PROFILE_SCREEN_OPTIONS_NAVIGATOR, REGISTER_SCREEN, RESET_PASSWORD_SCREEN, SEARCH_SCREEN, SELECT_LANGUAGE_SCREEN, SERVICE_STACK_NAVIGATOR, SHOP_SCREEN, SPLASH_SCREEN, UN_READ_NOTIFICATION_SCREEN, VERIFY_CAPTCHA_SEND_SMS_SCREEN, VERIFY_EMAIL_SCREEN, VERIFY_OTP_SCREEN, VERIFY_PHONE_SCREEN } from '../constants/Screens';
+import { ADDRESS_SCREEN, ALL_NOTIFICATION_SCREEN, AUTHENTICATION_STACK_NAVIGATOR, BILL_SCREEN, BOTTOM_TAB_NAVIGATOR, CART_SCREEN, CHECK_OUT_SCREEN, CONVERSATION_SCREEN, DETAIL_CATEGORY_SCREEN, DETAIL_NOTIFICATION_SCREEN, DETAIL_PRODUCT_SCREEN, FEED_BACK_SCREEN, FORGOT_PASSWORD, HOME_SCREEN, INTERMEDIATE_SCREEN, LATEST_PRODUCT_LIST_AND_BEST_SELLING_PRODUCT_LIST, LIST_PRODUCT_LIKED, LOGIN_SCREEN, MESSENGER_SCREEN, NOTIFICATION_SCREEN, NOTIFICATION_SCREEN_OPTIONS_NAVIGATOR, PAYMENT_SCREEN, PROFILE_SCREEN, PROFILE_SCREEN_OPTIONS_NAVIGATOR, REGISTER_SCREEN, RESET_PASSWORD_SCREEN, SEARCH_SCREEN, SELECT_LANGUAGE_SCREEN, SERVICE_STACK_NAVIGATOR, SHOP_SCREEN, SPLASH_SCREEN, UN_READ_NOTIFICATION_SCREEN, VERIFY_CAPTCHA_SEND_SMS_SCREEN, VERIFY_EMAIL_SCREEN, VERIFY_OTP_SCREEN, VERIFY_PHONE_SCREEN } from '../constants/Screens';
 import { Variables } from '../constants/Variables';
 import { useAppDispatch, useAppSelector } from '../redux/Hooks';
 import { logoutUser } from '../redux/userThunks';
@@ -26,6 +26,7 @@ import ForgotPassWordScreen from '../screens/forgot/ForgotPassWordScreen';
 import HomeScreen from '../screens/home/HomeScreen';
 import IntermediateScreen from '../screens/intermediate/IntermediateScreen';
 import SelectLanguageScreen from '../screens/language/SelectLanguageScreen';
+import ListProductLikedScreen from '../screens/liked/screens/ListProductLikedScreen';
 import LoginScreen from '../screens/login/LoginScreen';
 import MessengerScreen from '../screens/messenger/MessengerScreen';
 import NotificationScreen from '../screens/notifications/NotificationScreen';
@@ -46,6 +47,8 @@ import VerificationWithOTPScreen from '../screens/verification/verificationWithO
 import { CartItem } from '../types/other/CartItem';
 import { Product } from '../types/other/Product';
 import { moderateScale } from '../utils/ScaleUtils';
+import BillScreen from '../screens/bills/BillScreen';
+import ConversationScreen from '../screens/messenger/screen/ConversationScreen';
 
 export type RootStackParamList = {
   SPLASH_SCREEN: undefined;
@@ -74,7 +77,7 @@ export type RootStackParamList = {
   NOTIFICATION_OPTION_SPECIAL_NAVIGATOR: undefined;
   DETAIL_PRODUCT_SCREEN: { code: string };
   FEED_BACK_SCREEN: { id: number };
-  CONVERSATION_SCREEN: { id: number };
+  CONVERSATION_SCREEN: { code: string, senderEmail: string };
   MESSENGER_SCREEN: undefined;
   DETAIL_CATEGORY_SCREEN: { code: string };
   SEARCH_SCREEN: undefined;
@@ -90,6 +93,8 @@ export type RootStackParamList = {
   PAYMENT_SCREEN: { listCodeCartChecked: string[] };
   MAP_SCREEN: undefined;
   LATEST_PRODUCT_LIST_AND_BEST_SELLING_PRODUCT_LIST: { products: Product[] },
+  LIST_PRODUCT_LIKED: { username: string };
+  BILL_SCREEN: undefined
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -247,6 +252,21 @@ function ServiceStackNavigator() {
             header: () => <ToolbarWithBackPress title={'Danh sách sản phẩm mới nhất '} />
           }}
           name={LATEST_PRODUCT_LIST_AND_BEST_SELLING_PRODUCT_LIST} component={DetailBestSellingAndLatestProduct} />
+        <RootStack.Screen
+          options={{
+            header: () => <ToolbarWithBackPress title={'Danh sách sản phẩm đã thích'} />
+          }}
+          name={LIST_PRODUCT_LIKED} component={ListProductLikedScreen} />
+        <RootStack.Screen
+          options={{
+            header: () => <ToolbarWithBackPress title={'Danh sách Hóa đơn'} />
+          }}
+          name={BILL_SCREEN} component={BillScreen} />
+        <RootStack.Screen
+          options={{
+            header: () => <ToolbarWithBackPress title={'Nguyễn Văn A'} />
+          }}
+          name={CONVERSATION_SCREEN} component={ConversationScreen} />
       </RootStack.Group>
     </RootStack.Navigator>
   )
@@ -475,19 +495,6 @@ function MainStackNavigator() {
   );
 }
 const Routes = () => {
-  // const token = useAppSelector((state) => state.SpeedReducer.token);
-  // useEffect(() => {
-  //   const handleAppStateChange = (nextAppState: AppStateStatus) => {
-  //     if (nextAppState === 'active') {
-  //       console.log('App has come to the foreground (resumed)', token);
-  //     }
-  //   };
-
-  //   const subscription = AppState.addEventListener('change', handleAppStateChange);
-  //   return () => {
-  //     subscription.remove();
-  //   };
-  // }, []);
   return <MainStackNavigator />;
 }
 

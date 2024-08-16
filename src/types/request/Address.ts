@@ -7,4 +7,5 @@ export interface Address {
   nameGet: string;
   status: string;
   location: string;
+  code: string;
 }

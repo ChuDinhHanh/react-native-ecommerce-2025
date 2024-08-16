@@ -1,19 +1,19 @@
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { Colors } from '../../../../constants/Colors';
 import { appInfo } from '../../../../constants/Infos';
 import { Variables } from '../../../../constants/Variables';
+import { Product } from '../../../../types/other/Product';
 import { vietnameseCurrency } from '../../../../utils/FormatNumberUtils';
 import RateQtyProductComponent from '../../../rate/RateQtyProductComponent';
 import RowComponent from '../../../row/RowComponent';
 import SessionComponent from '../../../session/SessionComponent';
 import SpaceComponent from '../../../space/SpaceComponent';
 import TextComponent from '../../../text/TextComponent';
-import AllProductComponent from '../suggestion/AllProductComponent';
 import { styles } from './ProductItem.style';
 
 interface Props {
-    item: any;
+    item: Product;
     onPress: (id: string) => void;
     marginLeft?: number;
 }
@@ -22,9 +22,9 @@ const ProductItem = (props: Props) => {
     const { item, onPress, marginLeft } = props;
     return (
         <TouchableOpacity onPress={() => onPress(item.code)}>
-            <View key={item.id} style={[styles.container, { marginLeft }]}>
+            <View key={item.createdAt} style={[styles.container, { marginLeft }]}>
                 <View style={styles.wrapperImage}>
-                    <Image style={styles.image} source={{ uri: item.image ?? 'https://vsmall.vn/wp-content/uploads/2022/07/cach-chup-anh-quan-ao-dep-bang-dien-thoai.png' }} />
+                    <Image style={styles.image} source={{ uri: `http://10.0.2.2:5181/api/get/image/thoi-trang-nam.jpg` }} />
                 </View>
                 <SessionComponent padding={5}>
                     <Text
@@ -44,7 +44,10 @@ const ProductItem = (props: Props) => {
                         />
                         <SpaceComponent width={5} />
                         {/* Price sale off */}
-                        <TextComponent textDecoration='line-through' text={vietnameseCurrency(item.price)} color={Colors.RED} fontSize={12} />
+                        {
+                            item.priceSaleOff && <TextComponent textDecoration='line-through' text={vietnameseCurrency(item.price)} color={Colors.RED} fontSize={12} />
+                        }
+
                     </RowComponent>
                     {/* Fast delivery */}
                     {

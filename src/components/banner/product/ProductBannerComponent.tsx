@@ -1,9 +1,10 @@
 import { useIsFocused } from '@react-navigation/native';
-import React, { useCallback, useRef, useState } from 'react';
-import { FlatList, Image, Pressable, Text, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { FlatList, Image, Pressable, View } from 'react-native';
 import { Colors } from '../../../constants/Colors';
 import TextComponent from '../../text/TextComponent';
 import { styles } from './ProductBannerComponent.style';
+import { SERVER_ADDRESS } from '../../../constants/System';
 
 const DotsComponent = React.memo(
     ({ length, currentDot }: { length: number; currentDot: number }) => {
@@ -25,18 +26,6 @@ const DotsComponent = React.memo(
     },
 );
 
-interface Props {
-    height: number;
-    widthOfBanner: number;
-    data: any;
-    showNode?: boolean;
-    showIndexNumber?: boolean;
-    autoScroll: boolean;
-    borderRadius?: number;
-    paddingHorizontal?: number;
-}
-
-
 const CurrentIndex = React.memo(
     ({ length, currentDot }: { length: number; currentDot: number }) => {
         return (
@@ -55,22 +44,67 @@ const CurrentIndex = React.memo(
     },
 );
 
+interface Props {
+    height: number;
+    widthOfBanner: number;
+    data: any;
+    showNode?: boolean;
+    showIndexNumber?: boolean;
+    autoScroll: boolean;
+    borderRadius?: number;
+    paddingHorizontal?: number;
+}
 
 const ProductBannerComponent = (props: Props) => {
     const { height, widthOfBanner, data, showNode, showIndexNumber, autoScroll, borderRadius, paddingHorizontal } =
         props;
-    const [dataImage, setDataImage] = useState<[{ id: number, image: string }][]>(data);
     const BannerRef = useRef<FlatList>(null);
     const [currentIndexDot, setCurrentIndexDot] = useState(0);
-    // Session padding total is 20
     const isFocusing = useIsFocused();
     const totalWidthOfBanner = data.length * widthOfBanner;
+    const scrollInterval = useRef<NodeJS.Timeout | null>(null);
 
     const handleMomentumScrollEnd = (event: any) => {
         const offsetX = event.nativeEvent.contentOffset.x;
         const currentIndex = Math.round(offsetX / widthOfBanner);
-        setCurrentIndexDot(currentIndex)
-    }
+        setCurrentIndexDot(currentIndex);
+    };
+
+    const startAutoScroll = () => {
+        if (autoScroll && isFocusing && scrollInterval.current === null) {
+            scrollInterval.current = setInterval(() => {
+                setCurrentIndexDot((prevIndex) => {
+                    const nextIndex = prevIndex + 1 >= data.length ? 0 : prevIndex + 1;
+                    BannerRef.current?.scrollToIndex({ index: nextIndex, animated: true });
+                    return nextIndex;
+                });
+            }, 3000); // Thời gian giữa mỗi lần chuyển banner
+        }
+    };
+
+    const stopAutoScroll = () => {
+        if (scrollInterval.current) {
+            clearInterval(scrollInterval.current);
+            scrollInterval.current = null;
+        }
+    };
+
+    useEffect(() => {
+        if (isFocusing) {
+            startAutoScroll();
+        } else {
+            stopAutoScroll();
+        }
+        return stopAutoScroll; // Cleanup interval on unmount or when focus is lost
+    }, [isFocusing, autoScroll]);
+
+    useEffect(() => {
+        // Restart auto scroll when currentIndexDot or autoScroll changes
+        if (autoScroll) {
+            stopAutoScroll();
+            startAutoScroll();
+        }
+    }, [currentIndexDot, autoScroll]);
 
     const renderItem = (item: any, index: number) => {
         return (
@@ -88,15 +122,16 @@ const ProductBannerComponent = (props: Props) => {
                         width: widthOfBanner,
                         paddingHorizontal
                     }}>
-                    <Image style={[styles.bannerImages, { height, borderRadius }]} source={{ uri: item.image }} />
+                    <Image style={[styles.bannerImages, { height, borderRadius }]} source={{ uri: `${SERVER_ADDRESS}api/get/image/${item.name}` }} />
                 </View>
             </Pressable>
         );
     };
+
     return (
         <View>
             <FlatList
-                keyExtractor={(item) => item.id.toString()} // Thêm keyExtractor
+                keyExtractor={(item) => item.id.toString()}
                 onMomentumScrollEnd={handleMomentumScrollEnd}
                 ref={BannerRef}
                 contentContainerStyle={{
@@ -105,7 +140,7 @@ const ProductBannerComponent = (props: Props) => {
                 pagingEnabled
                 showsHorizontalScrollIndicator={false}
                 horizontal
-                data={dataImage}
+                data={data ?? []}
                 renderItem={({ item, index }) => renderItem(item, index)}
             />
             {/* Dot */}
@@ -120,4 +155,4 @@ const ProductBannerComponent = (props: Props) => {
     )
 }
 
-export default ProductBannerComponent
+export default ProductBannerComponent;

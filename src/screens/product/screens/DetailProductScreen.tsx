@@ -7,7 +7,6 @@ import ProductBannerComponent from '../../../components/banner/product/ProductBa
 import ContainerComponent from '../../../components/container/ContainerComponent'
 import FeedBackComponent from '../../../components/feedback/FeedBackComponent'
 import LoadingComponent from '../../../components/loading/LoadingComponent'
-import RateQtyProductComponent from '../../../components/rate/RateQtyProductComponent'
 import SessionComponent from '../../../components/session/SessionComponent'
 import ShopProductsComponent from '../../../components/shop/product/normal/ShopProductsComponent'
 import SpaceComponent from '../../../components/space/SpaceComponent'
@@ -24,6 +23,7 @@ import { useAuthService } from '../../../services/authService'
 import { moderateScale, scale } from '../../../utils/ScaleUtils'
 import BottomComponentDetailScreen from '../component/bottomToolBar/BottomComponentDetailScreen'
 import DeliveryComponent from '../component/delivery/DeliveryComponent'
+import LikeAndRateComponent from '../component/like/LikeAndRateComponent'
 import SelectOptionProductComponent from '../component/optionProduct/SelectOptionProductComponent'
 import ShopComponent from '../component/shop/ShopComponent'
 
@@ -45,13 +45,16 @@ const DetailProductScreen = () => {
     useEffect(() => {
         const getProductData = async () => {
             try {
+                console.log('===================getProductData=================');
+                console.log({ code: code, token: token ?? "" });
+                console.log('===================getProductData=================');
                 await getProductByCode({ code: code, token: token ?? "" });
             } catch (error) {
                 console.log(error);
             }
         }
-        getProductData();
-    }, [code, token]);
+        isFocused && getProductData();
+    }, [code, token, isFocused]);
 
     useEffect(() => {
         if (dataAddToCart) {
@@ -129,6 +132,16 @@ const DetailProductScreen = () => {
             isCenter
         >
             {
+                isFocused && isFetching && !isLoading && <LoadingComponent
+                    title={'Đang tải dữ liệu...'}
+                    size={Variables.FONT_SIZE_ERROR_TEXT}
+                    color={Colors.WHITE}
+                    icon=''
+                    iconSize={moderateScale(25)}
+                    iconColor={Colors.GREEN_500}
+                />
+            }
+            {
                 (data?.data == null || isLoading) ?
                     <LoadingComponent
                         title={'Đang tải thông tin sản phẩm...'}
@@ -158,14 +171,11 @@ const DetailProductScreen = () => {
                                     color={Colors.BLACK}
                                     text={data?.data?.name}
                                 />
-                                <SpaceComponent height={moderateScale(15)} />
-                                <RateQtyProductComponent
-                                    rateQty={<TextComponent text="(33)" color={Colors.COLOR_BLUE_BANNER} />}
-                                    fontSize={scale(15)}
-                                    color={Colors.BLACK}
-                                />
-                            </SessionComponent>
-                            <SessionComponent>
+                                {/* Like and rate*/}
+                                {
+                                    isFocused && !isFetching && <LikeAndRateComponent refreshToken={userLogin?.refreshToken ?? ""} isLike={data.data.isLiked} productCode={data.data.code ?? ""} token={token} userName={userLogin?.email ?? ""} />
+                                }
+
                                 {/* Select option of product */}
                                 <SelectOptionProductComponent
                                     data={data?.data?.classifies}
@@ -245,7 +255,7 @@ const DetailProductScreen = () => {
                             </SessionComponent>
                         </ScrollView>
                         <BottomComponentDetailScreen
-                            price={parseInt(data?.data.priceSaleOff ?? data?.data.price)}
+                            price={data.data.priceSaleOff ?? data.data.price}
                             onPress={handlePressButtonEvent} />
                     </>
             }

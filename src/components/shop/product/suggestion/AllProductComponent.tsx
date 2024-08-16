@@ -1,31 +1,12 @@
-import React from 'react';
-import { FlatList, StyleSheet } from 'react-native';
-import { NewOfferData } from '../../../../data/NewOfferData';
-import ProductItem from '../item/ProductItem';
-import { styles } from './AllProductComponent.style';
+import { View, Text } from 'react-native'
+import React from 'react'
 
-interface Props {
-    onPressOnProduct: (idProduct: number) => void;
-}
-
-const AllProductComponent = (props: Props) => {
-    const { onPressOnProduct } = props;
+const AllProductComponent = () => {
     return (
-        <FlatList
-            scrollEnabled={false}
-            keyExtractor={(item: any) => item.id}
-            columnWrapperStyle={styles.flatList}
-            contentContainerStyle={styles.flatList__content}
-            numColumns={2}
-            data={NewOfferData}
-            extraData={NewOfferData}
-            // ItemSeparatorComponent={}
-            renderItem={({ item }) => (
-                <ProductItem item={item} onPress={() => { }} />
-            )}
-        />
+        <View>
+            <Text>AllProductComponent</Text>
+        </View>
     )
 }
-
 
 export default AllProductComponent

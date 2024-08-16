@@ -1,7 +1,8 @@
 # OSX
 #
 .DS_Store
-
+# Ignore Google Cloud Service Account JSON
+src/admin/store-ab1b8-firebase-adminsdk-5smhi-520d78a250.json
 .env
 # Xcode
 #

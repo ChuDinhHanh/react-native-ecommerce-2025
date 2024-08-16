@@ -1,7 +1,6 @@
 import React, { memo, useCallback, useEffect, useMemo, useState } from 'react';
-import { FlatList, Text } from 'react-native';
+import { FlatList } from 'react-native';
 import TextButtonComponent from '../../../../components/buttons/textButton/TextButtonComponent';
-import SessionComponent from '../../../../components/session/SessionComponent';
 import SpaceComponent from '../../../../components/space/SpaceComponent';
 import TextComponent from '../../../../components/text/TextComponent';
 import { Colors } from '../../../../constants/Colors';

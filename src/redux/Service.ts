@@ -5,21 +5,31 @@ import {Product} from '../types/other/Product';
 import {Address} from '../types/request/Address';
 import {Order} from '../types/request/Bill';
 import {CheckTokenAlive} from '../types/request/CheckTokenAlive';
+import {CreateNewMessageRequest} from '../types/request/CreateNewMessageRequest';
 import {Data} from '../types/request/Data';
+import {GetBill} from '../types/request/getBill';
+import {GetChatBoxRequest} from '../types/request/getChatBoxRequest';
 import {GetHostProduce} from '../types/request/GetHostProduce';
+import {GetLikeProduct} from '../types/request/GetLikeProduct';
 import {GetNewProduce} from '../types/request/GetNewProduce';
+import {ProductData} from '../types/request/GetProductByCode';
+import {LikeProduct} from '../types/request/LikeProduct';
 import {ResetPassword} from '../types/request/ResetPassword';
 import {SearchProduct} from '../types/request/SearchProduct';
 import {SignIn} from '../types/request/SignIn';
 import {SignInByGoogle} from '../types/request/SignInByGoogle';
 import {SignUpByGoogle} from '../types/request/SignUpByGoogle';
+import {UpdateBill} from '../types/request/UpdateBill';
 import {CartUpdate} from '../types/request/UpdateCart';
 import {Register} from '../types/request/UserRegister';
+import {Category} from '../types/response/Category';
 import {CheckVerifyTokenResponse} from '../types/response/CheckVerifyTokenResponse';
+import {GetBannerResponse} from '../types/response/GetBannerResponse';
+import {GetBillResponse} from '../types/response/GetBillResponse';
 import {LoginByGoogleResponse} from '../types/response/LoginByGoogleResponse';
 import {LoginResponse} from '../types/response/loginResponse';
+import {NotificationItem} from '../types/response/NotificationItem';
 import {RegisterByGoogleResponse} from '../types/response/RegisterByGoogleResponse';
-import {Category} from '../types/response/Category';
 
 export const SpeedAPI = createApi({
   reducerPath: 'SpeedNetworkAPI',
@@ -30,6 +40,10 @@ export const SpeedAPI = createApi({
   refetchOnReconnect: true,
   // Global
   // keepUnusedDataFor:30,
+  // Xóa ngay lập tức khi không dùng
+  // refetchOnMountOrArgChange: true, // Tự động fetch lại khi component mount hoặc argument thay đổi
+  // refetchOnReconnect: true, // Fetch lại khi kết nối lại mạng
+  // refetchOnFocus: true, // Fetch lại khi người dùng quay lại ứng dụng
   tagTypes: ['Cart', 'Address'],
   endpoints: builder => ({
     register: builder.mutation<Data<string>, Register>({
@@ -210,8 +224,12 @@ export const SpeedAPI = createApi({
         },
       }),
     }),
-    getProductByCode: builder.query<Data<any>, {code: string; token: string}>({
+    getProductByCode: builder.query<
+      Data<ProductData>,
+      {code: string; token: string}
+    >({
       query: data => {
+        console.log('=================getProductByCode===================');
         return {
           url: `api/products?pCode=${data.code}`,
           method: 'GET',
@@ -328,7 +346,7 @@ export const SpeedAPI = createApi({
         };
       },
     }),
-    searchProduct: builder.query<Data<any>, SearchProduct>({
+    searchProduct: builder.query<Data<Product[]>, SearchProduct>({
       query: data => {
         return {
           url: `api/products/search?name=${data.name}`,
@@ -357,7 +375,7 @@ export const SpeedAPI = createApi({
       },
     }),
     getHostProduct: builder.query<
-      Data<any>,
+      Data<Product[]>,
       {data: GetHostProduce; token: Token}
     >({
       query: data => {
@@ -372,11 +390,146 @@ export const SpeedAPI = createApi({
         };
       },
     }),
-    getNotification: builder.query<Data<any>, {name: string; token: string}>({
+    getNotification: builder.query<
+      Data<NotificationItem[]>,
+      {name: string; token: string}
+    >({
       query: data => {
         return {
           url: `api/users/notifications/${data.name}`,
           method: 'GET',
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+    }),
+    likeProduct: builder.mutation<
+      Data<any>,
+      {data: LikeProduct; token: string}
+    >({
+      query: data => {
+        return {
+          url: `api/products/like`,
+          method: 'POST',
+          body: data.data,
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+    }),
+    getLikeProduct: builder.query<
+      Data<Product[]>,
+      {data: GetLikeProduct; token: string}
+    >({
+      query: data => {
+        return {
+          url: `api/products/like/get`,
+          method: 'POST',
+          body: data.data,
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+    }),
+    getBill: builder.query<
+      Data<GetBillResponse[]>,
+      {data: GetBill; token: string}
+    >({
+      query: data => {
+        return {
+          url: `api/bills`,
+          method: 'POST',
+          body: data.data,
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+      // keepUnusedDataFor: 0,
+    }),
+    updateBill: builder.mutation<
+      Data<GetBillResponse[]>,
+      {data: UpdateBill; token: string}
+    >({
+      query: data => {
+        return {
+          url: `api/bills/update-status`,
+          method: 'POST',
+          body: data.data,
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+    }),
+    getBoxChats: builder.query<Data<GetChatBoxRequest[]>, Token>({
+      query: data => {
+        return {
+          url: `api/boxchats/get`,
+          method: 'GET',
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+    }),
+    getMessageByCode: builder.query<Data<any>, {code: string; token: string}>({
+      query: data => {
+        return {
+          url: `api/messages/get/${data.code}`,
+          method: 'GET',
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+    }),
+    getBanner: builder.query<Data<GetBannerResponse[]>, Token>({
+      query: data => {
+        return {
+          url: `api/banners`,
+          method: 'GET',
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+    }),
+    getImageByUrlForMobile: builder.query<
+      Data<GetBannerResponse[]>,
+      {image: string; token: string}
+    >({
+      query: data => {
+        return {
+          url: `api/get/image/phone/${data.image}`,
+          method: 'GET',
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+    }),
+    createNewMessage: builder.mutation<
+      Data<GetBannerResponse[]>,
+      {data: CreateNewMessageRequest; token: string}
+    >({
+      query: data => {
+        return {
+          url: `api/messages/create`,
+          method: 'POST',
+          body: data.data,
           headers: {
             'Content-type': 'application/json; charset=UTF-8',
             Authorization: `Bearer ${data.token}`,
@@ -415,4 +568,13 @@ export const {
   useLazyGetNewProductQuery,
   useLazyGetHostProductQuery,
   useLazyGetNotificationQuery,
+  useLazyGetLikeProductQuery,
+  useLikeProductMutation,
+  useLazyGetBillQuery,
+  useUpdateBillMutation,
+  useLazyGetBoxChatsQuery,
+  useLazyGetMessageByCodeQuery,
+  useLazyGetBannerQuery,
+  useLazyGetImageByUrlForMobileQuery,
+  useCreateNewMessageMutation,
 } = SpeedAPI;

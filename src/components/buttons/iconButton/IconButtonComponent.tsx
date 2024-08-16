@@ -20,6 +20,7 @@ interface IconButtonProps {
     typeNoBackground?: boolean;
     icon?: ReactNode;
     badgeNumber?: number;
+    disable?: boolean;
 }
 
 const IconButtonComponent = (props: IconButtonProps) => {
@@ -51,6 +52,7 @@ const IconButtonComponent = (props: IconButtonProps) => {
         return (
             <Pressable
                 onPress={props.onPress}
+                disabled={props.disable}
             >
                 <View style={props.customStyle}>
                     {props.icon}
@@ -64,6 +66,7 @@ const IconButtonComponent = (props: IconButtonProps) => {
         return <Pressable
             onPressIn={() => setPress(true)}
             onPressOut={() => setPress(false)}
+            disabled={props.disable}
             style={({ pressed }) => [props.customStyle, btnStyle]}
             onPress={props.onPress}>
             <Icon

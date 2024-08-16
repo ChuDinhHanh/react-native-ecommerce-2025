@@ -6,6 +6,6 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   flatList__content: {
-    paddingBottom: moderateScale(100),
+    marginVertical: moderateScale(40),
   },
 });

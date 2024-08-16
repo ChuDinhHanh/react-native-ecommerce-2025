@@ -96,7 +96,11 @@
     "HomeScreen": {
         "textPlaceholderSearch": "Search",
         "TitleIntroduce": "Welcome to Speed",
-        "TitleIntroduce_description": "The most reputable e-commerce platform in Vietnam"
+        "TitleIntroduce_description": "The most reputable e-commerce platform in Vietnam",
+        "categories_title": "Categories",
+        "best_selling_title": "Best Selling",
+        "see_all_button": "See All",
+        "latest_title": "Latest"
     },
     "DrawerScreen": {
         "itemLanguage": "Language",
@@ -105,5 +109,10 @@
     "PaymentScreen": {
         "createNewAddress": "Create a new address",
         "selectOldAddress": "Select an address from your address list"
+    },
+    "SearchScreen": {
+        "inputSearchRequired": "Please enter a keyword!",
+        "productNotFoundTitle": "Product not found!",
+        "placeholder": "Search for products"
     }
 }

@@ -1,4 +1,6 @@
-import React from 'react'
+import { useNavigation } from '@react-navigation/native'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import React, { useCallback } from 'react'
 import { View } from 'react-native'
 import { Divider } from 'react-native-paper'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -16,13 +18,39 @@ import SessionComponent from '../../components/session/SessionComponent'
 import SpaceComponent from '../../components/space/SpaceComponent'
 import TextComponent from '../../components/text/TextComponent'
 import { Colors } from '../../constants/Colors'
+import { BILL_SCREEN, LIST_PRODUCT_LIKED, SERVICE_STACK_NAVIGATOR } from '../../constants/Screens'
 import { Variables } from '../../constants/Variables'
+import { useAppSelector } from '../../redux/Hooks'
+import { RootStackParamList } from '../../routes/Routes'
 import { globalStyles } from '../../styles/globalStyles'
 import { moderateScale, scale } from '../../utils/ScaleUtils'
 import ConcessionaryItemComponent from './component/concessionaryItem/ConcessionaryItemComponent'
 import OptionItemComponent from './component/optionItem/OptionItemComponent'
 import TopBannerComponent from './component/topBanner/TopBannerComponent'
 const ProfileScreen = () => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const userLogin = useAppSelector((state) => state.SpeedReducer.userLogin);
+
+  const handleClickButtonEvent = useCallback((key: number) => {
+    switch (key) {
+      case Variables.LIST_PRODUCT_LIKED:
+        navigation.navigate(SERVICE_STACK_NAVIGATOR, {
+          screen: LIST_PRODUCT_LIKED,
+          params: { username: userLogin?.email }
+        } as any)
+        break;
+      case Variables.BILL_SCREEN:
+        navigation.navigate(SERVICE_STACK_NAVIGATOR, {
+          screen: BILL_SCREEN,
+          params: { username: userLogin?.email }
+        } as any)
+        break;
+
+      default:
+        break;
+    }
+
+  }, [userLogin]);
   return (
     <ContainerComponent isScrollEnable backgroundColor={Colors.WHITE} isFull>
       {/* Banner */}
@@ -66,7 +94,7 @@ const ProfileScreen = () => {
       {/* History bill */}
       <SessionComponent>
         <RowComponent
-          onPress={() => { console.log("xem lịch sử mua hàng") }}
+          onPress={() => handleClickButtonEvent(Variables.BILL_SCREEN)}
           justifyContent='space-between' alignItems='center'>
           <RowComponent justifyContent='flex-start' alignItems='center'>
             <FontAwesome name="wpforms" size={Variables.ICN_SIZE_TOP_TAB} color={Colors.GREEN_500} />
@@ -110,11 +138,11 @@ const ProfileScreen = () => {
       {/* had like */}
       <OptionItemComponent
         id={0}
-        onPress={() => { }}
+        onPress={() => handleClickButtonEvent(Variables.LIST_PRODUCT_LIKED)}
         suffix={
           <AntDesign name="hearto" size={Variables.ICN_SIZE_TOP_TAB} color={Colors.GREEN_500} />
         }
-        suffixTitle={"Đơn thích"}
+        suffixTitle={"Sản phẩm đã thích"}
         affix={<AntDesign name="right" size={moderateScale(15)} color={Colors.GREY1} />}
         affixTitle={''}
       />
@@ -126,17 +154,6 @@ const ProfileScreen = () => {
           <Entypo name="shop" size={Variables.ICN_SIZE_TOP_TAB} color={Colors.GREEN_500} />
         }
         suffixTitle={"Shop đang theo dõi"}
-        affix={<AntDesign name="right" size={moderateScale(15)} color={Colors.GREY1} />}
-        affixTitle={''}
-      />
-      {/* Had seen currently */}
-      <OptionItemComponent
-        id={0}
-        onPress={() => { }}
-        suffix={
-          <AntDesign name="clockcircleo" size={Variables.ICN_SIZE_TOP_TAB} color={Colors.GREEN_500} />
-        }
-        suffixTitle={"Đã xem gần đây"}
         affix={<AntDesign name="right" size={moderateScale(15)} color={Colors.GREY1} />}
         affixTitle={''}
       />

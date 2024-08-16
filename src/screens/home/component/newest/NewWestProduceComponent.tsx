@@ -1,8 +1,8 @@
+import React, { useEffect } from 'react'
+import { FlatList, View, StyleSheet } from 'react-native'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 import { useIsFocused, useNavigation } from '@react-navigation/native'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
-import React, { useEffect } from 'react'
-import { FlatList, View } from 'react-native'
-import AntDesign from 'react-native-vector-icons/AntDesign'
 import TextButtonComponent from '../../../../components/buttons/textButton/TextButtonComponent'
 import RowComponent from '../../../../components/row/RowComponent'
 import ProductItem from '../../../../components/shop/product/item/ProductItem'
@@ -19,9 +19,17 @@ import { useAuthService } from '../../../../services/authService'
 import { Token } from '../../../../types/common/Token'
 import { GetNewProduce } from '../../../../types/request/GetNewProduce'
 import { moderateScale, verticalScale } from '../../../../utils/ScaleUtils'
+import { styles } from './NewWestProduceComponent.style'
+import { useTranslation } from 'react-multi-lang'
+
+const translations = {
+    latest: 'Mới nhất',
+    seeAll: 'xem tất cả'
+};
 
 const NewWestProduceComponent = () => {
     const { handleCheckTokenAlive } = useAuthService();
+    const t = useTranslation();
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     const token = useAppSelector((state) => state.SpeedReducer.token) ?? "";
     const email = useAppSelector((state) => state.SpeedReducer.userLogin?.email) ?? "";
@@ -31,20 +39,14 @@ const NewWestProduceComponent = () => {
 
     useEffect(() => {
         const handleGetCategories = async () => {
-            try {
-                if (token) {
-                    const getNewProductData: GetNewProduce = {
-                        page: 1,
-                        productInPage: 6,
-                        day: 7
-                    }
-                    const tokenData: Token = {
-                        token: token
-                    }
-                    await getNewProduct({ data: getNewProductData, token: tokenData });
-                }
-            } catch (error) {
-                //    Handle
+            if (token) {
+                const getNewProductData: GetNewProduce = {
+                    page: 1,
+                    productInPage: 6,
+                    day: 7
+                };
+                const tokenData: Token = { token };
+                await getNewProduct({ data: getNewProductData, token: tokenData });
             }
         }
         handleGetCategories();
@@ -55,56 +57,60 @@ const NewWestProduceComponent = () => {
             console.log('=================NewWestProduceComponent===================');
             handleCheckTokenAlive(token, refreshToken);
         }
-    }, [data, isError, isFetching, isFocused]);
+    }, [isError, isFocused]);
 
     const handlePressProductEvent = (id: string) => {
         navigation.navigate(SERVICE_STACK_NAVIGATOR, {
             screen: DETAIL_PRODUCT_SCREEN,
             params: { code: id }
-        } as any)
+        } as any);
     };
 
     const handlePressSeeAllEvent = () => {
         navigation.navigate(SERVICE_STACK_NAVIGATOR, {
             screen: LATEST_PRODUCT_LIST_AND_BEST_SELLING_PRODUCT_LIST,
             params: { products: data?.data }
-        } as any)
-    }
+        } as any);
+    };
 
     return (
-        <View>
+        <View style={styles.container}>
             <RowComponent justifyContent='space-between' alignItems='center'>
-                <TextComponent fontWeight='bold' text='Mới nhất' color={Colors.BLACK} />
-                {
-                    (!isLoading) && <TextButtonComponent
+                <TextComponent fontWeight='bold' text={t("HomeScreen.latest_title")} color={Colors.BLACK} />
+                {!isLoading && (
+                    <TextButtonComponent
                         isTextFixed
                         disabled={isLoading}
                         spaceSuffix={5}
                         iconOrImageSuffix={<AntDesign name='right' color={Colors.BLACK} />}
                         onPress={handlePressSeeAllEvent}
-                        title={<TextComponent fontSize={Variables.FONT_SIZE_ERROR_TEXT} text='xem tất cả' color={Colors.BLACK} />}
+                        title={<TextComponent fontSize={Variables.FONT_SIZE_ERROR_TEXT} text={t("HomeScreen.see_all_button")} color={Colors.BLACK} />}
                     />
-                }
+                )}
             </RowComponent>
-            {
-                isLoading ? <ProductSkeleton /> : <>
-                    {/* Title */}
+            {isLoading ? (
+                <ProductSkeleton />
+            ) : (
+                <>
                     <SpaceComponent height={verticalScale(16)} />
-                    {/* List product */}
                     <FlatList
                         numColumns={2}
-                        columnWrapperStyle={{ justifyContent: 'space-between' }}
+                        columnWrapperStyle={styles.columnWrapper}
                         ItemSeparatorComponent={() => <SpaceComponent height={verticalScale(15)} />}
                         data={data?.data}
                         extraData={data?.data}
                         renderItem={({ item, index }) => (
-                            <ProductItem marginLeft={index === (data!.data.length - 1) ? moderateScale(8) : undefined} item={item} onPress={handlePressProductEvent} />
+                            <ProductItem
+                                marginLeft={index === (data!.data.length - 1) ? moderateScale(8) : undefined}
+                                item={item}
+                                onPress={handlePressProductEvent}
+                            />
                         )}
                     />
                 </>
-            }
+            )}
         </View>
-    )
+    );
 }
 
-export default NewWestProduceComponent
+export default NewWestProduceComponent;

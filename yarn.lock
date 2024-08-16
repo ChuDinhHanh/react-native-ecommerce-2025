@@ -3959,6 +3959,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@socket.io/component-emitter@npm:~3.1.0":
+  version: 3.1.2
+  resolution: "@socket.io/component-emitter@npm:3.1.2"
+  checksum: 89888f00699eb34e3070624eb7b8161fa29f064aeb1389a48f02195d55dd7c52a504e52160016859f6d6dffddd54324623cdd47fd34b3d46f9ed96c18c456edc
+  languageName: node
+  linkType: hard
+
 "@types/babel__core@npm:^7.1.14":
   version: 7.20.5
   resolution: "@types/babel__core@npm:7.20.5"
@@ -4072,6 +4079,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash@npm:^4.17.7":
+  version: 4.17.7
+  resolution: "@types/lodash@npm:4.17.7"
+  checksum: 09e58a119cd8a70acfb33f8623dc2fc54f74cdce3b3429b879fc2daac4807fe376190a04b9e024dd300f9a3ee1876d6623979cefe619f70654ca0fe0c47679a7
+  languageName: node
+  linkType: hard
+
 "@types/node-forge@npm:^1.3.0":
   version: 1.3.11
   resolution: "@types/node-forge@npm:1.3.11"
@@ -4129,6 +4143,13 @@ __metadata:
     "@types/react": "*"
     react-native: "*"
   checksum: fb4118ce5bf9304a53924c1c0851d7cb7949a67ee5e7550002b0a16de5ea2bcf0306cad5158c7b72d010db6d19ed88d7bbaf0cc3d8dc4d5c346e3c5305abc9c6
+  languageName: node
+  linkType: hard
+
+"@types/react-native-html-to-pdf@npm:^0.8.3":
+  version: 0.8.3
+  resolution: "@types/react-native-html-to-pdf@npm:0.8.3"
+  checksum: 503278f3c82431316784f295871812a97f006902f364522aed9799fb96d76804cfba3a1f673c2515811eb6e8392c8480e0e02acc7b567aeec26f4fe9141ac656
   languageName: node
   linkType: hard
 
@@ -4465,10 +4486,12 @@ __metadata:
     "@react-navigation/stack": ^6.4.0
     "@reduxjs/toolkit": ^2.2.6
     "@types/base-64": ^1.0.2
+    "@types/lodash": ^4.17.7
     "@types/qs": ^6.9.15
     "@types/react": ^18.2.6
     "@types/react-native-actionsheet": ^2.4.7
     "@types/react-native-check-box": ^2.1.6
+    "@types/react-native-html-to-pdf": ^0.8.3
     "@types/react-native-push-notification": ^8.1.4
     "@types/react-native-vector-icons": ^6.4.18
     "@types/react-test-renderer": ^18.0.0
@@ -4500,8 +4523,10 @@ __metadata:
     react-native-drawer-layout: ^3.3.2
     react-native-element-dropdown: ^2.12.1
     react-native-fbsdk-next: ^13.0.0
+    react-native-fs: ^2.20.0
     react-native-gesture-handler: ^2.18.1
     react-native-google-places-autocomplete: ^2.5.6
+    react-native-html-to-pdf: ^0.12.0
     react-native-image-crop-picker: ^0.41.2
     react-native-image-picker: ^7.1.2
     react-native-intent: ^1.0.1
@@ -4509,6 +4534,7 @@ __metadata:
     react-native-maps: ^1.17.3
     react-native-pager-view: ^6.3.3
     react-native-paper: ^5.12.3
+    react-native-permissions: ^4.1.5
     react-native-popup-menu: ^0.16.1
     react-native-reanimated: ^3.15.0
     react-native-responsive-screen: ^1.4.2
@@ -4524,6 +4550,7 @@ __metadata:
     react-redux: ^9.1.2
     react-test-renderer: 18.2.0
     redux: ^5.0.1
+    socket.io-client: ^4.7.5
     tailwindcss: ^3.3.2
     typescript: 5.0.4
     yup: ^1.4.0
@@ -5109,6 +5136,13 @@ __metadata:
   version: 1.0.2
   resolution: "balanced-match@npm:1.0.2"
   checksum: 9706c088a283058a8a99e0bf91b0a2f75497f185980d9ffa8b304de1d9e58ebda7c72c07ebf01dadedaac5b2907b2c6f566f660d62bd336c3468e960403b9d65
+  languageName: node
+  linkType: hard
+
+"base-64@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "base-64@npm:0.1.0"
+  checksum: 5a42938f82372ab5392cbacc85a5a78115cbbd9dbef9f7540fa47d78763a3a8bd7d598475f0d92341f66285afd377509851a9bb5c67bbecb89686e9255d5b3eb
   languageName: node
   linkType: hard
 
@@ -5984,7 +6018,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:4, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.4":
+"debug@npm:4, debug@npm:^4.1.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.4, debug@npm:~4.3.1, debug@npm:~4.3.2":
   version: 4.3.6
   resolution: "debug@npm:4.3.6"
   dependencies:
@@ -6308,6 +6342,26 @@ __metadata:
   dependencies:
     iconv-lite: ^0.6.2
   checksum: bb98632f8ffa823996e508ce6a58ffcf5856330fde839ae42c9e1f436cc3b5cc651d4aeae72222916545428e54fd0f6aa8862fd8d25bdbcc4589f1e3f3715e7f
+  languageName: node
+  linkType: hard
+
+"engine.io-client@npm:~6.5.2":
+  version: 6.5.4
+  resolution: "engine.io-client@npm:6.5.4"
+  dependencies:
+    "@socket.io/component-emitter": ~3.1.0
+    debug: ~4.3.1
+    engine.io-parser: ~5.2.1
+    ws: ~8.17.1
+    xmlhttprequest-ssl: ~2.0.0
+  checksum: 32955326f7d81bbc8fd40aaf14972ec46956c0a6b08752e1ceb2de37bfb7fc2e4e8decbefad1a8092fad0ef29379fa0e95531ae2e10cb61facb2ef1200ef8752
+  languageName: node
+  linkType: hard
+
+"engine.io-parser@npm:~5.2.1":
+  version: 5.2.3
+  resolution: "engine.io-parser@npm:5.2.3"
+  checksum: a76d998b794ce8bbcade833064d949715781fdb9e9cf9b33ecf617d16355ddfd7772f12bb63aaec0f497d63266c6db441129c5aa24c60582270f810c696a6cf8
   languageName: node
   linkType: hard
 
@@ -11347,6 +11401,22 @@ geolib@latest:
   languageName: node
   linkType: hard
 
+"react-native-fs@npm:^2.20.0":
+  version: 2.20.0
+  resolution: "react-native-fs@npm:2.20.0"
+  dependencies:
+    base-64: ^0.1.0
+    utf8: ^3.0.0
+  peerDependencies:
+    react-native: "*"
+    react-native-windows: "*"
+  peerDependenciesMeta:
+    react-native-windows:
+      optional: true
+  checksum: 0be9bb9a5c13b501d0a3006efc3aa5c0b5b211456ee04718297f4e522532f3527f1daa220bd67d3b82d819ed8fdab8f64b7d6e0d7b768c1fd1d8ec9122d94316
+  languageName: node
+  linkType: hard
+
 "react-native-gesture-handler@npm:^2.18.1":
   version: 2.18.1
   resolution: "react-native-gesture-handler@npm:2.18.1"
@@ -11372,6 +11442,13 @@ geolib@latest:
   peerDependencies:
     react-native: ">= 0.59"
   checksum: 132911198f217eff064f658517a06d3b57cba2081f40462f9cec7eabfe0409dc30a9ea519377eff77924f69ceb94662fb88105e87bf5071c02120292519a64eb
+  languageName: node
+  linkType: hard
+
+"react-native-html-to-pdf@npm:^0.12.0":
+  version: 0.12.0
+  resolution: "react-native-html-to-pdf@npm:0.12.0"
+  checksum: a5be594ccbfdd501d3ac626fb643f9a87631f1693029cd42679d08925658d03becef9a1dd02d1c38c64b93ef914b6a5f42646d36869dcdeed3d0f6ddcbf013ba
   languageName: node
   linkType: hard
 
@@ -11465,6 +11542,20 @@ geolib@latest:
     react-native-safe-area-context: "*"
     react-native-vector-icons: "*"
   checksum: 927a8948d220fb59cb4dae2f12f3b4dc2173b9cd42e38dc74a0f25584a69978555a260c140db973f8401f7fef394dee3ec42c90b6134deeb3aa462291fd0ce5f
+  languageName: node
+  linkType: hard
+
+"react-native-permissions@npm:^4.1.5":
+  version: 4.1.5
+  resolution: "react-native-permissions@npm:4.1.5"
+  peerDependencies:
+    react: ">=18.1.0"
+    react-native: ">=0.70.0"
+    react-native-windows: ">=0.70.0"
+  peerDependenciesMeta:
+    react-native-windows:
+      optional: true
+  checksum: dc4b366a0f561a47f032c027eb703a2be45e801788b915ed583e38f617eea23656eb63a77b17fb3a663fe3199b2ec25788f799e751421634e35a64f5258feed9
   languageName: node
   linkType: hard
 
@@ -12566,6 +12657,28 @@ geolib@latest:
   languageName: node
   linkType: hard
 
+"socket.io-client@npm:^4.7.5":
+  version: 4.7.5
+  resolution: "socket.io-client@npm:4.7.5"
+  dependencies:
+    "@socket.io/component-emitter": ~3.1.0
+    debug: ~4.3.2
+    engine.io-client: ~6.5.2
+    socket.io-parser: ~4.2.4
+  checksum: a6994b93a753d14292682ee97ba3c925c54b63e6fcb2ed5e0aa1d7c1d6164ed4a30d993f7eaaa3017ddf868ad0a1ab996badc8310129070136d84668789ee6c9
+  languageName: node
+  linkType: hard
+
+"socket.io-parser@npm:~4.2.4":
+  version: 4.2.4
+  resolution: "socket.io-parser@npm:4.2.4"
+  dependencies:
+    "@socket.io/component-emitter": ~3.1.0
+    debug: ~4.3.1
+  checksum: 61540ef99af33e6a562b9effe0fad769bcb7ec6a301aba5a64b3a8bccb611a0abdbe25f469933ab80072582006a78ca136bf0ad8adff9c77c9953581285e2263
+  languageName: node
+  linkType: hard
+
 "socks-proxy-agent@npm:^8.0.3":
   version: 8.0.4
   resolution: "socks-proxy-agent@npm:8.0.4"
@@ -13594,6 +13707,13 @@ geolib@latest:
   languageName: node
   linkType: hard
 
+"utf8@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "utf8@npm:3.0.0"
+  checksum: cb89a69ad9ab393e3eae9b25305b3ff08bebca9adc839191a34f90777eb2942f86a96369d2839925fea58f8f722f7e27031d697f10f5f39690f8c5047303e62d
+  languageName: node
+  linkType: hard
+
 "util-deprecate@npm:^1.0.1, util-deprecate@npm:^1.0.2, util-deprecate@npm:~1.0.1":
   version: 1.0.2
   resolution: "util-deprecate@npm:1.0.2"
@@ -13895,10 +14015,32 @@ geolib@latest:
   languageName: node
   linkType: hard
 
+"ws@npm:~8.17.1":
+  version: 8.17.1
+  resolution: "ws@npm:8.17.1"
+  peerDependencies:
+    bufferutil: ^4.0.1
+    utf-8-validate: ">=5.0.2"
+  peerDependenciesMeta:
+    bufferutil:
+      optional: true
+    utf-8-validate:
+      optional: true
+  checksum: 442badcce1f1178ec87a0b5372ae2e9771e07c4929a3180321901f226127f252441e8689d765aa5cfba5f50ac60dd830954afc5aeae81609aefa11d3ddf5cecf
+  languageName: node
+  linkType: hard
+
 "xmlbuilder@npm:^15.1.1":
   version: 15.1.1
   resolution: "xmlbuilder@npm:15.1.1"
   checksum: 14f7302402e28d1f32823583d121594a9dca36408d40320b33f598bd589ca5163a352d076489c9c64d2dc1da19a790926a07bf4191275330d4de2b0d85bb1843
+  languageName: node
+  linkType: hard
+
+"xmlhttprequest-ssl@npm:~2.0.0":
+  version: 2.0.0
+  resolution: "xmlhttprequest-ssl@npm:2.0.0"
+  checksum: 1e98df67f004fec15754392a131343ea92e6ab5ac4d77e842378c5c4e4fd5b6a9134b169d96842cc19422d77b1606b8df84a5685562b3b698cb68441636f827e
   languageName: node
   linkType: hard
 

@@ -96,7 +96,11 @@
     "HomeScreen": {
         "textPlaceholderSearch": "Tìm kiếm",
         "TitleIntroduce": "Chào mừng bạn đến với speed",
-        "TitleIntroduce_description": "sàn thương mại điện tử uy tín số 1 việt nam"
+        "TitleIntroduce_description": "sàn thương mại điện tử uy tín số 1 việt nam",
+        "categories_title": "Danh mục",
+        "best_selling_title": "Bán chạy nhất",
+        "see_all_button": "xem tất cả",
+        "latest_title": "Mới nhất"
     },
     "DrawerScreen": {
         "itemLanguage": "Ngôn ngữ",
@@ -105,5 +109,10 @@
     "PaymentScreen": {
         "createNewAddress": "Tạo mới địa chỉ",
         "selectOldAddress": "địa chỉ từ danh sách địa chỉ của bạn"
+    },
+    "SearchScreen": {
+        "inputSearchRequired": "Vui lòng nhập từ khóa!",
+        "productNotFoundTitle": "Không tìm thấy sản phẩm!",
+        "placeholder": "Hãy nhập từ khóa để tìm kiếm"
     }
 }

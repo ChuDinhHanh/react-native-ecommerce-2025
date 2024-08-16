@@ -40,7 +40,6 @@ function TabsNotification() {
 }
 
 const NotificationScreen = () => {
-  console.log("NotificationScreen")
   const currentScreen = useAppSelector((state) => state.SpeedReducer.currentlyNotificationScreen);
   const handleReadAll = useCallback(() => {
     console.log(currentScreen);

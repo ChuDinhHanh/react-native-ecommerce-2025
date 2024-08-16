@@ -11,6 +11,7 @@ import { setCurrentlyNotificationScreen } from '../../../../redux/Slice'
 import { RootStackParamList } from '../../../../routes/Routes'
 import { useAuthService } from '../../../../services/authService'
 import NotificationItemComponent from '../../component/item/notificationItem/NotificationItemComponent'
+import { formatDate } from '../../../../utils/DateTimeUtils'
 
 const AllNotificationScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -51,6 +52,7 @@ const AllNotificationScreen = () => {
     navigation.navigate(SERVICE_STACK_NAVIGATOR, { id: id });
   }
 
+
   const handlePrintfNotification = useMemo(() => {
     return data?.data.length ?
       (
@@ -63,8 +65,8 @@ const AllNotificationScreen = () => {
               isRead
               image={'https://img.ws.mms.shopee.vn/17e2066120dab83b390da02b7875959a'}
               title={'Đơn hàng của bạn đã được xác nhậnĐơn hàng của bạn đã được xác nhậnĐơn hàng của bạn đã được xác nhậnĐơn hàng của bạn đã được xác nhận!'}
-              content={'Vui lòng kiểm tra điện thoại để nhận được các thông tin mới nhất về đơn hàng của bạnĐơn hàng của bạn đã được xác nhậnĐơn hàng của bạn đã được xác nhậnĐơn hàng của bạn đã được xác nhận'}
-              timeCreated={'10-12-2003 10:31'}
+              content={item.message}
+              timeCreated={formatDate(item.createdAt)}
               onPress={(id) => { console.log(id) }}
               onPressMenuItem={(id) => { console.log(id) }}
             />

@@ -13,6 +13,8 @@ export interface Product {
   saleOff: number;
   quantitySelled: number;
   likes: number;
+  isLiked: boolean;
   shippingUnit: string;
   classifies: Classify[];
+  images: string[];
 }

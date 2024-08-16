@@ -1,4 +1,5 @@
 import {scale} from '../utils/ScaleUtils';
+import {LIST_PRODUCT_LIKED} from './Screens';
 
 export const Variables = {
   type_email: 'email',
@@ -30,4 +31,7 @@ export const Variables = {
   // Address
   CREATE_NEW_ADDRESS: '1',
   SELECT_ADDRESS_FROM_DATA: '2',
+  // Screen
+  LIST_PRODUCT_LIKED: 1,
+  BILL_SCREEN: 2,
 };

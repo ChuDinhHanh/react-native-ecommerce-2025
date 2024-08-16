@@ -91,3 +91,16 @@ export const validationSchemaPaymentUtils = Yup.object().shape({
     'phuong thuc thanh toan khong duoc de trong',
   ),
 });
+
+// Input fields
+export function isBlank(value: any) {
+  return (
+    value === null ||
+    value === undefined ||
+    value.trim() === '' ||
+    (Array.isArray(value) && value.length === 0) ||
+    (typeof value === 'object' &&
+      Object.keys(value).length === 0 &&
+      value.constructor === Object)
+  );
+}
