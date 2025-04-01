@@ -1,28 +1,96 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
   <uses-permission android:name="android.permission.INTERNET" />
   <uses-permission android:name="android.permission.CAMERA" />
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
   <uses-permission android:name="android.permission.RECORD_AUDIO" />
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+  <uses-permission android:name="android.permission.VIBRATE"/>
+  <uses-permission android:name="android.permission.WAKE_LOCK" />
+  <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+  <!-- Zalo pay -->
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+  <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+  <!-- Check a application have in your phone -->
+  <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
+  <application
+    android:name=".MainApplication"
+    android:label="@string/app_name"
+    android:icon="@mipmap/ic_launcher"
+    android:roundIcon="@mipmap/ic_launcher_round"
+    android:allowBackup="false"
+    android:theme="@style/AppTheme">
+    <!-- Notification -->
+  <!-- <meta-data
+    android:name="com.google.firebase.messaging.default_notification_icon"
+    android:resource="@drawable/ic_custom_icon" /> -->
+  <meta-data
+    android:name="com.google.firebase.messaging.default_notification_color"
+    android:resource="@color/notification_color" 
+    tools:replace="android:resource"
+    />
+    <!-- Notification -->
+    <meta-data android:name="com.google.firebase.messaging.default_notification_icon" android:resource="@mipmap/ic_notification_2" />
+    <!-- <meta-data
+    android:name="com.google.firebase.messaging.default_notification_channel_id"
+    android:value="@string/default_notification_channel_id" />
+    <service android:name=".MyFirebaseMessagingService" android:exported="true">
+        <intent-filter>
+            <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+        </intent-filter>
+    </service> -->
+    <!-- Facebook SDK meta-data -->
+    <meta-data
+      android:name="com.facebook.sdk.ApplicationId"
+      android:value="@string/facebook_app_id"
+      tools:replace="android:value"/>
+    <meta-data
+      android:name="com.facebook.sdk.ClientToken"
+      android:value="@string/facebook_client_token"/>
 
-  <application android:name=".MainApplication" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:allowBackup="false" android:theme="@style/AppTheme">
-    <!-- Step1 ok-->
-    <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
-    <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
-
-    <activity android:name=".MainActivity" android:label="@string/app_name" android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode" android:launchMode="singleTask" android:windowSoftInputMode="adjustPan" android:exported="true" android:screenOrientation="portrait">
-      <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+    <activity
+      android:name=".MainActivity"
+      android:label="@string/app_name"
+      android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
+      android:launchMode="singleTask"
+      android:windowSoftInputMode="adjustPan"
+      android:exported="true"
+      android:screenOrientation="portrait"
+      >
+      <meta-data
+        android:name="com.facebook.sdk.ApplicationId"
+        android:value="@string/facebook_app_id"
+        tools:replace="android:value"/>
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
 
+        <!-- Đây là intent filter cần thiết cho ZaloPay SDK -->
+        <intent-filter>
+            <action android:name="vn.com.vng.zalopay.PAYMENT" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+        <!-- Đây là intent filter cần thiết cho Image cache -->
+        <intent-filter>
+           <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/> 
+        </intent-filter>
     </activity>
-    <!-- Facebook -->
-    <activity android:name="com.facebook.FacebookActivity" android:configChanges=
-                "keyboard|keyboardHidden|screenLayout|screenSize|orientation" android:label="@string/app_name" />
-    <activity android:name="com.facebook.CustomTabActivity" android:exported="true">
+
+    <!-- Facebook activities -->
+    <activity
+      android:name="com.facebook.FacebookActivity"
+      android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+      android:label="@string/app_name" />
+    <activity
+      android:name="com.facebook.CustomTabActivity"
+      android:exported="true">
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
@@ -31,5 +99,20 @@
       </intent-filter>
     </activity>
 
+    <!-- Google Maps API key -->
+    <meta-data
+      android:name="com.google.android.geo.API_KEY"
+      android:value="AIzaSyCC00r7Ymed6ihv8weIsWv0lVsVZ5on7Qk"
+      />
+      <!-- android:value="AIzaSyDE6J31ezKB9IdPtrb6nmeWBc58QMQDYJI" -->
+
+         <!-- Nếu SDK yêu cầu broadcast receiver hoặc service -->
+    <!-- <receiver android:name="com.zalopay.sdk.PaymentReceiver">
+        <intent-filter>
+            <action android:name="com.zalopay.sdk.ACTION_PAYMENT_RESULT" />
+        </intent-filter>
+    </receiver>
+    <service android:name="com.zalopay.sdk.PaymentService" /> -->
+       <!-- Thêm meta-data cho ZaloPay SDK -->
   </application>
 </manifest>

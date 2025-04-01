@@ -7,10 +7,16 @@ buildscript {
         ndkVersion = "26.1.10909125"
         kotlinVersion = "1.9.22"
         googlePlayServicesAuthVersion = "20.7.0"
+        // Map
+        googlePlayServicesVersion = "17.0.0"
     }
     repositories {
         google()
         mavenCentral()
+        // Zalo
+         flatDir {
+         dirs 'libs'
+                 }
     }
     dependencies {
         classpath("com.android.tools.build:gradle")

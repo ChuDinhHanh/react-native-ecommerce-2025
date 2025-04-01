@@ -86,12 +86,18 @@ android {
         versionName "1.0"
     }
     signingConfigs {
-        debug {
+         debug {
             storeFile file('debug.keystore')
             storePassword 'android'
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        // debug {
+        //     storeFile file('debug.keystore')
+        //     storePassword 'android'
+        //     keyAlias 'androiddebugkey'
+        //     keyPassword 'android'
+        // }
     }
     buildTypes {
         debug {
@@ -126,6 +132,19 @@ dependencies {
     // Phone
     implementation "androidx.browser:browser:1.2.0"
     implementation 'com.google.firebase:firebase-auth'
+    // Map
+    implementation "com.google.android.gms:play-services-maps:18.0.0"
+    // Auth
+     implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
+    //  implementation 'com.facebook.android:facebook-android-sdk:8.x'
+    // Notification
+    implementation 'com.google.firebase:firebase-messaging:23.0.0'
+}
+
+repositories {
+    flatDir {
+        dirs 'libs' // Đảm bảo thư mục libs chứa file zpdk-release.aar
+    }
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)

@@ -1,25 +1,31 @@
-import React, { memo } from 'react'
-import { View } from 'react-native'
-import { appInfo } from '../../../constants/Infos'
-import SessionComponent from '../../session/SessionComponent'
-import ProductSkeletonItem from './item/ProductSkeletonItem'
+import React from 'react';
+import {FlatList, View, StyleSheet} from 'react-native';
+import ProductSkeletonItem from './item/ProductSkeletonItem';
+import {styles} from './ProductSkeleton.style';
+
+const getRandomNumber = () => Math.floor(Math.random() * 6) + 2;
 
 const ProductSkeleton = () => {
+  const skeletonCount = getRandomNumber();
 
-    const handlePrintSkeleton = () => {
-        const qty = Math.floor(Math.random() * 5) + 2;
-        const skeleton = Array.from({ length: qty }, (_, i) => (<ProductSkeletonItem key={i} />));
-        return skeleton;
-    }
-    return (
-        <SessionComponent>
-            <View style={{ width: appInfo.sizes.WIDTH - 16, flexDirection: 'row', flexWrap: 'wrap' }}>
-                {
-                    handlePrintSkeleton()
-                }
-            </View>
-        </SessionComponent>
-    )
-}
+  const data = Array.from({length: skeletonCount}, (_, index) => index);
 
-export default memo(ProductSkeleton)
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={data}
+        keyExtractor={item => item.toString()}
+        contentContainerStyle={styles.listContent}
+        renderItem={() => (
+          <View style={styles.itemContainer}>
+            <ProductSkeletonItem />
+          </View>
+        )}
+        numColumns={2}
+        scrollEnabled={false}
+      />
+    </View>
+  );
+};
+
+export default ProductSkeleton;

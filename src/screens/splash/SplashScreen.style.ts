@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 15,
     color: 'white',
-    fontFamily:'PlaywritePE-Regular'
+    fontFamily: 'PlaywritePE-Regular',
   },
   'content__rectangle--first': {
     position: 'absolute',

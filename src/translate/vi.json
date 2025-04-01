@@ -1,101 +1,313 @@
 {
-    "LoginScreen": {
-        "screenName": "Đăng nhập",
-        "textLoginQuestionType": "Bạn không có tài khoản?",
-        "textLoginScreen": "Đăng ký",
-        "textForgotPassword": "Quên mật khẩu?",
-        "textLogin": "Đăng nhập",
-        "textOrLoginWith": "Hoặc đăng nhập với",
-        "textInputPlaceHolderEmailOrPhoneNumber": "Email/Số điện thoại",
-        "textInputPlaceHolderPassword": "Mật khẩu",
-        "textInputPlaceHolderUserName": "Tên tài khoản"
-    },
-    "LoginBySocial": {
-        "textLoginWithFacebook": "Đăng nhập với Facebook",
-        "textLoginWithGoogle": "Đăng nhập với Google"
-    },
-    "RegisterScreen": {
-        "screenName": "Đăng ký",
-        "textLoginQuestionType": "Bạn đã có tài khoản?",
-        "textRegisterScreen": "Đăng ký",
-        "textRegister": "Đăng ký",
-        "textOrRegisterWith": "Hoặc đăng ký với",
-        "textChooseTypeAccountRegisterSellPerson": "Người bán",
-        "textChooseTypeAccountRegisterBuyPerson": "Người mua"
-    },
-    "RegisterBySocial": {
-        "textRegisterWithFacebook": "Đăng ký với Facebook",
-        "textRegisterWithGoogle": "Đăng ký với Google"
-    },
-    "VerifyScreen": {
-        "screenName": "Xác thực",
-        "textErrorCodeNotMath": "mã code không chính xác"
-    },
-    "ForgotPasswordScreen": {
-        "screenName": "Quên mật khẩu",
-        "textSend": "Gửi",
-        "textPlaceHolderEmail": "Hãy nhập email"
-    },
-    "ResetPasswordScreen": {
-        "screenName": "Mật khẩu mới",
-        "textNewPassword": "Nhập mật khẩu mới",
-        "textPasswordConfirm": "Nhập lại mật khẩu"
-    },
-    "Validate": {
-        "textErrorPhoneNotCorrectFormat": "Số điện thoại sai định dạng",
-        "textErrorPhoneRequired": "Số điện thoại không được để trống",
-        "textErrorPasswordAtLess6Character": "Mật khẩu phải chứa ít nhất 6 ký tự",
-        "textErrorPasswordRequired": "Mật khẩu không được để trống",
-        "textErrorEmailNotCorrectFormat": "Email sai định dạng",
-        "textErrorEmailRequired": "Email không được để trống",
-        "textErrorConfirmPasswordNotMatches": "Mật khẩu không khớp",
-        "textErrorConfirmPasswordRequired": "Mật khẩu xác nhận là bắt buộc",
-        "textErrorEmailOrPhoneNumberRequired": "Số điện thoại hoặc email không được để trống",
-        "textErrorEmailOrPhoneNumberNotCorrectFormat": "Số điện thoại hoặc email không đúng định dạng",
-        "textErrorNameRequired": "Tên là bắt buộc",
-        "textErrorNameCantJustHaveSpaceCharacter": "Tên không được chỉ chứa khoảng trắng",
-        "textErrorTypeAccountRequired": "Loại tài khoản là bắt buộc"
-    },
-    "ImmediateScreen": {
-        "textButtonLeft": "Trở lại",
-        "textButtonRight": "Tiếp tục",
-        "textTitleDropDown": "Lựa chọn kiểu đăng ký",
-        "textTitleDropDownSelectRegisterWithFacebook": "Đăng ký với Email",
-        "textTitleDropDownSelectRegisterWithGoogle": "Đăng ký với facebook",
-        "textTitleNotification": "Thông báo",
-        "textWarningSelectedType": "Hãy chọn vai trò đăng ký"
-    },
-    "Alert": {
-        "notification": "Thông báo",
-        "warning": "Cảnh báo",
-        "loginSuccess": "Đăng nhập thành công",
-        "loginFail": "Đăng nhập không thành công",
-        "registerSuccess": "Đăng ký thành công",
-        "registerFail": "Đăng ký không thành công"
-    },
-    "VerificationWithOTPScreen": {
-        "textVerification": "Xác minh",
-        "textSendVerificationFor": "Chúng tôi đã gửi cho bạn mã xác minh cho"
-    },
-    "VerificationWithEmailScreen": {
-        "verifySuccess": "Xác thực thành công",
-        "title1": "Vui lòng xác minh email của bạn",
-        "title2": "Bạn sắp hoàn thành! Chúng tôi đã gửi một email tới",
-        "title3": "Chỉ cần nhấp vào liên kết trong email đó để hoàn tất đăng ký của bạn. Nếu bạn không thấy, bạn có thể cần kiểm tra thư mục spam.",
-        "title4": "Vẫn không tìm thấy email?",
-        "textButtonResendEmail": "Gửi lại email",
-        "textButtonVerification": "Xác minh email"
-    },
-    "VerificationWithPhoneScreen": {
-        "title1": "Vui lòng xác minh mã OTP của bạn",
-        "title2": "Bạn sắp hoàn thành việc đăng ký! Chúng tôi đã gửi mã OTP tới",
-        "title3": "Chỉ cần nhập mã OTP vào màn hình này để hoàn tất đăng ký của bạn. Nếu bạn không thấy, bạn có thể cần kiểm tra thư mục tin nhắn spam.",
-        "textResendCode": "Gửi lại code sau",
-        "titleButtonVerify": "Xác thực"
-    },
-    "HomeScreen": {
-        "textPlaceholderSearch": "Tìm kiếm",
-        "TitleIntroduce": "Chào mừng bạn đến với speed",
-        "TitleIntroduce_description": "sàn thương mại điện tử uy tín số 1 việt nam"
-    }
+  "LoginScreen": {
+    "screenName": "Đăng nhập",
+    "textLoginQuestionType": "Bạn không có tài khoản?",
+    "textLoginScreen": "Đăng ký",
+    "textForgotPassword": "Quên mật khẩu?",
+    "textLogin": "Đăng nhập",
+    "textOrLoginWith": "Hoặc đăng nhập với",
+    "textInputPlaceHolderEmailOrPhoneNumber": "Email/Số điện thoại",
+    "textInputPlaceHolderPassword": "Mật khẩu",
+    "textInputPlaceHolderUserName": "Tên tài khoản"
+  },
+  "LoginBySocial": {
+    "textLoginWithFacebook": "Đăng nhập với Facebook",
+    "textLoginWithGoogle": "Đăng nhập với Google"
+  },
+  "RegisterScreen": {
+    "screenName": "Đăng ký",
+    "textLoginQuestionType": "Bạn đã có tài khoản?",
+    "textRegisterScreen": "Đăng ký",
+    "textRegister": "Đăng ký",
+    "textOrRegisterWith": "Hoặc đăng ký với",
+    "textChooseTypeAccountRegisterSellPerson": "Người bán",
+    "textChooseTypeAccountRegisterBuyPerson": "Người mua"
+  },
+  "RegisterBySocial": {
+    "textRegisterWithFacebook": "Đăng ký với Facebook",
+    "textRegisterWithGoogle": "Đăng ký với Google"
+  },
+  "VerifyScreen": {
+    "screenName": "Xác thực",
+    "textErrorCodeNotMath": "mã code không chính xác"
+  },
+  "ForgotPasswordScreen": {
+    "screenName": "Quên mật khẩu",
+    "textSend": "Gửi",
+    "textPlaceHolderEmailOrPhone": "Hãy nhập email hoặc số điện thoại"
+  },
+  "ResetPasswordScreen": {
+    "screenName": "Mật khẩu mới",
+    "textNewPassword": "Nhập mật khẩu mới",
+    "textPasswordConfirm": "Nhập lại mật khẩu"
+  },
+  "Validate": {
+    "textErrorPhoneNotCorrectFormat": "Số điện thoại sai định dạng",
+    "textErrorPhoneRequired": "Số điện thoại không được để trống",
+    "textErrorPasswordAtLess6Character": "Mật khẩu phải chứa ít nhất 6 ký tự",
+    "textErrorPasswordRequired": "Mật khẩu không được để trống",
+    "textErrorEmailNotCorrectFormat": "Email sai định dạng",
+    "textErrorEmailRequired": "Email không được để trống",
+    "textErrorConfirmPasswordNotMatches": "Mật khẩu không khớp",
+    "textErrorConfirmPasswordRequired": "Mật khẩu xác nhận là bắt buộc",
+    "textErrorEmailOrPhoneNumberRequired": "Số điện thoại hoặc email không được để trống",
+    "textErrorEmailOrPhoneNumberNotCorrectFormat": "Số điện thoại hoặc email không đúng định dạng",
+    "textErrorNameRequired": "Tên là bắt buộc",
+    "textErrorNameCantJustHaveSpaceCharacter": "Tên không được chỉ chứa khoảng trắng",
+    "textErrorTypeAccountRequired": "Loại tài khoản là bắt buộc",
+    "shippingUnit": "Đơn vị vận chuyển không được để trống",
+    "paymentMethod": "Phương thức thanh toán không được để trống"
+  },
+  "ImmediateScreen": {
+    "textButtonLeft": "Trở lại",
+    "textButtonRight": "Tiếp tục",
+    "textTitleDropDown": "Lựa chọn kiểu đăng ký",
+    "textTitleDropDownSelectRegisterWithFacebook": "Đăng ký với Email",
+    "textTitleDropDownSelectRegisterWithGoogle": "Đăng ký với facebook",
+    "textTitleNotification": "Thông báo",
+    "textWarningSelectedType": "Hãy chọn vai trò đăng ký"
+  },
+  "Alert": {
+    "notification": "Thông báo",
+    "warning": "Cảnh báo",
+    "loginSuccess": "Đăng nhập thành công",
+    "loginFail": "Đăng nhập không thành công",
+    "registerSuccess": "Đăng ký thành công",
+    "registerFail": "Đăng ký không thành công",
+    "systemError": "Lỗi hệ thống, kết nối với serve không ổn định"
+  },
+  "VerificationWithOTPScreen": {
+    "textVerification": "Xác minh",
+    "textSendVerificationFor": "Chúng tôi đã gửi cho bạn mã xác minh cho"
+  },
+  "VerificationWithEmailScreen": {
+    "verifySuccess": "Xác thực thành công",
+    "title1": "Vui lòng xác minh email của bạn",
+    "title2": "Bạn sắp hoàn thành! Chúng tôi đã gửi một email tới",
+    "title3": "Chỉ cần nhấp vào liên kết trong email đó để hoàn tất đăng ký của bạn. Nếu bạn không thấy, bạn có thể cần kiểm tra thư mục spam.",
+    "title4": "Vẫn không tìm thấy email?",
+    "textButtonResendEmail": "Gửi lại email",
+    "textButtonVerification": "Xác minh email"
+  },
+  "VerificationWithPhoneScreen": {
+    "title1": "Vui lòng xác minh mã OTP của bạn",
+    "title2": "Bạn sắp hoàn thành việc đăng ký! Chúng tôi đã gửi mã OTP tới",
+    "title3": "Chỉ cần nhập mã OTP vào màn hình này để hoàn tất đăng ký của bạn. Nếu bạn không thấy, bạn có thể cần kiểm tra thư mục tin nhắn spam.",
+    "textResendCode": "Gửi lại code sau",
+    "titleButtonVerify": "Xác thực"
+  },
+  "HomeScreen": {
+    "textPlaceholderSearch": "Tìm kiếm",
+    "TitleIntroduce": "Chào mừng bạn đến với speed",
+    "TitleIntroduce_description": "sàn thương mại điện tử uy tín số 1 việt nam",
+    "categories_title": "Danh mục",
+    "best_selling_title": "Bán chạy nhất",
+    "see_all_button": "xem tất cả",
+    "latest_title": "Mới nhất"
+  },
+  "DrawerScreen": {
+    "itemLanguage": "Ngôn ngữ",
+    "itemLogout": "Đăng xuất"
+  },
+  "PaymentScreen": {
+    "nameScreen": "Thanh Toán",
+    "createNewAddress": "Tạo mới địa chỉ",
+    "selectOldAddress": "địa chỉ từ danh sách địa chỉ của bạn",
+    "selectShippingUnit": "Chọn đơn vị giao hàng",
+    "selectPaymentMethod": "Chọn phương thức thanh toán",
+    "shippingCost": "Chi phí giao hàng",
+    "payNow": "Thanh toán ngay",
+    "addCartError": "Lỗi khi thêm vào giỏ hàng",
+    "createBillError": "Lỗi khi tạo hóa đơn",
+    "paymentSuccess": "Thanh toán thành công!",
+    "paymentFailure": "Thanh toán thất bại!",
+    "addressPlaceholder": "Chọn địa chỉ",
+    "paypalPaymentTitle": "Thanh toán bằng PayPal",
+    "payWithCash": "Tiền mặt",
+    "payWithCreaditCart": "Thẻ tín dụng"
+  },
+  "SearchScreen": {
+    "inputSearchRequired": "Vui lòng nhập từ khóa!",
+    "productNotFoundTitle": "Không tìm thấy sản phẩm!",
+    "placeholder": "Hãy nhập từ khóa để tìm kiếm",
+    "screenName": "Tìm kiếm"
+  },
+  "DetailProductScreen": {
+    "loadingData": "Đang tải dữ liệu...",
+    "loadingProductInfo": "Đang tải thông tin sản phẩm...",
+    "addToCartSuccess": "Thêm vào giỏ hàng thành công",
+    "selectAllRequiredOptions": "Vui lòng chọn tất cả các tuỳ chọn sản phẩm cần thiết.",
+    "returnPolicy": "Chính sách hoàn trả:",
+    "returnPolicyDetails": "Đổi trả trong 15 ngày, miễn phí đổi ý",
+    "aboutThisProduct": "Về sản phẩm này",
+    "customerReviews": "Đánh giá của khách hàng cho cửa hàng",
+    "nameScreen": "Chi tiết sản phẩm"
+  },
+  "FeedBackText": {
+    "ratingTitle": "Đánh giá sản phẩm",
+    "viewAllButton": "Xem tất cả",
+    "productName": "Mặt hàng"
+  },
+  "BottomComponentDetailScreen": {
+    "shop": "Cửa hàng",
+    "addToCart": "Thêm vào giỏ hàng",
+    "buyNow": "Mua ngay"
+  },
+  "CategoriesProductList": {
+    "nameScreen": "Sản phẩm của danh mục"
+  },
+  "LanguageScreen": {
+    "nameScreen": "Lựa chọn ngôn ngữ của bạn",
+    "vietnameseLanguage": "Tiếng việt",
+    "EnglandLanguage": "Tiếng Anh",
+    "JapaneseLanguage": "Tiếng Nhật"
+  },
+  "BestSellingAndLatestProduct": {
+    "latestProductsList": "Danh sách sản phẩm mới nhất",
+    "bestSellingProductsList": "Danh sách sản phẩm bán chạy nhất"
+  },
+  "CartScreen": {
+    "emptyCart": "Giỏ hàng đang trống",
+    "updateProduct": "Cập nhật sản phẩm",
+    "updatingProduct": "Đang cập nhật sản phẩm...",
+    "updatingCart": "Đang cập nhật giỏ hàng...",
+    "selectProductWarning": "Yêu cầu chọn ít nhất 1 sản phẩm.",
+    "store": "Cửa hàng",
+    "product": "Sản phẩm",
+    "price": "Giá",
+    "quantity": "Số lượng",
+    "checkBoxLabel": "Tất cả",
+    "totalAmount": "Tổng thanh toán",
+    "buttonLabelBuyNow": "Mua ngay",
+    "title": "Hủy xóa",
+    "message": "Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?",
+    "cancelButton": "Không",
+    "confirmButton": "Có"
+  },
+  "CheckoutScreen": {
+    "title": "Kiểm tra đơn hàng",
+    "productType": "Phân loại",
+    "quantity": "Số lượng",
+    "price": "Giá",
+    "checkout": "Thanh toán"
+  },
+  "ConversationScreen": {
+    "sendPlaceholder": "Gửi tin nhắn",
+    "alertWarning": "Cảnh báo",
+    "alertSystemError": "Lỗi hệ thống",
+    "errorNoSocketConnection": "Không có kết nối socket hoặc tin nhắn trống"
+  },
+  "NotificationScreen": {
+    "all": "Tất cả",
+    "unread": "Chưa đọc",
+    "title": "Thông báo",
+    "readAll": "Đọc tất cả",
+    "deleteAll": "Xóa tất cả",
+    "titleNothing": "Chưa có thông báo mới",
+    "markAsRead": "Đánh dấu đã đọc",
+    "markAsUnread": "Đánh dấu chưa đọc",
+    "delete": "Xóa"
+  },
+  "SelectLanguageScreen": {
+    "nameScreen": "Lựa chọn ngôn ngữa của bạn"
+  },
+  "addressScreen": {
+    "title": "Địa chỉ nhận hàng"
+  },
+  "SelectAddress": {
+    "chooseAddress": "Vui lòng lựa chọn địa chỉ nhận hàng",
+    "loading": "Đang tải địa chỉ giao hàng",
+    "noAddress": "Chưa có địa chỉ giao hàng!",
+    "createNewAddress": "Tạo địa chỉ mới",
+    "confirmAddress": "Xác nhận địa chỉ giao hàng"
+  },
+  "PaypalScreen": {
+    "title": "Thanh toán qua paypal"
+  },
+  "ChatBoxScreen": {
+    "nothingTitle": "cuộc hội thoại trống"
+  },
+  "DetailNotificationScreen": {
+    "nameScreen": "Chi tiết thông báo"
+  },
+  "ListProductLiked": {
+    "title": "Đang cập nhật danh sách sản phẩm..."
+  },
+  "PrintfPDF": {
+    "downloadSuccessAlertTitle": "Tải xuống thành công",
+    "downloadSuccessAlertMessage": "Hóa đơn của bạn đã được lưu tại: ",
+    "errorAlertMessage": "Không thể tạo file PDF: ",
+    "errorAlertTitle": "Lỗi"
+  },
+  "BillScreen": {
+    "nameScreen": "Danh sách Hóa đơn",
+    "userInfo": "Thông tin Người dùng",
+    "shippingInfo": "Thông tin Giao hàng",
+    "method": "Phương thức",
+    "location": "Địa điểm",
+    "price": "Giá",
+    "address": "Địa chỉ",
+    "contact": "Liên hệ",
+    "receiver": "Người nhận",
+    "billItems": "Các mục Hóa đơn",
+    "priceLabel": "Giá",
+    "classifies": "Phân loại",
+    "quantity": "Số lượng",
+    "summary": "Tóm tắt",
+    "totalProductsPrice": "Tổng giá Sản phẩm",
+    "totalPrice": "Tổng giá",
+    "deleteBill": "Xóa Hóa đơn",
+    "printBill": "In Hóa đơn",
+    "username": "Họ tên",
+    "email": "Email",
+    "phone": "số điện thoại",
+    "description": "Lời nhắn",
+    "deliveryAddress": "Nơi nhận",
+    "createdAt": "Ngày tạo",
+    "paymentMethod": "Phương thức thanh toán",
+    "nameShop": "Tên cửa hàng",
+    "nameProduct": "Tên sản phẩm",
+    "bill": "Hóa đơn"
+  },
+  "LikedProductScreen": {
+    "nameScreen": "Danh sách sản phẩm đã thích"
+  },
+  "BillPDF": {
+    "userInfo": "Thông tin người dùng",
+    "shippingInfo": "Thông tin giao hàng",
+    "address": "Địa chỉ",
+    "billItems": "Sản phẩm",
+    "summary": "Tổng kết",
+    "method": "Phương thức",
+    "location": "Vị trí",
+    "price": "Giá",
+    "contact": "Liên hệ",
+    "receiver": "Người nhận",
+    "totalProductsPrice": "Tổng giá sản phẩm",
+    "totalPrice": "Tổng giá",
+    "downloadSuccess": "Tải xuống thành công",
+    "downloadSuccessMessage": "File hóa đơn đã được lưu tại:",
+    "error": "Lỗi",
+    "pdfErrorMessage": "Không thể tạo file PDF:"
+  },
+  "ProfileScreen": {
+    "viewPurchaseHistory": "Xem lịch sử mua hàng",
+    "purchaseOrder": "Đơn mua",
+    "likedProducts": "Sản phẩm đã thích",
+    "settings": "Thiết lập tài khoản"
+  },
+  "Account": {
+    "settings": "Thiếp lập tài khoản"
+  },
+  "App": {
+    "home": "Trang chủ",
+    "cart": "Giỏ hàng",
+    "messenger": "Tin nhắn",
+    "notification": "Thông báo",
+    "me": "Tôi"
+  },
+  "PushNotifications": {
+    "title": "Thông báo từ speed",
+    "body": "Bạn có đơn hàng mới"
+  }
 }

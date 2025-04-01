@@ -6,3 +6,8 @@ include ':react-native-vector-icons'
 project(':react-native-vector-icons').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-vector-icons/android')
 include ':react-native-fbsdk-next'
 project(':react-native-fbsdk-next').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-fbsdk-next/android')
+// include ':app', ':zpdk-release'
+// project(':zpdk-release').projectDir = new File(rootProject.projectDir, 'app/libs')
+// Printf pdf
+include ':react-native-fs'
+project(':react-native-fs').projectDir = new File(settingsDir, '../node_modules/react-native-fs/android')

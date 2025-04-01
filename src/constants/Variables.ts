@@ -1,4 +1,5 @@
 import {scale} from '../utils/ScaleUtils';
+import {LIST_PRODUCT_LIKED} from './Screens';
 
 export const Variables = {
   type_email: 'email',
@@ -8,6 +9,7 @@ export const Variables = {
   TYPE_ADMIN: 'quan-tri-vien',
   TOKEN_KEY: 'token',
   USER_LOGIN_KEY: 'user-login',
+  REFRESH_TOKEN: 'refresh-token',
   // Font sizes
   FONT_SIZE_MAIN_TITLE: scale(22),
   FONT_SIZE_SUBTITLE: scale(20),
@@ -25,4 +27,18 @@ export const Variables = {
   FAST_DELIVERY: 'hỏa tốc',
   // Language
   USER_LANGUAGE_KEY: 'language',
+  DEFAULT_LANGUAGE: 'vi',
+  // Address
+  CREATE_NEW_ADDRESS: '1',
+  SELECT_ADDRESS_FROM_DATA: '2',
+  // Screen
+  LIST_PRODUCT_LIKED: 1,
+  BILL_SCREEN: 2,
+  ACCOUNT_SETTING: 3,
+  // Token
+  TOKEN_EXPIRED: 'Token is Expired',
+  NUMBER_PRODUCT_IN_SINGLE_PAGE: 6,
+  ABORTED_ERROR: 'Aborted',
+  // Payment
+  CREDIT_CARD: 'Thẻ tín dụng',
 };

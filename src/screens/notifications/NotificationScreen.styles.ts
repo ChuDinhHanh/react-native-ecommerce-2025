@@ -1,5 +1,11 @@
-import { StyleSheet } from "react-native";
+import {StyleSheet} from 'react-native';
+import {Colors} from '../../constants/Colors';
 
-const styles = StyleSheet.create({
-    
-})
+export const styles = StyleSheet.create({
+  tabBarIndicator: {
+    backgroundColor: Colors.GREEN_500,
+  },
+  menuOption: {
+    padding: 10,
+  },
+});

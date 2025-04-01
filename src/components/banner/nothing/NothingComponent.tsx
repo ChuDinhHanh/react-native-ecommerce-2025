@@ -1,15 +1,27 @@
-import { View, Text } from 'react-native'
-import React from 'react'
-import { appInfo } from '../../../constants/Infos'
-import TextComponent from '../../text/TextComponent'
-import { Colors } from '../../../constants/Colors'
+import React from 'react';
+import {View} from 'react-native';
+import {Colors} from '../../../constants/Colors';
+import TextComponent from '../../text/TextComponent';
+import {styles} from './NothingComponent.style';
+import {appInfo} from '../../../constants/Infos';
+import {useAppSelector} from '../../../redux/Hooks';
 
-const NothingComponent = () => {
-    return (
-        <View style={{ width: appInfo.sizes.WIDTH - 16, height: appInfo.sizes.HEIGHT - 16, justifyContent: 'center', alignItems: 'center' }}>
-            <TextComponent text='Danh mục chưa có sản phẩm' color={Colors.BLACK} />
-        </View>
-    )
+interface Props {
+  title: string;
+  effectiveHeight?: number;
 }
 
-export default NothingComponent
+const NothingComponent = (props: Props) => {
+  const {title, effectiveHeight} = props;
+  return (
+    <View
+      style={[
+        styles.container,
+        {height: appInfo.sizes.HEIGHT - (effectiveHeight ?? 0)},
+      ]}>
+      <TextComponent text={title} color={Colors.BLACK} />
+    </View>
+  );
+};
+
+export default NothingComponent;

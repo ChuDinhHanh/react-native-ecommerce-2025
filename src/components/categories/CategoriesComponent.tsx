@@ -1,79 +1,139 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useIsFocused } from '@react-navigation/native'
-import React, { useEffect } from 'react'
-import { Alert, FlatList, Image, Pressable, View } from 'react-native'
-import { Colors } from '../../constants/Colors'
-import { Variables } from '../../constants/Variables'
-import { useLazyGetCategoriesQuery } from '../../redux/Service'
-import { moderateScale } from '../../utils/ScaleUtils'
-import SessionComponent from '../session/SessionComponent'
-import CategorySkeleton from '../skeletons/category/CategorySkeleton'
-import SpaceComponent from '../space/SpaceComponent'
-import TextComponent from '../text/TextComponent'
+import React, {useEffect, useCallback} from 'react';
+import {FlatList, View, Alert} from 'react-native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {useTranslation} from 'react-multi-lang';
 
-interface Props {
-    onPress: (code: 'string') => void;
-}
-const CategoriesComponent = (props: Props) => {
-    const { onPress } = props;
-    const isFocused = useIsFocused();
-    const [getCategories, { data, isError, isFetching, isLoading, isSuccess, error }] = useLazyGetCategoriesQuery();
-    useEffect(() => {
-        const x = async () => {
-            await AsyncStorage.getItem(Variables.TOKEN_KEY).then((res) => {
-                if (res) {
-                    getCategories({ token: res })
-                }
-            })
-        }
-        x();
-    }, [isFocused]);
+import {useAppSelector} from '../../redux/Hooks';
+import {useLazyGetCategoriesQuery} from '../../redux/Service';
+import {useAuthService} from '../../services/authService';
+import {RootStackParamList} from '../../routes/Routes';
 
-    useEffect(() => {
-        if (isError) {
-            const errorText = JSON.parse(JSON.stringify(error))
-            Alert.alert('Cảnh báo', `${errorText.messenger}`)
-        }
-    }, [data, isError, isFetching])
+import SessionComponent from '../session/SessionComponent';
+import CategorySkeleton from '../skeletons/category/CategorySkeleton';
+import SpaceComponent from '../space/SpaceComponent';
+import TextComponent from '../text/TextComponent';
+import CategoryItemComponent from './component/item/CategoryItemComponent';
 
+import {
+  DETAIL_CATEGORY_SCREEN,
+  SERVICE_STACK_NAVIGATOR,
+} from '../../constants/Screens';
+import {styles} from './CategoriesComponent.style';
+import {moderateScale} from '../../utils/ScaleUtils';
+import {Colors} from '../../constants/Colors';
+import {Variables} from '../../constants/Variables';
+import {Category} from '../../types/response/Category';
+
+const CategoriesComponent = () => {
+  const {handleCheckTokenAlive} = useAuthService();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const isFocused = useIsFocused();
+  const t = useTranslation();
+
+  const token = useAppSelector(state => state.SpeedReducer.token) ?? '';
+  const refreshToken =
+    useAppSelector(state => state.SpeedReducer.userLogin?.refreshToken) ?? '';
+
+  const [getCategories, {data, isError, isLoading, error}] =
+    useLazyGetCategoriesQuery();
+
+  const handleGetCategories = useCallback(async () => {
+    if (token) {
+      try {
+        await getCategories({token});
+      } catch (error) {
+        // Handle error
+      }
+    }
+  }, [token, getCategories]);
+
+  useEffect(() => {
+    handleGetCategories();
+  }, [handleGetCategories]);
+
+  const handleError = useCallback(() => {
+    if (isError && isFocused) {
+      const textError = JSON.parse(JSON.stringify(error));
+      const errorMessage = textError?.data?.message || textError?.message;
+      if (errorMessage === Variables.ABORTED_ERROR) {
+        handleGetCategories();
+      } else if (errorMessage === Variables.TOKEN_EXPIRED) {
+        handleCheckTokenAlive(token, refreshToken);
+      } else {
+        // Alert.alert(t("Alert.warning"), t("Alert.systemError"));
+      }
+    }
+  }, [
+    isError,
+    isFocused,
+    error,
+    token,
+    refreshToken,
+    handleCheckTokenAlive,
+    t,
+  ]);
+
+  useEffect(() => {
+    handleError();
+  }, [handleError]);
+
+  const handlePressCategoryEvent = (code: string) => {
+    navigation.navigate(SERVICE_STACK_NAVIGATOR, {
+      screen: DETAIL_CATEGORY_SCREEN,
+      params: {code},
+    } as any);
+  };
+
+  const renderItem = (item: Category, index: number) => {
+    const isLastItem = index === data?.data.length! - 1;
     return (
-        <React.Fragment>
-            {/* Title */}
-            <SessionComponent>
-                <TextComponent fontWeight='bold' text='Danh mục' color={Colors.BLACK} />
-            </SessionComponent>
-            {/* List categories */}
-            {
-                isLoading ?
-                    <CategorySkeleton />
-                    :
-                    <FlatList
-                        horizontal
-                        data={data?.data}
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{
-                            marginLeft: 16
-                        }}
-                        renderItem={({ item, index }) => {
-                            return index !== 0 && item.level == 1 ?
-                                <Pressable onPress={() => onPress(item.code)}>
-                                    <View style={{ backgroundColor: Colors.WHITE, borderWidth: 1, height: 200, minWidth: 170, marginRight: 10, borderRadius: 5, justifyContent: 'center', alignItems: 'center', borderColor: Colors.COLOR_GREY_FEEBLE }}>
-                                        <View style={{ width: 120, height: 120, backgroundColor: Colors.COLOR_GREY_FEEBLE, borderRadius: 100, overflow: 'hidden' }}>
-                                            <Image style={{ width: '100%', height: '100%', objectFit: 'cover' }} source={{ uri: 'https://vsmall.vn/wp-content/uploads/2022/07/cach-chup-anh-quan-ao-dep-bang-dien-thoai.png' }} />
-                                        </View>
-                                        <SpaceComponent height={moderateScale(10)} />
-                                        <View style={{ width: 120, justifyContent: 'center', alignItems: 'center' }}>
-                                            <TextComponent numberOfLines={2} color={Colors.BLACK} text={item.name} />
-                                        </View>
-                                    </View>
-                                </Pressable>
-                                :
-                                null
-                        }}
-                    />
-            }
-        </React.Fragment>
-    )
-}
+      <>
+        {item.level === 1 ? (
+          <CategoryItemComponent
+            item={item}
+            onPress={handlePressCategoryEvent}
+          />
+        ) : null}
 
-export default CategoriesComponent
+        {isLastItem && <SpaceComponent width={moderateScale(25)} />}
+      </>
+    );
+  };
+
+  if (isLoading) {
+    return (
+      <SessionComponent>
+        <CategorySkeleton />
+      </SessionComponent>
+    );
+  }
+
+  return (
+    <View>
+      {/* Title */}
+      <SessionComponent>
+        <TextComponent
+          color={Colors.BLACK}
+          style={styles.title}
+          text={t('HomeScreen.categories_title')}
+        />
+      </SessionComponent>
+      {/* List categories */}
+      <FlatList
+        horizontal
+        data={data?.data}
+        keyExtractor={item => item.id.toString()}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.container}
+        renderItem={({item, index}) => renderItem(item, index)}
+        ListEmptyComponent={
+          <TextComponent text={t('HomeScreen.no_categories')} />
+        }
+      />
+    </View>
+  );
+};
+
+export default CategoriesComponent;

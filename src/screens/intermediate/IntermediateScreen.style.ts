@@ -34,12 +34,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  container__image: {
-    objectFit: 'cover',
-  },
   container__wrapper: {
     borderRadius: 10,
-    elevation:5
+    elevation: 5,
   },
 });
 

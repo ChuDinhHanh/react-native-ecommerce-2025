@@ -1,108 +1,155 @@
-import React from 'react'
-import { View } from 'react-native'
-import { Divider } from 'react-native-paper'
-import AntDesign from 'react-native-vector-icons/AntDesign'
-import Entypo from 'react-native-vector-icons/Entypo'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import Octicons from 'react-native-vector-icons/Octicons'
-import ContainerComponent from '../../components/container/ContainerComponent'
-import RowComponent from '../../components/row/RowComponent'
-import SessionComponent from '../../components/session/SessionComponent'
-import SpaceComponent from '../../components/space/SpaceComponent'
-import TextComponent from '../../components/text/TextComponent'
-import { Colors } from '../../constants/Colors'
-import { Variables } from '../../constants/Variables'
-import { globalStyles } from '../../styles/globalStyles'
-import { moderateScale, scale } from '../../utils/ScaleUtils'
-import ConcessionaryItemComponent from './component/concessionaryItem/ConcessionaryItemComponent'
-import OptionItemComponent from './component/optionItem/OptionItemComponent'
-import TopBannerComponent from './component/topBanner/TopBannerComponent'
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import React, { useCallback } from 'react';
+import { useTranslation } from 'react-multi-lang';
+import { Divider } from 'react-native-paper';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Entypo from 'react-native-vector-icons/Entypo';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Octicons from 'react-native-vector-icons/Octicons';
+import ContainerComponent from '../../components/container/ContainerComponent';
+import RowComponent from '../../components/row/RowComponent';
+import SessionComponent from '../../components/session/SessionComponent';
+import SpaceComponent from '../../components/space/SpaceComponent';
+import TextComponent from '../../components/text/TextComponent';
+import { Colors } from '../../constants/Colors';
+import {
+  ACCOUNT_SETTING,
+  BILL_SCREEN,
+  LIST_PRODUCT_LIKED,
+  SERVICE_STACK_NAVIGATOR,
+} from '../../constants/Screens';
+import { Variables } from '../../constants/Variables';
+import { useAppSelector } from '../../redux/Hooks';
+import { RootStackParamList } from '../../routes/Routes';
+import { moderateScale } from '../../utils/ScaleUtils';
+import ConcessionaryItemComponent from './component/concessionaryItem/ConcessionaryItemComponent';
+import OptionItemComponent from './component/optionItem/OptionItemComponent';
+import TopBannerComponent from './component/topBanner/TopBannerComponent';
 const ProfileScreen = () => {
+  const t = useTranslation();
+  const language = useAppSelector(state => state.SpeedReducer.language);
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const userLogin = useAppSelector(state => state.SpeedReducer.userLogin);
+
+  const handleClickButtonEvent = useCallback(
+    (key: number) => {
+      switch (key) {
+        case Variables.LIST_PRODUCT_LIKED:
+          navigation.navigate(SERVICE_STACK_NAVIGATOR, {
+            screen: LIST_PRODUCT_LIKED,
+            params: {username: userLogin?.email},
+          } as any);
+          break;
+        case Variables.BILL_SCREEN:
+          navigation.navigate(SERVICE_STACK_NAVIGATOR, {
+            screen: BILL_SCREEN,
+            params: {username: userLogin?.email},
+          } as any);
+          break;
+        case Variables.ACCOUNT_SETTING:
+          navigation.navigate(SERVICE_STACK_NAVIGATOR, {
+            screen: ACCOUNT_SETTING,
+            params: null,
+          } as any);
+          break;
+
+        default:
+          break;
+      }
+    },
+    [userLogin],
+  );
   return (
     <ContainerComponent isScrollEnable backgroundColor={Colors.WHITE} isFull>
       {/* Banner */}
       <TopBannerComponent />
       {/* Concessionary */}
-      <SessionComponent>
-        <RowComponent justifyContent='flex-start' alignItems='center'>
-          <TextComponent text='Ưu đãi riêng dành cho bạn' color={Colors.BLACK} />
-          <SpaceComponent width={scale(5)} />
-          <View style={[globalStyles.center, { paddingHorizontal: 5, paddingVertical: .5, borderTopLeftRadius: 10, borderTopRightRadius: 10, borderBottomRightRadius: 10, backgroundColor: Colors.GREEN_500 }]}>
-            <TextComponent text='Mới' fontSize={14} />
-          </View>
-        </RowComponent>
-      </SessionComponent>
-      <Divider />
-      {/* List Concessionary */}
-      <RowComponent paddingVertical={moderateScale(16)} justifyContent='space-around' alignItems='center'>
-        <ConcessionaryItemComponent
-          icon={<Entypo name='box' size={Variables.ICON_SIZE_MEDIUM} color={Colors.WHITE} />}
-          title={'Đơn đầu tiên'}
-          concessionary={'Miễn phí'}
-          backgroundColor={"rgb(24, 90, 157)"}
-          onPress={() => { }}
-        />
-        <ConcessionaryItemComponent
-          icon={<Ionicons name='ticket' size={Variables.ICON_SIZE_MEDIUM} color={Colors.WHITE} />}
-          title={'Mã giảm giá'}
-          concessionary={'giảm giá'}
-          backgroundColor={"rgb(255 199 55)"}
-          onPress={() => { }}
-        />
-        <ConcessionaryItemComponent
-          icon={<MaterialCommunityIcons name='truck-fast' size={Variables.ICON_SIZE_MEDIUM} color={Colors.WHITE} />}
-          title={'Miễn phí'}
-          concessionary={'Vận chuyển'}
-          backgroundColor={"rgb(63 194 162)"}
-          onPress={() => { }}
-        />
-      </RowComponent>
       <Divider />
       {/* History bill */}
       <SessionComponent>
         <RowComponent
-          onPress={() => { console.log("xem lịch sử mua hàng") }}
-          justifyContent='space-between' alignItems='center'>
-          <RowComponent justifyContent='flex-start' alignItems='center'>
-            <FontAwesome name="wpforms" size={Variables.ICN_SIZE_TOP_TAB} color={Colors.GREEN_500} />
+          onPress={() => handleClickButtonEvent(Variables.BILL_SCREEN)}
+          justifyContent="space-between"
+          alignItems="center">
+          <RowComponent justifyContent="flex-start" alignItems="center">
+            <FontAwesome
+              name="wpforms"
+              size={Variables.ICN_SIZE_TOP_TAB}
+              color={Colors.GREEN_500}
+            />
             <SpaceComponent width={moderateScale(10)} />
-            <TextComponent text='Đơn mua' color={Colors.BLACK} />
+            <TextComponent
+              text={t('ProfileScreen.purchaseOrder')}
+              color={Colors.BLACK}
+            />
           </RowComponent>
-          <RowComponent justifyContent='flex-start' alignItems='center'>
-            <TextComponent fontSize={Variables.FONT_SIZE_ERROR_TEXT} text='Xem lịch sử mua hàng' color={Colors.BLACK} />
+          <RowComponent justifyContent="flex-start" alignItems="center">
+            <TextComponent
+              fontSize={Variables.FONT_SIZE_ERROR_TEXT}
+              text={t('ProfileScreen.viewPurchaseHistory')}
+              color={Colors.BLACK}
+            />
             <SpaceComponent width={moderateScale(10)} />
-            <AntDesign name="right" size={moderateScale(15)} color={Colors.GREY1} />
+            <AntDesign
+              name="right"
+              size={moderateScale(15)}
+              color={Colors.GREY1}
+            />
           </RowComponent>
         </RowComponent>
       </SessionComponent>
       <Divider />
       {/* Option */}
       <SessionComponent>
-        <RowComponent justifyContent='space-around' alignItems='center'>
+        <RowComponent justifyContent="space-around" alignItems="center">
           <ConcessionaryItemComponent
-            icon={<FontAwesome5 name='box-tissue' size={Variables.ICON_SIZE_MEDIUM} color={Colors.GREY1} />}
+            icon={
+              <FontAwesome5
+                name="box-tissue"
+                size={Variables.ICON_SIZE_MEDIUM}
+                color={Colors.GREY1}
+              />
+            }
             title={'Chờ xác nhận'}
-            onPress={() => { }}
+            onPress={() => {}}
           />
           <ConcessionaryItemComponent
-            icon={<FontAwesome5 name='box' size={Variables.ICON_SIZE_MEDIUM} color={Colors.GREY1} />}
+            icon={
+              <FontAwesome5
+                name="box"
+                size={Variables.ICON_SIZE_MEDIUM}
+                color={Colors.GREY1}
+              />
+            }
             title={'Chờ lấy hàng'}
-            onPress={() => { }}
+            onPress={() => {}}
           />
           <ConcessionaryItemComponent
-            icon={<FontAwesome6 name='truck-arrow-right' size={Variables.ICON_SIZE_MEDIUM} color={Colors.GREY1} />}
+            icon={
+              <FontAwesome6
+                name="truck-arrow-right"
+                size={Variables.ICON_SIZE_MEDIUM}
+                color={Colors.GREY1}
+              />
+            }
             title={'Chờ giao hàng'}
-            onPress={() => { }}
+            onPress={() => {}}
           />
           <ConcessionaryItemComponent
-            icon={<Octicons name='feed-star' size={Variables.ICON_SIZE_MEDIUM} color={Colors.GREY1} />}
+            icon={
+              <Octicons
+                name="feed-star"
+                size={Variables.ICON_SIZE_MEDIUM}
+                color={Colors.GREY1}
+              />
+            }
             title={'Đánh giá'}
-            onPress={() => { }}
+            onPress={() => {}}
           />
         </RowComponent>
       </SessionComponent>
@@ -110,71 +157,110 @@ const ProfileScreen = () => {
       {/* had like */}
       <OptionItemComponent
         id={0}
-        onPress={() => { }}
+        onPress={() => handleClickButtonEvent(Variables.LIST_PRODUCT_LIKED)}
         suffix={
-          <AntDesign name="hearto" size={Variables.ICN_SIZE_TOP_TAB} color={Colors.GREEN_500} />
+          <AntDesign
+            name="hearto"
+            size={Variables.ICN_SIZE_TOP_TAB}
+            color={Colors.GREEN_500}
+          />
         }
-        suffixTitle={"Đơn thích"}
-        affix={<AntDesign name="right" size={moderateScale(15)} color={Colors.GREY1} />}
+        suffixTitle={t('ProfileScreen.likedProducts')}
+        affix={
+          <AntDesign
+            name="right"
+            size={moderateScale(15)}
+            color={Colors.GREY1}
+          />
+        }
         affixTitle={''}
       />
       {/* Following shop */}
       <OptionItemComponent
         id={0}
-        onPress={() => { }}
+        onPress={() => {}}
         suffix={
-          <Entypo name="shop" size={Variables.ICN_SIZE_TOP_TAB} color={Colors.GREEN_500} />
+          <Entypo
+            name="shop"
+            size={Variables.ICN_SIZE_TOP_TAB}
+            color={Colors.GREEN_500}
+          />
         }
-        suffixTitle={"Shop đang theo dõi"}
-        affix={<AntDesign name="right" size={moderateScale(15)} color={Colors.GREY1} />}
-        affixTitle={''}
-      />
-      {/* Had seen currently */}
-      <OptionItemComponent
-        id={0}
-        onPress={() => { }}
-        suffix={
-          <AntDesign name="clockcircleo" size={Variables.ICN_SIZE_TOP_TAB} color={Colors.GREEN_500} />
+        suffixTitle={'Shop đang theo dõi'}
+        affix={
+          <AntDesign
+            name="right"
+            size={moderateScale(15)}
+            color={Colors.GREY1}
+          />
         }
-        suffixTitle={"Đã xem gần đây"}
-        affix={<AntDesign name="right" size={moderateScale(15)} color={Colors.GREY1} />}
         affixTitle={''}
       />
       {/* My opinion */}
       <OptionItemComponent
         id={0}
-        onPress={() => { }}
+        onPress={() => {}}
         suffix={
-          <AntDesign name="staro" size={Variables.ICN_SIZE_TOP_TAB} color={Colors.GREEN_500} />
+          <AntDesign
+            name="staro"
+            size={Variables.ICN_SIZE_TOP_TAB}
+            color={Colors.GREEN_500}
+          />
         }
-        suffixTitle={"Đánh giá của tôi"}
-        affix={<AntDesign name="right" size={moderateScale(15)} color={Colors.GREY1} />}
+        suffixTitle={'Đánh giá của tôi'}
+        affix={
+          <AntDesign
+            name="right"
+            size={moderateScale(15)}
+            color={Colors.GREY1}
+          />
+        }
         affixTitle={''}
       />
       {/* Account setting */}
       <OptionItemComponent
         id={0}
-        onPress={() => { }}
+        onPress={() => handleClickButtonEvent(Variables.ACCOUNT_SETTING)}
         suffix={
-          <AntDesign name="user" size={Variables.ICN_SIZE_TOP_TAB} color={Colors.GREEN_500} />
+          <AntDesign
+            name="user"
+            size={Variables.ICN_SIZE_TOP_TAB}
+            color={Colors.GREEN_500}
+          />
         }
-        suffixTitle={"Thiết lập tài khoản"}
-        affix={<AntDesign name="right" size={moderateScale(15)} color={Colors.GREY1} />}
+        suffixTitle={t('ProfileScreen.settings')}
+        affix={
+          <AntDesign
+            name="right"
+            size={moderateScale(15)}
+            color={Colors.GREY1}
+          />
+        }
         affixTitle={''}
       />
       {/* Chat with admin */}
       <OptionItemComponent
         id={0}
-        onPress={() => { }}
+        onPress={() => {}}
         suffix={
-          <MaterialIcons name="support-agent" size={Variables.ICN_SIZE_TOP_TAB} color={Colors.GREEN_500} />
+          <MaterialIcons
+            name="support-agent"
+            size={Variables.ICN_SIZE_TOP_TAB}
+            color={Colors.GREEN_500}
+          />
         }
-        suffixTitle={"Chat với Speed"}
-        affix={<AntDesign name="right" size={moderateScale(15)} color={Colors.GREY1} />}
+        suffixTitle={'Chat với Speed'}
+        affix={
+          <AntDesign
+            name="right"
+            size={moderateScale(15)}
+            color={Colors.GREY1}
+          />
+        }
         affixTitle={''}
       />
     </ContainerComponent>
-  )
-}
+  );
+};
 
-export default ProfileScreen
+export default ProfileScreen;

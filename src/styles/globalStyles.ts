@@ -42,5 +42,5 @@ export const globalStyles = StyleSheet.create({
     marginTop: 2,
     fontSize: 14,
     marginBottom: 5,
-  }
+  },
 });

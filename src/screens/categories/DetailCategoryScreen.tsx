@@ -1,52 +1,112 @@
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { RouteProp, useIsFocused, useRoute } from '@react-navigation/native'
-import React, { useEffect } from 'react'
-import { Alert } from 'react-native'
-import NothingComponent from '../../components/banner/nothing/NothingComponent'
-import ContainerComponent from '../../components/container/ContainerComponent'
-import ListProductOfCategoryComponent from '../../components/list/productsOfCategory/ListProductOfCategoryComponent'
-import SessionComponent from '../../components/session/SessionComponent'
-import ProductSkeleton from '../../components/skeletons/product/ProductSkeleton'
-import { Variables } from '../../constants/Variables'
-import { useAddToCartMutation, useLazyGetProductsOfCategoryQuery } from '../../redux/Service'
-import { RootStackParamList } from '../../routes/Routes'
+import {
+  RouteProp,
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import React, {useEffect, useCallback} from 'react';
+import {Alert, FlatList} from 'react-native';
+import NothingComponent from '../../components/banner/nothing/NothingComponent';
+import ContainerComponent from '../../components/container/ContainerComponent';
+import SessionComponent from '../../components/session/SessionComponent';
+import ProductItem from '../../components/shop/product/item/ProductItem';
+import ProductSkeleton from '../../components/skeletons/product/ProductSkeleton';
+import {DETAIL_PRODUCT_SCREEN} from '../../constants/Screens';
+import {useAppSelector} from '../../redux/Hooks';
+import {useLazyGetProductsOfCategoryQuery} from '../../redux/Service';
+import {RootStackParamList} from '../../routes/Routes';
+import {styles} from './DetailCategoryScreen.style';
+import {useAuthService} from '../../services/authService';
+import {useTranslation} from 'react-multi-lang';
+import {Variables} from '../../constants/Variables';
 
 const DetailCategoryScreen = () => {
-    const route = useRoute<RouteProp<RootStackParamList, 'DETAIL_CATEGORY_SCREEN'>>();
-    const code = route.params.code;
-    const isFocused = useIsFocused();
-    const [getProductsOfCategory, { data, isError, isFetching, isLoading, error }] = useLazyGetProductsOfCategoryQuery();
+  const {handleCheckTokenAlive} = useAuthService();
+  const refreshToken =
+    useAppSelector(state => state.SpeedReducer.userLogin?.refreshToken) ?? '';
+  const token = useAppSelector(state => state.SpeedReducer.token) ?? '';
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const route =
+    useRoute<RouteProp<RootStackParamList, 'DETAIL_CATEGORY_SCREEN'>>();
+  const code = route.params.code;
+  const isFocused = useIsFocused();
+  const t = useTranslation(); // Use translation hook for handling localization
 
-    useEffect(() => {
-        const x = async () => {
-            await AsyncStorage.getItem(Variables.TOKEN_KEY).then((res) => {
-                if (res) {
-                    getProductsOfCategory({ token: res, code: code })
-                }
-            })
+  const [getProductsOfCategory, {data, isError, isFetching, isLoading, error}] =
+    useLazyGetProductsOfCategoryQuery();
+
+  const handleError = useCallback(() => {
+    if (isError && isFocused) {
+      const textError = JSON.parse(JSON.stringify(error));
+      const errorMessage = textError?.data?.message || textError?.message;
+      if (errorMessage === Variables.ABORTED_ERROR) {
+        if (token && code) {
+          getProductsOfCategory({token, code});
         }
-        x();
-    }, [isFocused, code]);
+      } else if (errorMessage === Variables.TOKEN_EXPIRED) {
+        handleCheckTokenAlive(token, refreshToken);
+      } else {
+        Alert.alert(t('Alert.warning'), t('Alert.systemError'));
+      }
+    }
+  }, [
+    isError,
+    isFocused,
+    error,
+    token,
+    refreshToken,
+    handleCheckTokenAlive,
+    t,
+    code,
+  ]);
 
-    useEffect(() => {
-        if (isError) {
-            const errorText = JSON.parse(JSON.stringify(error));
-            Alert.alert('Cảnh báo', errorText.message)
-        }
-    }, [data, isError, error])
+  useEffect(() => {
+    if (token && code) {
+      getProductsOfCategory({token, code});
+    }
+  }, [token, code, isFocused]);
 
+  useEffect(() => {
+    handleError();
+  }, [handleError]);
 
+  const handlePressProductEvent = (id: string) => {
+    navigation.navigate(DETAIL_PRODUCT_SCREEN, {code: id});
+  };
+
+  if (isLoading || isFetching) {
     return (
-        <ContainerComponent
-            isScrollEnable
-        >
-            <SessionComponent padding={10}>
-                {
-                    isFetching ? <ProductSkeleton /> : (data?.data.length !== 0) ? <ListProductOfCategoryComponent data={data?.data} /> : <NothingComponent />
-                }
-            </SessionComponent>
-        </ContainerComponent>
-    )
-}
+      <SessionComponent>
+        <ProductSkeleton />
+      </SessionComponent>
+    );
+  }
 
-export default DetailCategoryScreen
+  return (
+    <ContainerComponent isScrollEnable>
+      <SessionComponent padding={10}>
+        {data?.data.length ? (
+          <FlatList
+            keyExtractor={item => item.code.toString()}
+            columnWrapperStyle={styles.flatList}
+            contentContainerStyle={styles.flatList__content}
+            numColumns={2}
+            data={data?.data}
+            renderItem={({item}) => (
+              <ProductItem onPress={handlePressProductEvent} item={item} />
+            )}
+          />
+        ) : (
+          <NothingComponent
+            effectiveHeight={150}
+            title={t('SearchScreen.productNotFoundTitle')}
+          />
+        )}
+      </SessionComponent>
+    </ContainerComponent>
+  );
+};
+
+export default DetailCategoryScreen;

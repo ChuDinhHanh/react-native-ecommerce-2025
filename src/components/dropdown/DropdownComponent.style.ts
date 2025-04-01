@@ -26,5 +26,5 @@ export const styles = StyleSheet.create({
   'container__wrapper--avatar': {
     justifyContent: 'center',
     alignItems: 'center',
-  }
+  },
 });
