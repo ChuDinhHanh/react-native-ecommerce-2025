@@ -104,6 +104,14 @@
     {
       "path": "assets/fonts/Roboto-ThinItalic.ttf",
       "sha1": "cc79d5a23bd0ec08b1d99f5390bf33cacc3082f4"
+    },
+    {
+      "path": "node_modules/@ant-design/icons-react-native/fonts/antfill.ttf",
+      "sha1": "56960e7721fc92b62e0f7c4d131ffe34ed042c49"
+    },
+    {
+      "path": "node_modules/@ant-design/icons-react-native/fonts/antoutline.ttf",
+      "sha1": "66720607b7496a48f145425386b2082b73662fd1"
     }
   ]
 }

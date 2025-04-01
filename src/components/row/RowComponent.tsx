@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { FlexAlignType, LayoutChangeEvent, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { FlexAlignType, LayoutChangeEvent, Pressable, StyleProp, View, ViewStyle } from 'react-native';
 import { globalStyles } from '../../styles/globalStyles';
 
 interface Props {
@@ -25,6 +25,7 @@ interface Props {
     onLayout?: (event: LayoutChangeEvent, isBottom: boolean) => void;
     flexWrap?: "wrap" | "nowrap" | "wrap-reverse",
     styles?: StyleProp<ViewStyle>;
+    paddingVertical?: number;
 }
 
 const RowComponent = (props: Props) => {
@@ -43,7 +44,8 @@ const RowComponent = (props: Props) => {
         padding,
         onLayout,
         flexWrap,
-        styles
+        styles,
+        paddingVertical
     } = props;
     const style = [
         {
@@ -57,7 +59,8 @@ const RowComponent = (props: Props) => {
             marginHorizontal,
             paddingHorizontal,
             padding,
-            flexWrap
+            flexWrap,
+            paddingVertical
         },
         globalStyles.row,
         styles
@@ -65,9 +68,9 @@ const RowComponent = (props: Props) => {
     return (
         <React.Fragment>
             {onPress ? (
-                <TouchableOpacity style={style} onPress={onPress}>
+                <Pressable style={style} onPress={onPress}>
                     {children}
-                </TouchableOpacity>
+                </Pressable>
             ) : (
                 <View
                     onLayout={onLayout ? event => onLayout(event, false) : undefined}

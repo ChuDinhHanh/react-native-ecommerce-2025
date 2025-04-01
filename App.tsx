@@ -1,15 +1,23 @@
 import { NavigationContainer } from '@react-navigation/native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import Routes from './src/routes/Routes'
+import { Provider } from 'react-redux'
+import { store } from './src/redux/Store'
+import { PaperProvider } from 'react-native-paper'
 
 const App = () => {
+
   return (
-    <SafeAreaProvider>
-      <NavigationContainer >
-        <Routes />
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <PaperProvider>
+      <Provider store={store}>
+        <SafeAreaProvider>
+          <NavigationContainer >
+            <Routes />
+          </NavigationContainer>
+        </SafeAreaProvider>
+      </Provider>
+    </PaperProvider>
   )
 }
 

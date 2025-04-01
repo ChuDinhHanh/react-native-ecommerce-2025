@@ -1,5 +1,101 @@
 {
-    "LoginScreen":{
-        "screenName":"Đăng nhập"
+    "LoginScreen": {
+        "screenName": "Đăng nhập",
+        "textLoginQuestionType": "Bạn không có tài khoản?",
+        "textLoginScreen": "Đăng ký",
+        "textForgotPassword": "Quên mật khẩu?",
+        "textLogin": "Đăng nhập",
+        "textOrLoginWith": "Hoặc đăng nhập với",
+        "textInputPlaceHolderEmailOrPhoneNumber": "Email/Số điện thoại",
+        "textInputPlaceHolderPassword": "Mật khẩu",
+        "textInputPlaceHolderUserName": "Tên tài khoản"
+    },
+    "LoginBySocial": {
+        "textLoginWithFacebook": "Đăng nhập với Facebook",
+        "textLoginWithGoogle": "Đăng nhập với Google"
+    },
+    "RegisterScreen": {
+        "screenName": "Đăng ký",
+        "textLoginQuestionType": "Bạn đã có tài khoản?",
+        "textRegisterScreen": "Đăng ký",
+        "textRegister": "Đăng ký",
+        "textOrRegisterWith": "Hoặc đăng ký với",
+        "textChooseTypeAccountRegisterSellPerson": "Người bán",
+        "textChooseTypeAccountRegisterBuyPerson": "Người mua"
+    },
+    "RegisterBySocial": {
+        "textRegisterWithFacebook": "Đăng ký với Facebook",
+        "textRegisterWithGoogle": "Đăng ký với Google"
+    },
+    "VerifyScreen": {
+        "screenName": "Xác thực",
+        "textErrorCodeNotMath": "mã code không chính xác"
+    },
+    "ForgotPasswordScreen": {
+        "screenName": "Quên mật khẩu",
+        "textSend": "Gửi",
+        "textPlaceHolderEmail": "Hãy nhập email"
+    },
+    "ResetPasswordScreen": {
+        "screenName": "Mật khẩu mới",
+        "textNewPassword": "Nhập mật khẩu mới",
+        "textPasswordConfirm": "Nhập lại mật khẩu"
+    },
+    "Validate": {
+        "textErrorPhoneNotCorrectFormat": "Số điện thoại sai định dạng",
+        "textErrorPhoneRequired": "Số điện thoại không được để trống",
+        "textErrorPasswordAtLess6Character": "Mật khẩu phải chứa ít nhất 6 ký tự",
+        "textErrorPasswordRequired": "Mật khẩu không được để trống",
+        "textErrorEmailNotCorrectFormat": "Email sai định dạng",
+        "textErrorEmailRequired": "Email không được để trống",
+        "textErrorConfirmPasswordNotMatches": "Mật khẩu không khớp",
+        "textErrorConfirmPasswordRequired": "Mật khẩu xác nhận là bắt buộc",
+        "textErrorEmailOrPhoneNumberRequired": "Số điện thoại hoặc email không được để trống",
+        "textErrorEmailOrPhoneNumberNotCorrectFormat": "Số điện thoại hoặc email không đúng định dạng",
+        "textErrorNameRequired": "Tên là bắt buộc",
+        "textErrorNameCantJustHaveSpaceCharacter": "Tên không được chỉ chứa khoảng trắng",
+        "textErrorTypeAccountRequired": "Loại tài khoản là bắt buộc"
+    },
+    "ImmediateScreen": {
+        "textButtonLeft": "Trở lại",
+        "textButtonRight": "Tiếp tục",
+        "textTitleDropDown": "Lựa chọn kiểu đăng ký",
+        "textTitleDropDownSelectRegisterWithFacebook": "Đăng ký với Email",
+        "textTitleDropDownSelectRegisterWithGoogle": "Đăng ký với facebook",
+        "textTitleNotification": "Thông báo",
+        "textWarningSelectedType": "Hãy chọn vai trò đăng ký"
+    },
+    "Alert": {
+        "notification": "Thông báo",
+        "warning": "Cảnh báo",
+        "loginSuccess": "Đăng nhập thành công",
+        "loginFail": "Đăng nhập không thành công",
+        "registerSuccess": "Đăng ký thành công",
+        "registerFail": "Đăng ký không thành công"
+    },
+    "VerificationWithOTPScreen": {
+        "textVerification": "Xác minh",
+        "textSendVerificationFor": "Chúng tôi đã gửi cho bạn mã xác minh cho"
+    },
+    "VerificationWithEmailScreen": {
+        "verifySuccess": "Xác thực thành công",
+        "title1": "Vui lòng xác minh email của bạn",
+        "title2": "Bạn sắp hoàn thành! Chúng tôi đã gửi một email tới",
+        "title3": "Chỉ cần nhấp vào liên kết trong email đó để hoàn tất đăng ký của bạn. Nếu bạn không thấy, bạn có thể cần kiểm tra thư mục spam.",
+        "title4": "Vẫn không tìm thấy email?",
+        "textButtonResendEmail": "Gửi lại email",
+        "textButtonVerification": "Xác minh email"
+    },
+    "VerificationWithPhoneScreen": {
+        "title1": "Vui lòng xác minh mã OTP của bạn",
+        "title2": "Bạn sắp hoàn thành việc đăng ký! Chúng tôi đã gửi mã OTP tới",
+        "title3": "Chỉ cần nhập mã OTP vào màn hình này để hoàn tất đăng ký của bạn. Nếu bạn không thấy, bạn có thể cần kiểm tra thư mục tin nhắn spam.",
+        "textResendCode": "Gửi lại code sau",
+        "titleButtonVerify": "Xác thực"
+    },
+    "HomeScreen": {
+        "textPlaceholderSearch": "Tìm kiếm",
+        "TitleIntroduce": "Chào mừng bạn đến với speed",
+        "TitleIntroduce_description": "sàn thương mại điện tử uy tín số 1 việt nam"
     }
 }

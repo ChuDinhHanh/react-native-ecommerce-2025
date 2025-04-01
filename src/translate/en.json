@@ -1,5 +1,101 @@
 {
     "LoginScreen": {
-        "screenName": "Login"
+        "screenName": "Login",
+        "textLoginQuestionType": "Don't have an account?",
+        "textLoginScreen": "Register",
+        "textForgotPassword": "Forgot password?",
+        "textLogin": "Login",
+        "textOrLoginWith": "Or login with",
+        "textInputPlaceHolderEmailOrPhoneNumber": "Email/Phone number",
+        "textInputPlaceHolderPassword": "Password",
+        "textInputPlaceHolderUserName": "Username"
+    },
+    "LoginBySocial": {
+        "textLoginWithFacebook": "Login with Facebook",
+        "textLoginWithGoogle": "Login with Google"
+    },
+    "RegisterScreen": {
+        "screenName": "Register",
+        "textLoginQuestionType": "Already have an account?",
+        "textRegisterScreen": "Register",
+        "textRegister": "Register",
+        "textOrRegisterWith": "Or register with",
+        "textChooseTypeAccountRegisterSellPerson": "Seller",
+        "textChooseTypeAccountRegisterBuyPerson": "Buyer"
+    },
+    "RegisterBySocial": {
+        "textRegisterWithFacebook": "Register with Facebook",
+        "textRegisterWithGoogle": "Register with Google"
+    },
+    "VerifyScreen": {
+        "screenName": "Verify",
+        "textErrorCodeNotMath": "Code does not match"
+    },
+    "ForgotPasswordScreen": {
+        "screenName": "Forgot password",
+        "textSend": "Send",
+        "textPlaceHolderEmail": "Please enter email"
+    },
+    "ResetPasswordScreen": {
+        "screenName": "New password",
+        "textNewPassword": "Enter new password",
+        "textPasswordConfirm": "Re-enter password"
+    },
+    "Validate": {
+        "textErrorPhoneNotCorrectFormat": "Phone number is not in correct format",
+        "textErrorPhoneRequired": "Phone number is required",
+        "textErrorPasswordAtLess6Character": "Password must be at least 6 characters",
+        "textErrorPasswordRequired": "Password is required",
+        "textErrorEmailNotCorrectFormat": "Email is not in correct format",
+        "textErrorEmailRequired": "Email is required",
+        "textErrorConfirmPasswordNotMatches": "Passwords do not match",
+        "textErrorConfirmPasswordRequired": "Confirm password is required",
+        "textErrorEmailOrPhoneNumberRequired": "Email or phone number is required",
+        "textErrorEmailOrPhoneNumberNotCorrectFormat": "Email or phone number is not in correct format",
+        "textErrorNameRequired": "Name is required",
+        "textErrorNameCantJustHaveSpaceCharacter": "Name cannot consist of only spaces",
+        "textErrorTypeAccountRequired": "Account type is required"
+    },
+    "ImmediateScreen": {
+        "textButtonLeft": "Back",
+        "textButtonRight": "Continue",
+        "textTitleDropDown": "Choose registration type",
+        "textTitleDropDownSelectRegisterWithFacebook": "Register with Email",
+        "textTitleDropDownSelectRegisterWithGoogle": "Register with Facebook",
+        "textTitleNotification": "Notification",
+        "textWarningSelectedType": "Please choose a registration role"
+    },
+    "Alert": {
+        "notification": "Notification",
+        "warning": "Warning",
+        "loginSuccess": "Login successful",
+        "loginFail": "Login failed",
+        "registerSuccess": "Registration successful",
+        "registerFail": "Registration failed"
+    },
+    "VerificationWithOTPScreen": {
+        "textVerification": "Verification",
+        "textSendVerificationFor": "We have sent you a verification code for"
+    },
+    "VerificationWithEmailScreen": {
+        "verifySuccess": "Verification successful",
+        "title1": "Please verify your email",
+        "title2": "You're almost done! We have sent an email to",
+        "title3": "Just click the link in that email to complete your registration. If you don't see it, you may need to check your spam folder.",
+        "title4": "Still can't find the email?",
+        "textButtonResendEmail": "Resend email",
+        "textButtonVerification": "Verify email"
+    },
+    "VerificationWithPhoneScreen": {
+        "title1": "Please verify your OTP code",
+        "title2": "You're almost done with registration! We have sent an OTP code to",
+        "title3": "Just enter the OTP code on this screen to complete your registration. If you don't see it, you may need to check your spam message folder.",
+        "textResendCode": "Resend code after",
+        "titleButtonVerify": "Verify"
+    },
+    "HomeScreen": {
+        "textPlaceholderSearch": "Search",
+        "TitleIntroduce": "Welcome to Speed",
+        "TitleIntroduce_description": "The most reputable e-commerce platform in Vietnam"
     }
 }

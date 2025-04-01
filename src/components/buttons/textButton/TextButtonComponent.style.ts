@@ -5,8 +5,12 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  container__icon: {
+  ['container__icon--left']: {
     position: 'absolute',
     left: 10,
+  },
+  ['container__icon--right']: {
+    position: 'absolute',
+    right: 10,
   },
 });

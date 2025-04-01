@@ -1,6 +1,9 @@
 import React from 'react';
 import { Image, Text, View } from 'react-native';
 import styles from './DefaultAvatar.style';
+import { moderateScale } from '../../../utils/ScaleUtils';
+import { Colors } from '../../../constants/Colors';
+import TextComponent from '../../text/TextComponent';
 
 interface Props {
     name: string;
@@ -11,12 +14,6 @@ interface Props {
 const DefaultAvatar = (props: Props) => {
     const { name, image, size } = props;
 
-    const generateColor = () => {
-        const randomColor = Math.floor(Math.random() * 16777215)
-            .toString(16)
-            .padStart(6, '0');
-        return `#${randomColor}`;
-    };
 
     return (
         <>
@@ -26,8 +23,8 @@ const DefaultAvatar = (props: Props) => {
                     style={[
                         styles.wrapperAvatar,
                         {
-                            width: size ?? 40,
-                            height: size ?? 40,
+                            width: size ?? moderateScale(65),
+                            height: size ?? moderateScale(65),
                         },
                     ]}
                 />
@@ -36,12 +33,12 @@ const DefaultAvatar = (props: Props) => {
                     style={[
                         styles.wrapperDefaultAvatar,
                         {
-                            width: size ?? 40,
-                            height: size ?? 40,
-                            backgroundColor: generateColor(),
+                            width: size ?? moderateScale(65),
+                            height: size ?? moderateScale(65),
+                            backgroundColor: Colors.GREY4,
                         },
                     ]}>
-                    <Text style={styles.wrapperName}>{name}</Text>
+                    <TextComponent text={name[0]} color={Colors.BLACK} />
                 </View>
             )}
         </>

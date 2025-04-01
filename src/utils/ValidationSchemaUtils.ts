@@ -1,14 +1,75 @@
 import * as Yup from 'yup';
+import {RegexUntil} from './RegexUtil';
 
-export const validationSchemaUtils = Yup.object().shape({
-  email: Yup.string()
-    .email('Invalid email address')
-    .matches(
-      /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-      'Invalid email address',
-    )
-    .required('Email is required'),
+export const validationSchemaLoginUtils = Yup.object().shape({
+  username: Yup.string()
+    .required('Validate.textErrorEmailOrPhoneNumberRequired')
+    .test(
+      'emailOrPhone',
+      'Validate.textErrorEmailOrPhoneNumberNotCorrectFormat',
+      value => {
+        const phoneRegex = /^(0|\+84)\d{9}$/;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return phoneRegex.test(value) || emailRegex.test(value);
+      },
+    ),
   password: Yup.string()
-    .min(6, 'Password must be at least 6 characters')
-    .required('Password is required'),
+    .min(6, 'Validate.textErrorPasswordAtLess6Character')
+    .required('Validate.textErrorPasswordRequired'),
 });
+
+export const validationSchemaForgotPasswordUtils = Yup.object().shape({
+  email: Yup.string()
+    .matches(RegexUntil.emailRegex, 'Validate.textErrorEmailNotCorrectFormat')
+    .required('Validate.textErrorEmailRequired'),
+});
+
+export const validationSchemaResetPasswordUtils = Yup.object().shape({
+  password: Yup.string()
+    .min(6, 'Validate.textErrorPasswordAtLess6Character')
+    .required('Validate.textErrorPasswordRequired'),
+  confirmPassword: Yup.string()
+    .oneOf(
+      [Yup.ref('password'), undefined],
+      'Validate.textErrorConfirmPasswordNotMatches',
+    )
+    .required('Validate.textErrorConfirmPasswordRequired'),
+});
+
+export const validationSchemaRegisterUtils = Yup.object().shape({
+  name: Yup.string()
+    .required('Validate.textErrorNameRequired')
+    .test(
+      'is-not-empty',
+      'Validate.textErrorNameCantJustHaveSpaceCharacter',
+      value => value?.trim() !== '',
+    ),
+  identifier: Yup.string()
+    .required('Validate.textErrorEmailOrPhoneNumberRequired')
+    .test(
+      'emailOrPhone',
+      'Validate.textErrorEmailOrPhoneNumberNotCorrectFormat',
+      value => {
+        const phoneRegex = /^(0|\+84)\d{9}$/; // Số điện thoại Việt Nam
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Định dạng email cơ bản
+        return phoneRegex.test(value) || emailRegex.test(value);
+      },
+    ),
+  password: Yup.string()
+    .required('Validate.textErrorPasswordRequired')
+    .min(6, 'Validate.textErrorPasswordAtLess6Character'),
+  accountType: Yup.string().required('Validate.textErrorTypeAccountRequired'),
+});
+
+export const ValidateIdentifyTypePhoneOrEmail = (
+  type: 'phone' | 'email',
+  value: string,
+) => {
+  if (
+    (RegexUntil.phoneRegex.test(value) && type === 'phone') ||
+    (RegexUntil.emailRegex.test(value) && type === 'email')
+  ) {
+    return value;
+  }
+  return '';
+};

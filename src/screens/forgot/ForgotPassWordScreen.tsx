@@ -1,11 +1,106 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { useIsFocused, useNavigation } from '@react-navigation/native'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { Formik } from 'formik'
+import React, { useEffect, useState } from 'react'
+import { useTranslation } from 'react-multi-lang'
+import { Alert, Image, View } from 'react-native'
+import FontistoIcons from 'react-native-vector-icons/Fontisto'
+import TextButtonComponent from '../../components/buttons/textButton/TextButtonComponent'
+import ContainerComponent from '../../components/container/ContainerComponent'
+import CustomTextInput from '../../components/inputs/customize/InputComponent'
+import SessionComponent from '../../components/session/SessionComponent'
+import SpaceComponent from '../../components/space/SpaceComponent'
+import TextComponent from '../../components/text/TextComponent'
+import { Colors } from '../../constants/Colors'
+import { VERIFY_OTP_SCREEN } from '../../constants/Screens'
+import { Variables } from '../../constants/Variables'
+import { useLazyForgotPasswordQuery } from '../../redux/Service'
+import { RootStackParamList } from '../../routes/Routes'
+import { scale, verticalScale } from '../../utils/ScaleUtils'
+import { validationSchemaForgotPasswordUtils } from '../../utils/ValidationSchemaUtils'
+import { styles } from './ForgotPassWordScreen.style'
+
+interface ForgotPassWordFormValidate {
+  email: string
+}
 
 const ForgotPassWordScreen = () => {
+  console.log('=================ForgotPassWordScreen===================');
+  const t = useTranslation();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const [initialValue, setInitialValue] = useState<ForgotPassWordFormValidate>({ email: "" });
+  const [forgotPassword, { data, isFetching, error, isError, isSuccess }] = useLazyForgotPasswordQuery();
+
+  const handleSubmit = async (values: ForgotPassWordFormValidate) => {
+    console.log('===========handleSubmit=========================');
+    try {
+      setInitialValue({ ...values });
+      await forgotPassword({ email: values.email });
+    } catch (error) {
+      // hanlde
+    }
+  }
+
+  useEffect(() => {
+    if (data && !isFetching) {
+      Alert.alert("Thông báo", data.message);
+      navigation.navigate(VERIFY_OTP_SCREEN, initialValue);
+    }
+    if (isError) {
+      const textError = JSON.parse(JSON.stringify(error));
+      Alert.alert("Thông báo", `${textError.message}`);
+    }
+    return () => {
+
+    };
+  }, [data, isFetching, error, isError, isSuccess])
+
   return (
-    <View>
-      <Text>ForgotPassWordScreen</Text>
-    </View>
+    <ContainerComponent
+      isFull
+    >
+      <View style={styles.container}>
+        <Image
+          style={styles.container__image}
+          source={require('../../assets/images/data/forgotPassword/ForgotPasswordImage.png')} />
+      </View>
+      <SessionComponent>
+        <Formik
+          initialValues={initialValue}
+          validationSchema={validationSchemaForgotPasswordUtils}
+          onSubmit={handleSubmit}
+          enableReinitialize
+        >
+          {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+            <View>
+              <CustomTextInput
+                isAutoFocus={true}
+                focusable
+                suffix={
+                  <FontistoIcons name='email' size={Variables.ICON_SIZE_SMALL} color={Colors.GREY1} />
+                }
+                placeholder={t("ForgotPasswordScreen.textPlaceHolderEmail")}
+                onChangeText={handleChange('email')}
+                onBlur={handleBlur('email')}
+                value={values.email}
+                error={errors.email}
+                touched={touched.email}
+              />
+              <SpaceComponent height={verticalScale(20)} />
+              <TextButtonComponent
+                isLoading={isFetching}
+                disabled={isFetching}
+                padding={scale(15)}
+                borderRadius={5}
+                backgroundColor={Colors.GREEN_500}
+                title={<TextComponent fontSize={Variables.FONT_SIZE_BUTTON_TEXT} fontWeight='bold' color={Colors.WHITE} text={t("ForgotPasswordScreen.textSend")} />}
+                onPress={handleSubmit}
+              />
+            </View>
+          )}
+        </Formik>
+      </SessionComponent>
+    </ContainerComponent>
   )
 }
 
