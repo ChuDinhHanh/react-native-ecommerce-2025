@@ -34,4 +34,11 @@ export const Variables = {
   // Screen
   LIST_PRODUCT_LIKED: 1,
   BILL_SCREEN: 2,
+  ACCOUNT_SETTING: 3,
+  // Token
+  TOKEN_EXPIRED: 'Token is Expired',
+  NUMBER_PRODUCT_IN_SINGLE_PAGE: 6,
+  ABORTED_ERROR: 'Aborted',
+  // Payment
+  CREDIT_CARD: 'Thẻ tín dụng',
 };

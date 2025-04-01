@@ -1,118 +1,313 @@
 {
-    "LoginScreen": {
-        "screenName": "ログイン",
-        "textLoginQuestionType": "アカウントをお持ちでないですか?",
-        "textLoginScreen": "登録",
-        "textForgotPassword": "パスワードを忘れましたか?",
-        "textLogin": "ログイン",
-        "textOrLoginWith": "または、以下でログイン",
-        "textInputPlaceHolderEmailOrPhoneNumber": "メール/電話番号",
-        "textInputPlaceHolderPassword": "パスワード",
-        "textInputPlaceHolderUserName": "ユーザー名"
-    },
-    "LoginBySocial": {
-        "textLoginWithFacebook": "Facebookでログイン",
-        "textLoginWithGoogle": "Googleでログイン"
-    },
-    "RegisterScreen": {
-        "screenName": "登録",
-        "textLoginQuestionType": "すでにアカウントをお持ちですか?",
-        "textRegisterScreen": "登録",
-        "textRegister": "登録",
-        "textOrRegisterWith": "または、以下で登録",
-        "textChooseTypeAccountRegisterSellPerson": "販売者",
-        "textChooseTypeAccountRegisterBuyPerson": "購入者"
-    },
-    "RegisterBySocial": {
-        "textRegisterWithFacebook": "Facebookで登録",
-        "textRegisterWithGoogle": "Googleで登録"
-    },
-    "VerifyScreen": {
-        "screenName": "認証",
-        "textErrorCodeNotMath": "コードが一致しません"
-    },
-    "ForgotPasswordScreen": {
-        "screenName": "パスワードを忘れた",
-        "textSend": "送信",
-        "textPlaceHolderEmailOrPhone": "メールアドレスまたは電話番号を入力してください"
-    },
-    "ResetPasswordScreen": {
-        "screenName": "新しいパスワード",
-        "textNewPassword": "新しいパスワードを入力",
-        "textPasswordConfirm": "パスワードを再入力"
-    },
-    "Validate": {
-        "textErrorPhoneNotCorrectFormat": "電話番号の形式が正しくありません",
-        "textErrorPhoneRequired": "電話番号は必須です",
-        "textErrorPasswordAtLess6Character": "パスワードは6文字以上である必要があります",
-        "textErrorPasswordRequired": "パスワードは必須です",
-        "textErrorEmailNotCorrectFormat": "メール形式が正しくありません",
-        "textErrorEmailRequired": "メールは必須です",
-        "textErrorConfirmPasswordNotMatches": "パスワードが一致しません",
-        "textErrorConfirmPasswordRequired": "確認パスワードは必須です",
-        "textErrorEmailOrPhoneNumberRequired": "メールまたは電話番号は必須です",
-        "textErrorEmailOrPhoneNumberNotCorrectFormat": "メールまたは電話番号の形式が正しくありません",
-        "textErrorNameRequired": "名前は必須です",
-        "textErrorNameCantJustHaveSpaceCharacter": "名前はスペースだけではいけません",
-        "textErrorTypeAccountRequired": "アカウントタイプは必須です"
-    },
-    "ImmediateScreen": {
-        "textButtonLeft": "戻る",
-        "textButtonRight": "続ける",
-        "textTitleDropDown": "登録タイプを選択",
-        "textTitleDropDownSelectRegisterWithFacebook": "メールで登録",
-        "textTitleDropDownSelectRegisterWithGoogle": "Facebookで登録",
-        "textTitleNotification": "通知",
-        "textWarningSelectedType": "登録の役割を選択してください"
-    },
-    "Alert": {
-        "notification": "通知",
-        "warning": "警告",
-        "loginSuccess": "ログイン成功",
-        "loginFail": "ログイン失敗",
-        "registerSuccess": "登録成功",
-        "registerFail": "登録失敗"
-    },
-    "VerificationWithOTPScreen": {
-        "textVerification": "認証",
-        "textSendVerificationFor": "認証コードを送信しました"
-    },
-    "VerificationWithEmailScreen": {
-        "verifySuccess": "認証成功",
-        "title1": "メールを確認してください",
-        "title2": "もうすぐ完了です！メールを送信しました",
-        "title3": "そのメールのリンクをクリックするだけで登録が完了します。見つからない場合は、スパムフォルダを確認する必要があります。",
-        "title4": "まだメールが見つかりませんか？",
-        "textButtonResendEmail": "メールを再送",
-        "textButtonVerification": "メールを確認"
-    },
-    "VerificationWithPhoneScreen": {
-        "title1": "OTPコードを確認してください",
-        "title2": "登録がもうすぐ完了します！OTPコードを送信しました",
-        "title3": "この画面にOTPコードを入力するだけで登録が完了します。見つからない場合は、スパムメッセージフォルダを確認する必要があります。",
-        "textResendCode": "コードを再送",
-        "titleButtonVerify": "確認"
-    },
-    "HomeScreen": {
-        "textPlaceholderSearch": "検索",
-        "TitleIntroduce": "Speedへようこそ",
-        "TitleIntroduce_description": "ベトナムで最も信頼されているeコマースプラットフォーム",
-        "categories_title": "カテゴリー",
-        "best_selling_title": "ベストセラー",
-        "see_all_button": "すべて見る",
-        "latest_title": "最新"
-    },
-    "DrawerScreen": {
-        "itemLanguage": "言語",
-        "itemLogout": "ログアウト"
-    },
-    "PaymentScreen": {
-        "createNewAddress": "新しい住所を作成",
-        "selectOldAddress": "住所リストから住所を選択"
-    },
-    "SearchScreen": {
-        "inputSearchRequired": "キーワードを入力してください！",
-        "productNotFoundTitle": "商品が見つかりません!",
-        "placeholder": "商品を検索"
-    }
+  "LoginScreen": {
+    "screenName": "ログイン",
+    "textLoginQuestionType": "アカウントをお持ちでないですか?",
+    "textLoginScreen": "登録",
+    "textForgotPassword": "パスワードを忘れましたか?",
+    "textLogin": "ログイン",
+    "textOrLoginWith": "または、以下でログイン",
+    "textInputPlaceHolderEmailOrPhoneNumber": "メール/電話番号",
+    "textInputPlaceHolderPassword": "パスワード",
+    "textInputPlaceHolderUserName": "ユーザー名"
+  },
+  "LoginBySocial": {
+    "textLoginWithFacebook": "Facebookでログイン",
+    "textLoginWithGoogle": "Googleでログイン"
+  },
+  "RegisterScreen": {
+    "screenName": "登録",
+    "textLoginQuestionType": "すでにアカウントをお持ちですか?",
+    "textRegisterScreen": "登録",
+    "textRegister": "登録",
+    "textOrRegisterWith": "または、以下で登録",
+    "textChooseTypeAccountRegisterSellPerson": "販売者",
+    "textChooseTypeAccountRegisterBuyPerson": "購入者"
+  },
+  "RegisterBySocial": {
+    "textRegisterWithFacebook": "Facebookで登録",
+    "textRegisterWithGoogle": "Googleで登録"
+  },
+  "VerifyScreen": {
+    "screenName": "認証",
+    "textErrorCodeNotMath": "コードが一致しません"
+  },
+  "ForgotPasswordScreen": {
+    "screenName": "パスワードを忘れた",
+    "textSend": "送信",
+    "textPlaceHolderEmailOrPhone": "メールアドレスまたは電話番号を入力してください"
+  },
+  "ResetPasswordScreen": {
+    "screenName": "新しいパスワード",
+    "textNewPassword": "新しいパスワードを入力",
+    "textPasswordConfirm": "パスワードを再入力"
+  },
+  "Validate": {
+    "textErrorPhoneNotCorrectFormat": "電話番号の形式が正しくありません",
+    "textErrorPhoneRequired": "電話番号は必須です",
+    "textErrorPasswordAtLess6Character": "パスワードは6文字以上である必要があります",
+    "textErrorPasswordRequired": "パスワードは必須です",
+    "textErrorEmailNotCorrectFormat": "メール形式が正しくありません",
+    "textErrorEmailRequired": "メールは必須です",
+    "textErrorConfirmPasswordNotMatches": "パスワードが一致しません",
+    "textErrorConfirmPasswordRequired": "確認パスワードは必須です",
+    "textErrorEmailOrPhoneNumberRequired": "メールまたは電話番号は必須です",
+    "textErrorEmailOrPhoneNumberNotCorrectFormat": "メールまたは電話番号の形式が正しくありません",
+    "textErrorNameRequired": "名前は必須です",
+    "textErrorNameCantJustHaveSpaceCharacter": "名前はスペースだけではいけません",
+    "textErrorTypeAccountRequired": "アカウントタイプは必須です",
+    "shippingUnit": "配送単位は必須です",
+    "paymentMethod": "支払い方法は必須です"
+  },
+  "ImmediateScreen": {
+    "textButtonLeft": "戻る",
+    "textButtonRight": "続ける",
+    "textTitleDropDown": "登録タイプを選択",
+    "textTitleDropDownSelectRegisterWithFacebook": "メールで登録",
+    "textTitleDropDownSelectRegisterWithGoogle": "Facebookで登録",
+    "textTitleNotification": "通知",
+    "textWarningSelectedType": "登録の役割を選択してください"
+  },
+  "Alert": {
+    "notification": "通知",
+    "warning": "警告",
+    "loginSuccess": "ログイン成功",
+    "loginFail": "ログイン失敗",
+    "registerSuccess": "登録成功",
+    "registerFail": "登録失敗",
+    "systemError": "システムエラー、サーバーとの接続が不安定です。"
+  },
+  "VerificationWithOTPScreen": {
+    "textVerification": "認証",
+    "textSendVerificationFor": "認証コードを送信しました"
+  },
+  "VerificationWithEmailScreen": {
+    "verifySuccess": "認証成功",
+    "title1": "メールを確認してください",
+    "title2": "もうすぐ完了です！メールを送信しました",
+    "title3": "そのメールのリンクをクリックするだけで登録が完了します。見つからない場合は、スパムフォルダを確認する必要があります。",
+    "title4": "まだメールが見つかりませんか？",
+    "textButtonResendEmail": "メールを再送",
+    "textButtonVerification": "メールを確認"
+  },
+  "VerificationWithPhoneScreen": {
+    "title1": "OTPコードを確認してください",
+    "title2": "登録がもうすぐ完了します！OTPコードを送信しました",
+    "title3": "この画面にOTPコードを入力するだけで登録が完了します。見つからない場合は、スパムメッセージフォルダを確認する必要があります。",
+    "textResendCode": "コードを再送",
+    "titleButtonVerify": "確認"
+  },
+  "HomeScreen": {
+    "textPlaceholderSearch": "検索",
+    "TitleIntroduce": "Speedへようこそ",
+    "TitleIntroduce_description": "ベトナムで最も信頼されているeコマースプラットフォーム",
+    "categories_title": "カテゴリー",
+    "best_selling_title": "ベストセラー",
+    "see_all_button": "すべて見る",
+    "latest_title": "最新"
+  },
+  "DrawerScreen": {
+    "itemLanguage": "言語",
+    "itemLogout": "ログアウト"
+  },
+  "PaymentScreen": {
+    "nameScreen": "支払い",
+    "createNewAddress": "新しい住所を作成する",
+    "selectOldAddress": "住所リストから選択",
+    "selectShippingUnit": "配送ユニットを選択",
+    "selectPaymentMethod": "支払い方法を選択",
+    "shippingCost": "配送費用",
+    "payNow": "今すぐ支払う",
+    "addCartError": "カートに追加中のエラー",
+    "createBillError": "請求書の作成エラー",
+    "paymentSuccess": "支払いが成功しました！",
+    "paymentFailure": "支払いに失敗しました！",
+    "addressPlaceholder": "住所を選択",
+    "paypalPaymentTitle": "PayPalで支払う",
+    "payWithCash": "現金",
+    "payWithCreaditCart": "クレジットカード"
+  },
+  "SearchScreen": {
+    "inputSearchRequired": "キーワードを入力してください！",
+    "productNotFoundTitle": "商品が見つかりません!",
+    "placeholder": "商品を検索",
+    "screenName": "検索"
+  },
+  "DetailProductScreen": {
+    "loadingData": "データを読み込んでいます...",
+    "loadingProductInfo": "製品情報を読み込んでいます...",
+    "addToCartSuccess": "カートに追加しました",
+    "selectAllRequiredOptions": "必要な製品オプションをすべて選択してください。",
+    "returnPolicy": "返品ポリシー:",
+    "returnPolicyDetails": "15日間の返品、返品自由",
+    "aboutThisProduct": "この製品について",
+    "customerReviews": "ストアの顧客レビュー",
+    "nameScreen": "製品詳細"
+  },
+  "FeedBackText": {
+    "ratingTitle": "製品評価",
+    "viewAllButton": "すべて表示",
+    "productName": "商品"
+  },
+  "BottomComponentDetailScreen": {
+    "shop": "ショップ",
+    "addToCart": "カートに追加",
+    "buyNow": "今すぐ購入"
+  },
+  "CategoriesProductList": {
+    "nameScreen": "カテゴリーの商品"
+  },
+  "LanguageScreen": {
+    "nameScreen": "言語を選択してください",
+    "vietnameseLanguage": "ベトナム語",
+    "EnglandLanguage": "英語",
+    "JapaneseLanguage": "日本語"
+  },
+  "BestSellingAndLatestProduct": {
+    "latestProductsList": "最新商品リスト",
+    "bestSellingProductsList": "ベストセラー商品リスト"
+  },
+  "CartScreen": {
+    "emptyCart": "カートが空です",
+    "updateProduct": "商品を更新する",
+    "updatingProduct": "商品を更新中...",
+    "updatingCart": "カートを更新中...",
+    "selectProductWarning": "少なくとも1つの商品を選択する必要があります。",
+    "store": "店舗",
+    "product": "商品",
+    "price": "価格",
+    "quantity": "数量",
+    "checkBoxLabel": "すべて選択",
+    "totalAmount": "合計金額",
+    "buttonLabelBuyNow": "今すぐ購入",
+    "title": "削除の確認",
+    "message": "この商品をカートから削除してもよろしいですか？",
+    "cancelButton": "いいえ",
+    "confirmButton": "はい"
+  },
+  "CheckoutScreen": {
+    "title": "注文の確認",
+    "productType": "商品タイプ",
+    "quantity": "数量",
+    "price": "価格",
+    "checkout": "チェックアウト"
+  },
+  "ConversationScreen": {
+    "sendPlaceholder": "メッセージを送る",
+    "alertWarning": "警告",
+    "alertSystemError": "システムエラー",
+    "errorNoSocketConnection": "ソケット接続がないか、メッセージが空です"
+  },
+  "NotificationScreen": {
+    "all": "すべて",
+    "unread": "未読",
+    "title": "通知",
+    "readAll": "すべて読む",
+    "deleteAll": "すべて削除",
+    "titleNothing": "新しい通知はありません",
+    "markAsRead": "既読にする",
+    "markAsUnread": "未読にする",
+    "delete": "削除する"
+  },
+  "SelectLanguageScreen": {
+    "nameScreen": "言語を選択してください"
+  },
+  "addressScreen": {
+    "title": "配送先住所"
+  },
+  "SelectAddress": {
+    "chooseAddress": "配達先住所を選択してください",
+    "loading": "配達先住所を読み込み中",
+    "noAddress": "配達先住所がありません！",
+    "createNewAddress": "新しい住所を作成",
+    "confirmAddress": "配達先住所を確認"
+  },
+  "PaypalScreen": {
+    "title": " PayPalで支払う"
+  },
+  "ChatBoxScreen": {
+    "nothingTitle": "会話が空です"
+  },
+  "DetailNotificationScreen": {
+    "nameScreen": "通知の詳細"
+  },
+  "ListProductLiked": {
+    "title": "製品リストを更新中..."
+  },
+  "PrintfPDF": {
+    "downloadSuccessAlertTitle": "ダウンロード成功",
+    "downloadSuccessAlertMessage": "請求書が次の場所に保存されました: ",
+    "errorAlertMessage": "PDFファイルの作成に失敗しました: ",
+    "errorAlertTitle": "エラー"
+  },
+  "BillScreen": {
+    "nameScreen": "請求書一覧",
+    "userInfo": "ユーザー情報",
+    "shippingInfo": "配送情報",
+    "method": "方法",
+    "location": "場所",
+    "price": "価格",
+    "address": "住所",
+    "contact": "連絡先",
+    "receiver": "受取人",
+    "billItems": "請求項目",
+    "priceLabel": "価格",
+    "classifies": "分類",
+    "quantity": "数量",
+    "summary": "概要",
+    "totalProductsPrice": "商品合計価格",
+    "totalPrice": "総価格",
+    "deleteBill": "請求書を削除",
+    "printBill": "請求書を印刷",
+    "username": "名前",
+    "email": "メールアドレス",
+    "phone": "電話番号",
+    "description": "メッセージ",
+    "deliveryAddress": "配送先住所",
+    "createdAt": "作成日",
+    "paymentMethod": "支払い方法",
+    "nameShop": "店舗名",
+    "nameProduct": "商品名",
+    "bill": "請求書"
+  },
+  "LikedProductScreen": {
+    "nameScreen": "お気に入り商品リスト"
+  },
+  "BillPDF": {
+    "userInfo": "ユーザー情報",
+    "shippingInfo": "配送情報",
+    "address": "住所",
+    "billItems": "請求書アイテム",
+    "summary": "概要",
+    "method": "方法",
+    "location": "場所",
+    "price": "価格",
+    "contact": "連絡先",
+    "receiver": "受取人",
+    "totalProductsPrice": "総製品価格",
+    "totalPrice": "総価格",
+    "downloadSuccess": "ダウンロード成功",
+    "downloadSuccessMessage": "請求書が保存されました:",
+    "error": "エラー",
+    "pdfErrorMessage": "PDFファイルの作成に失敗しました:"
+  },
+  "ProfileScreen": {
+    "viewPurchaseHistory": "購入履歴を見る",
+    "purchaseOrder": "購入注文",
+    "likedProducts": "お気に入りの商品",
+    "settings": "アカウント設定"
+  },
+  "Account": {
+    "settings": "アカウント設定"
+  },
+  "App": {
+    "home": "ホーム",
+    "cart": "カート",
+    "messenger": "メッセンジャー",
+    "notification": "通知",
+    "me": "私"
+  },
+  "PushNotifications": {
+    "title": "スピードからの通知",
+    "body": "新しい注文があります"
+  }
 }

@@ -1,8 +1,16 @@
 import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItem,
+  DrawerItemList,
+} from '@react-navigation/drawer';
 import { useNavigation } from '@react-navigation/native';
-import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
+import {
+  createNativeStackNavigator,
+  NativeStackNavigationProp,
+} from '@react-navigation/native-stack';
 import React from 'react';
 import { t, useTranslation } from 'react-multi-lang';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -12,12 +20,51 @@ import TextComponent from '../components/text/TextComponent';
 import ToolbarWithBackPress from '../components/toolbars/toolbarWithBackPress/ToolbarWithBackPress';
 import { Colors } from '../constants/Colors';
 import { appInfo } from '../constants/Infos';
-import { ADDRESS_SCREEN, ALL_NOTIFICATION_SCREEN, AUTHENTICATION_STACK_NAVIGATOR, BILL_SCREEN, BOTTOM_TAB_NAVIGATOR, CART_SCREEN, CHECK_OUT_SCREEN, CONVERSATION_SCREEN, DETAIL_CATEGORY_SCREEN, DETAIL_NOTIFICATION_SCREEN, DETAIL_PRODUCT_SCREEN, FEED_BACK_SCREEN, FORGOT_PASSWORD, HOME_SCREEN, INTERMEDIATE_SCREEN, LATEST_PRODUCT_LIST_AND_BEST_SELLING_PRODUCT_LIST, LIST_PRODUCT_LIKED, LOGIN_SCREEN, MESSENGER_SCREEN, NOTIFICATION_SCREEN, NOTIFICATION_SCREEN_OPTIONS_NAVIGATOR, PAYMENT_SCREEN, PROFILE_SCREEN, PROFILE_SCREEN_OPTIONS_NAVIGATOR, REGISTER_SCREEN, RESET_PASSWORD_SCREEN, SEARCH_SCREEN, SELECT_LANGUAGE_SCREEN, SERVICE_STACK_NAVIGATOR, SHOP_SCREEN, SPLASH_SCREEN, UN_READ_NOTIFICATION_SCREEN, VERIFY_CAPTCHA_SEND_SMS_SCREEN, VERIFY_EMAIL_SCREEN, VERIFY_OTP_SCREEN, VERIFY_PHONE_SCREEN } from '../constants/Screens';
+import {
+  ACCOUNT_SETTING,
+  ADDRESS_SCREEN,
+  ALL_NOTIFICATION_SCREEN,
+  AUTHENTICATION_STACK_NAVIGATOR,
+  BILL_SCREEN,
+  BOTTOM_TAB_NAVIGATOR,
+  CART_SCREEN,
+  CHECK_OUT_SCREEN,
+  CONVERSATION_SCREEN,
+  DETAIL_CATEGORY_SCREEN,
+  DETAIL_NOTIFICATION_SCREEN,
+  DETAIL_PRODUCT_SCREEN,
+  FEED_BACK_SCREEN,
+  FORGOT_PASSWORD,
+  HOME_SCREEN,
+  INTERMEDIATE_SCREEN,
+  LATEST_PRODUCT_LIST_AND_BEST_SELLING_PRODUCT_LIST,
+  LIST_PRODUCT_LIKED,
+  LOGIN_SCREEN,
+  MESSENGER_SCREEN,
+  NOTIFICATION_SCREEN,
+  NOTIFICATION_SCREEN_OPTIONS_NAVIGATOR,
+  PAYMENT_SCREEN,
+  PROFILE_SCREEN,
+  PROFILE_SCREEN_OPTIONS_NAVIGATOR,
+  REGISTER_SCREEN,
+  RESET_PASSWORD_SCREEN,
+  SEARCH_SCREEN,
+  SELECT_LANGUAGE_SCREEN,
+  SERVICE_STACK_NAVIGATOR,
+  SHOP_SCREEN,
+  SPLASH_SCREEN,
+  UN_READ_NOTIFICATION_SCREEN,
+  VERIFY_CAPTCHA_SEND_SMS_SCREEN,
+  VERIFY_EMAIL_SCREEN,
+  VERIFY_OTP_SCREEN,
+  VERIFY_PHONE_SCREEN,
+} from '../constants/Screens';
 import { Variables } from '../constants/Variables';
 import { useAppDispatch, useAppSelector } from '../redux/Hooks';
 import { logoutUser } from '../redux/userThunks';
 import CartScreen from '../screens/Cart/CartScreen';
 import AddressScreen from '../screens/address/AddressScreen';
+import BillScreen from '../screens/bills/BillScreen';
 import DetailCategoryScreen from '../screens/categories/DetailCategoryScreen';
 import CheckOutScreen from '../screens/checkout/CheckOutScreen';
 import DetailBestSellingAndLatestProduct from '../screens/details/bestSellingAndlatest/DetailBestSellingProductScreen';
@@ -29,6 +76,7 @@ import SelectLanguageScreen from '../screens/language/SelectLanguageScreen';
 import ListProductLikedScreen from '../screens/liked/screens/ListProductLikedScreen';
 import LoginScreen from '../screens/login/LoginScreen';
 import MessengerScreen from '../screens/messenger/MessengerScreen';
+import ConversationScreen from '../screens/messenger/screen/ConversationScreen';
 import NotificationScreen from '../screens/notifications/NotificationScreen';
 import DetailNotificationScreen from '../screens/notifications/screens/detail/DetailNotificationScreen';
 import NotificationUnReadScreen from '../screens/notifications/screens/notificationUnRead/NotificationUnReadScreen';
@@ -38,6 +86,7 @@ import ProfileScreen from '../screens/profile/ProfileScreen';
 import RegisterScreen from '../screens/register/RegisterScreen';
 import ResetPasswordScreen from '../screens/reset/ResetPasswordScreen';
 import SearchScreen from '../screens/search/SearchScreen';
+import ProfileSettingScreen from '../screens/settings/profile/ProfileSettingScreen';
 import ShopScreen from '../screens/shop/ShopScreen';
 import SplashScreen from '../screens/splash/SplashScreen';
 import VerificationWithPhoneNumberScreen from '../screens/verification/VerificationWithPhoneNumber/VerificationWithPhoneNumberScreen';
@@ -46,9 +95,8 @@ import VerificationWithEmailScreen from '../screens/verification/verificationWit
 import VerificationWithOTPScreen from '../screens/verification/verificationWithOTP/VerificationWithOTPScreen';
 import { CartItem } from '../types/other/CartItem';
 import { Product } from '../types/other/Product';
+import { NotificationItem } from '../types/response/NotificationItem';
 import { moderateScale } from '../utils/ScaleUtils';
-import BillScreen from '../screens/bills/BillScreen';
-import ConversationScreen from '../screens/messenger/screen/ConversationScreen';
 
 export type RootStackParamList = {
   SPLASH_SCREEN: undefined;
@@ -66,59 +114,66 @@ export type RootStackParamList = {
   VERIFY_OTP_SCREEN: { email: string };
   RESET_PASSWORD_SCREEN: { code: string };
   INTERMEDIATE_SCREEN: undefined;
-  VERIFY_EMAIL_SCREEN: { token: string; email: string; };
-  VERIFY_PHONE_SCREEN: { token: string; phone: string; confirm: FirebaseAuthTypes.ConfirmationResult };
+  VERIFY_EMAIL_SCREEN: { token: string; email: string };
+  VERIFY_PHONE_SCREEN: {
+    token: string;
+    phone: string;
+    confirm: FirebaseAuthTypes.ConfirmationResult;
+  };
   PROFILE_SCREEN_OPTIONS_NAVIGATOR: undefined;
-  CART_SCREEN: undefined | { code: string, cartItem_ProductClassifies: string };
-  DETAIL_NOTIFICATION_SCREEN: { id: number };
+  CART_SCREEN: undefined | { code: string; cartItem_ProductClassifies: string };
+  DETAIL_NOTIFICATION_SCREEN: { item: NotificationItem };
   NOTIFICATION_SCREEN_OPTIONS_NAVIGATOR: undefined;
   ALL_NOTIFICATION_SCREEN: undefined;
   UN_READ_NOTIFICATION_SCREEN: undefined;
   NOTIFICATION_OPTION_SPECIAL_NAVIGATOR: undefined;
   DETAIL_PRODUCT_SCREEN: { code: string };
   FEED_BACK_SCREEN: { id: number };
-  CONVERSATION_SCREEN: { code: string, senderEmail: string };
+  CONVERSATION_SCREEN: { code: string; senderEmail: string };
   MESSENGER_SCREEN: undefined;
   DETAIL_CATEGORY_SCREEN: { code: string };
   SEARCH_SCREEN: undefined;
-  VERIFY_CAPTCHA_SEND_SMS_SCREEN: { token: string; phone: string; };
+  VERIFY_CAPTCHA_SEND_SMS_SCREEN: { token: string; phone: string };
   SELECT_LANGUAGE_SCREEN: undefined;
   SHOP_SCREEN: { id: string };
   CHECK_OUT_SCREEN: {
-    cartItemChecked: CartItem[],
-    listCodeCartChecked: string[],
-    totalPrice: number
+    cartItemChecked: CartItem[];
+    listCodeCartChecked: string[];
+    totalPrice: number;
   };
   ADDRESS_SCREEN: undefined;
   PAYMENT_SCREEN: { listCodeCartChecked: string[] };
   MAP_SCREEN: undefined;
-  LATEST_PRODUCT_LIST_AND_BEST_SELLING_PRODUCT_LIST: { products: Product[] },
+  LATEST_PRODUCT_LIST_AND_BEST_SELLING_PRODUCT_LIST: {
+    products: Product[];
+    title: string;
+  };
   LIST_PRODUCT_LIKED: { username: string };
-  BILL_SCREEN: undefined
+  BILL_SCREEN: undefined;
+  ACCOUNT_SETTING: undefined;
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 const BottomTab = createBottomTabNavigator();
 const Drawer = createDrawerNavigator();
 
-
-
 function CustomDrawerContent(props: any) {
-  const { language } = useAppSelector((state) => state.SpeedReducer);
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { language } = useAppSelector(state => state.SpeedReducer);
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const dispatch = useAppDispatch();
   const handleLogout = async () => {
-    await dispatch(logoutUser()).then((res) => {
+    await dispatch(logoutUser()).then(res => {
       navigation.replace(AUTHENTICATION_STACK_NAVIGATOR);
     });
-  }
+  };
 
   const handleSelectLanguage = () => {
     navigation.navigate(SERVICE_STACK_NAVIGATOR, {
       screen: SELECT_LANGUAGE_SCREEN,
-      params: null
+      params: null,
     } as any);
-  }
+  };
 
   return (
     <DrawerContentScrollView {...props}>
@@ -126,15 +181,37 @@ function CustomDrawerContent(props: any) {
       <DrawerItem
         activeBackgroundColor={Colors.GREY_FEEBLE}
         inactiveBackgroundColor={Colors.WHITE}
-        icon={() => <MaterialIcons name='language' size={moderateScale(22)} color={Colors.COLOR_BTN_BLUE_PRIMARY} />}
-        label={() => (<TextComponent color={Colors.BLACK} text={t("DrawerScreen.itemLanguage")} />)}
+        icon={() => (
+          <MaterialIcons
+            name="language"
+            size={moderateScale(22)}
+            color={Colors.COLOR_BTN_BLUE_PRIMARY}
+          />
+        )}
+        label={() => (
+          <TextComponent
+            color={Colors.BLACK}
+            text={t('DrawerScreen.itemLanguage')}
+          />
+        )}
         onPress={handleSelectLanguage}
       />
       <DrawerItem
         activeBackgroundColor={Colors.GREY_FEEBLE}
         inactiveBackgroundColor={Colors.WHITE}
-        icon={() => <SimpleLineIcons name='logout' size={moderateScale(20)} color={'red'} />}
-        label={() => (<TextComponent color={Colors.BLACK} text={t("DrawerScreen.itemLogout")} />)}
+        icon={() => (
+          <SimpleLineIcons
+            name="logout"
+            size={moderateScale(20)}
+            color={'red'}
+          />
+        )}
+        label={() => (
+          <TextComponent
+            color={Colors.BLACK}
+            text={t('DrawerScreen.itemLogout')}
+          />
+        )}
         onPress={handleLogout}
       />
     </DrawerContentScrollView>
@@ -144,21 +221,21 @@ function CustomDrawerContent(props: any) {
 function HomeDrawerWrapper() {
   return (
     <Drawer.Navigator
-      drawerContent={(props) => <CustomDrawerContent {...props} />}
+      drawerContent={props => <CustomDrawerContent {...props} />}
       screenOptions={{
         header: () => false,
         drawerType: appInfo.sizes.WIDTH >= 768 ? 'permanent' : 'front',
-      }}
-    >
+      }}>
       <Drawer.Screen
         options={{
           drawerItemStyle: { display: 'none' },
         }}
-        name="HomeDrawer" component={WrapperHome} />
+        name="HomeDrawer"
+        component={WrapperHome}
+      />
     </Drawer.Navigator>
   );
 }
-
 
 function WrapperHome() {
   return (
@@ -168,222 +245,327 @@ function WrapperHome() {
           options={{
             header: () => false,
           }}
-          name={HOME_SCREEN} component={HomeScreen}
+          name={HOME_SCREEN}
+          component={HomeScreen}
         />
       </RootStack.Group>
     </RootStack.Navigator>
-  )
+  );
 }
 
 function ServiceStackNavigator() {
   return (
-    <RootStack.Navigator
-      initialRouteName={DETAIL_NOTIFICATION_SCREEN}
-    >
+    <RootStack.Navigator initialRouteName={DETAIL_NOTIFICATION_SCREEN}>
       <RootStack.Group>
         <RootStack.Screen
           options={{
-            header: () => false,
+            header: () => (
+              <ToolbarWithBackPress
+                title={t('DetailNotificationScreen.nameScreen')}
+              />
+            ),
           }}
-          name={DETAIL_NOTIFICATION_SCREEN} component={DetailNotificationScreen}
+          name={DETAIL_NOTIFICATION_SCREEN}
+          component={DetailNotificationScreen}
         />
         <RootStack.Screen
           options={{
-            header: () => <ToolbarWithBackPress title={'Sản phẩm của danh mục'} />,
+            header: () => (
+              <ToolbarWithBackPress
+                title={t('CategoriesProductList.nameScreen')}
+              />
+            ),
           }}
-          name={DETAIL_CATEGORY_SCREEN} component={DetailCategoryScreen}
+          name={DETAIL_CATEGORY_SCREEN}
+          component={DetailCategoryScreen}
         />
         <RootStack.Screen
           options={{
-            header: () => <ToolbarWithBackPress title={'Chi tiết sản phẩm'} />,
+            header: () => (
+              <ToolbarWithBackPress
+                title={t('DetailProductScreen.nameScreen')}
+              />
+            ),
           }}
-          name={DETAIL_PRODUCT_SCREEN} component={DetailProductScreen}
+          name={DETAIL_PRODUCT_SCREEN}
+          component={DetailProductScreen}
         />
         <RootStack.Screen
           options={{
             header: () => <ToolbarWithBackPress title={'Đánh gía'} />,
           }}
-          name={FEED_BACK_SCREEN} component={FeedbackScreen}
+          name={FEED_BACK_SCREEN}
+          component={FeedbackScreen}
         />
         <RootStack.Screen
           options={{
-            header: () => <ToolbarWithBackPress title={'Danh sách Hội thoại'} />,
+            header: () => (
+              <ToolbarWithBackPress title={'Danh sách Hội thoại'} />
+            ),
           }}
-          name={MESSENGER_SCREEN} component={MessengerScreen}
+          name={MESSENGER_SCREEN}
+          component={MessengerScreen}
         />
         <RootStack.Screen
           options={{
-            header: () => <ToolbarWithBackPress title={'Tìm kiếm'} />,
+            header: () => (
+              <ToolbarWithBackPress title={t('SearchScreen.screenName')} />
+            ),
           }}
-          name={SEARCH_SCREEN} component={SearchScreen}
+          name={SEARCH_SCREEN}
+          component={SearchScreen}
         />
         <RootStack.Screen
           options={{
-            header: () => false
+            header: () => false,
           }}
-          name={VERIFY_PHONE_SCREEN} component={VerificationWithPhoneNumberScreen} />
+          name={VERIFY_PHONE_SCREEN}
+          component={VerificationWithPhoneNumberScreen}
+        />
         <RootStack.Screen
           options={{
-            header: () => <ToolbarWithBackPress title={'Lựa chọn ngôn ngữa của bạn'} />
+            header: () => (
+              <ToolbarWithBackPress
+                title={t('SelectLanguageScreen.nameScreen')}
+              />
+            ),
           }}
-          name={SELECT_LANGUAGE_SCREEN} component={SelectLanguageScreen} />
+          name={SELECT_LANGUAGE_SCREEN}
+          component={SelectLanguageScreen}
+        />
         <RootStack.Screen
           options={{
-            header: () => <ToolbarWithBackPress title={'Thông tin cửa hàng'} />
+            header: () => <ToolbarWithBackPress title={'Thông tin cửa hàng'} />,
           }}
-          name={SHOP_SCREEN} component={ShopScreen} />
+          name={SHOP_SCREEN}
+          component={ShopScreen}
+        />
         <RootStack.Screen
           options={{
-            header: () => <ToolbarWithBackPress title={'Kiểm tra đơn hàng'} />
+            header: () => (
+              <ToolbarWithBackPress title={t('CheckoutScreen.title')} />
+            ),
           }}
-          name={CHECK_OUT_SCREEN} component={CheckOutScreen} />
+          name={CHECK_OUT_SCREEN}
+          component={CheckOutScreen}
+        />
         <RootStack.Screen
           options={{
-            header: () => <ToolbarWithBackPress title={'Địa chỉ nhận hàng'} />
+            header: () => <ToolbarWithBackPress title={'Địa chỉ nhận hàng'} />,
           }}
-          name={ADDRESS_SCREEN} component={AddressScreen} />
+          name={ADDRESS_SCREEN}
+          component={AddressScreen}
+        />
         <RootStack.Screen
           options={{
-            header: () => <ToolbarWithBackPress title={'Địa chỉ nhận hàng'} />
+            header: () => (
+              <ToolbarWithBackPress title={t('PaymentScreen.nameScreen')} />
+            ),
           }}
-          name={PAYMENT_SCREEN} component={PaymentScreen} />
+          name={PAYMENT_SCREEN}
+          component={PaymentScreen}
+        />
+        <RootStack.Screen
+          options={({ route }) => ({
+            header: () => (
+              <ToolbarWithBackPress title={route.params.title ?? ''} />
+            ),
+          })}
+          name={LATEST_PRODUCT_LIST_AND_BEST_SELLING_PRODUCT_LIST}
+          component={DetailBestSellingAndLatestProduct}
+        />
         <RootStack.Screen
           options={{
-            header: () => <ToolbarWithBackPress title={'Danh sách sản phẩm mới nhất '} />
+            header: () => (
+              <ToolbarWithBackPress
+                title={t('LikedProductScreen.nameScreen')}
+              />
+            ),
           }}
-          name={LATEST_PRODUCT_LIST_AND_BEST_SELLING_PRODUCT_LIST} component={DetailBestSellingAndLatestProduct} />
+          name={LIST_PRODUCT_LIKED}
+          component={ListProductLikedScreen}
+        />
         <RootStack.Screen
           options={{
-            header: () => <ToolbarWithBackPress title={'Danh sách sản phẩm đã thích'} />
+            header: () => (
+              <ToolbarWithBackPress title={t('BillScreen.nameScreen')} />
+            ),
           }}
-          name={LIST_PRODUCT_LIKED} component={ListProductLikedScreen} />
+          name={BILL_SCREEN}
+          component={BillScreen}
+        />
         <RootStack.Screen
           options={{
-            header: () => <ToolbarWithBackPress title={'Danh sách Hóa đơn'} />
+            header: () => <ToolbarWithBackPress title={'Nguyễn Văn A'} />,
           }}
-          name={BILL_SCREEN} component={BillScreen} />
+          name={CONVERSATION_SCREEN}
+          component={ConversationScreen}
+        />
         <RootStack.Screen
           options={{
-            header: () => <ToolbarWithBackPress title={'Nguyễn Văn A'} />
+            header: () => (
+              <ToolbarWithBackPress title={t('Account.settings')} />
+            ),
           }}
-          name={CONVERSATION_SCREEN} component={ConversationScreen} />
+          name={ACCOUNT_SETTING}
+          component={ProfileSettingScreen}
+        />
       </RootStack.Group>
     </RootStack.Navigator>
-  )
+  );
 }
 
 function AuthenticationStackNavigator() {
   const t = useTranslation();
   return (
-    <RootStack.Navigator
-      initialRouteName={LOGIN_SCREEN}
-    >
+    <RootStack.Navigator initialRouteName={LOGIN_SCREEN}>
       <RootStack.Group>
         <RootStack.Screen
           options={{
             header: () => (
-              <ToolbarWithBackPress hideBackPressButton={true} title={t("ForgotPasswordScreen.screenName")} />
+              <ToolbarWithBackPress
+                hideBackPressButton={true}
+                title={t('ForgotPasswordScreen.screenName')}
+              />
             ),
           }}
-          name={VERIFY_EMAIL_SCREEN} component={VerificationWithEmailScreen} />
+          name={VERIFY_EMAIL_SCREEN}
+          component={VerificationWithEmailScreen}
+        />
         <RootStack.Screen
           options={{
             header: () => (
-              <ToolbarWithBackPress isExit={true} title={t("LoginScreen.screenName")} />
+              <ToolbarWithBackPress
+                isExit={true}
+                title={t('LoginScreen.screenName')}
+              />
             ),
           }}
-          name={LOGIN_SCREEN} component={LoginScreen} />
+          name={LOGIN_SCREEN}
+          component={LoginScreen}
+        />
         <RootStack.Screen
           options={{
             header: () => (
-              <ToolbarWithBackPress title={t("RegisterScreen.screenName")} />
-            )
+              <ToolbarWithBackPress title={t('RegisterScreen.screenName')} />
+            ),
           }}
-          name={REGISTER_SCREEN} component={RegisterScreen} />
+          name={REGISTER_SCREEN}
+          component={RegisterScreen}
+        />
         <RootStack.Screen
           options={{
-            header: () => null
+            header: () => null,
           }}
-          name={INTERMEDIATE_SCREEN} component={IntermediateScreen} />
-        <RootStack.Screen
-          options={{
-            header: () => <ToolbarWithBackPress title={t("ResetPasswordScreen.screenName")} />
-          }}
-          name={RESET_PASSWORD_SCREEN} component={ResetPasswordScreen} />
+          name={INTERMEDIATE_SCREEN}
+          component={IntermediateScreen}
+        />
         <RootStack.Screen
           options={{
             header: () => (
-              <ToolbarWithBackPress title={t("ForgotPasswordScreen.screenName")} />
+              <ToolbarWithBackPress
+                title={t('ResetPasswordScreen.screenName')}
+              />
             ),
           }}
-          name={FORGOT_PASSWORD} component={ForgotPassWordScreen} />
+          name={RESET_PASSWORD_SCREEN}
+          component={ResetPasswordScreen}
+        />
         <RootStack.Screen
           options={{
-            header: () => <ToolbarWithBackPress title={t("VerifyScreen.screenName")} />
+            header: () => (
+              <ToolbarWithBackPress
+                title={t('ForgotPasswordScreen.screenName')}
+              />
+            ),
           }}
-          name={VERIFY_OTP_SCREEN} component={VerificationWithOTPScreen} />
+          name={FORGOT_PASSWORD}
+          component={ForgotPassWordScreen}
+        />
         <RootStack.Screen
           options={{
-            header: () => <ToolbarWithBackPress hideBackPressButton title={t("VerifyScreen.screenName")} />
+            header: () => (
+              <ToolbarWithBackPress title={t('VerifyScreen.screenName')} />
+            ),
           }}
-          name={VERIFY_PHONE_SCREEN} component={VerificationWithPhoneNumberScreen} />
+          name={VERIFY_OTP_SCREEN}
+          component={VerificationWithOTPScreen}
+        />
         <RootStack.Screen
           options={{
-            header: () => <ToolbarWithBackPress hideBackPressButton title={'Xác thực với mã capcha'} />
+            header: () => (
+              <ToolbarWithBackPress
+                hideBackPressButton
+                title={t('VerifyScreen.screenName')}
+              />
+            ),
           }}
-          name={VERIFY_CAPTCHA_SEND_SMS_SCREEN} component={VerificationWithCaptchaAndSendSmsScreen} />
+          name={VERIFY_PHONE_SCREEN}
+          component={VerificationWithPhoneNumberScreen}
+        />
+        <RootStack.Screen
+          options={{
+            header: () => (
+              <ToolbarWithBackPress
+                hideBackPressButton
+                title={'Xác thực với mã capcha'}
+              />
+            ),
+          }}
+          name={VERIFY_CAPTCHA_SEND_SMS_SCREEN}
+          component={VerificationWithCaptchaAndSendSmsScreen}
+        />
       </RootStack.Group>
     </RootStack.Navigator>
-  )
+  );
 }
 
 function ProfileScreenOptionNavigator() {
   const t = useTranslation();
   return (
-    <RootStack.Navigator
-      initialRouteName={PROFILE_SCREEN}
-    >
+    <RootStack.Navigator initialRouteName={PROFILE_SCREEN}>
       <RootStack.Group>
         <RootStack.Screen
           options={{
             header: () => false,
           }}
-          name={PROFILE_SCREEN} component={ProfileScreen} />
+          name={PROFILE_SCREEN}
+          component={ProfileScreen}
+        />
       </RootStack.Group>
     </RootStack.Navigator>
-  )
+  );
 }
-
-
 
 function NotificationScreenOptionNavigator() {
   const t = useTranslation();
   return (
-    <RootStack.Navigator
-      initialRouteName={NOTIFICATION_SCREEN}
-    >
+    <RootStack.Navigator initialRouteName={NOTIFICATION_SCREEN}>
       <RootStack.Group>
         <RootStack.Screen
           options={{
             header: () => false,
           }}
-          name={NOTIFICATION_SCREEN} component={NotificationScreen}
+          name={NOTIFICATION_SCREEN}
+          component={NotificationScreen}
         />
         <RootStack.Screen
           options={{
             header: () => false,
           }}
-          name={UN_READ_NOTIFICATION_SCREEN} component={NotificationUnReadScreen}
+          name={UN_READ_NOTIFICATION_SCREEN}
+          component={NotificationUnReadScreen}
         />
         <RootStack.Screen
           options={{
             header: () => false,
           }}
-          name={ALL_NOTIFICATION_SCREEN} component={DetailNotificationScreen}
+          name={ALL_NOTIFICATION_SCREEN}
+          component={DetailNotificationScreen}
         />
       </RootStack.Group>
     </RootStack.Navigator>
-  )
+  );
 }
 
 function BottomTabNavigator() {
@@ -394,30 +576,37 @@ function BottomTabNavigator() {
         tabBarBadgeStyle: {
           backgroundColor: 'red',
           color: 'white',
-        }
-      }}
-    >
+        },
+      }}>
       <BottomTab.Group>
         <BottomTab.Screen
           options={{
-            tabBarLabel: 'Home',
+            tabBarLabel: t('App.home'),
             tabBarActiveTintColor: Colors.GREEN_500,
             tabBarLabelStyle: { fontSize: Variables.FONT_SIZE_ERROR_TEXT },
             tabBarIcon: ({ color, focused }) => (
-              <Ionicons name={focused ? "home-sharp" : "home-outline"} color={focused ? Colors.GREEN_500 : color} size={Variables.ICON_SIZE_LIMIT_BOTTOM_BAR} />
+              <Ionicons
+                name={focused ? 'home-sharp' : 'home-outline'}
+                color={focused ? Colors.GREEN_500 : color}
+                size={Variables.ICON_SIZE_LIMIT_BOTTOM_BAR}
+              />
             ),
-            tabBarBadge: 3,
+            // tabBarBadge: 3,
           }}
           name={HOME_SCREEN}
           component={HomeDrawerWrapper}
         />
         <BottomTab.Screen
           options={{
-            tabBarLabel: 'Cart',
+            tabBarLabel: t('App.cart'),
             tabBarActiveTintColor: Colors.GREEN_500,
             tabBarLabelStyle: { fontSize: Variables.FONT_SIZE_ERROR_TEXT },
             tabBarIcon: ({ color, focused }) => (
-              <Ionicons name={focused ? "cart-sharp" : "cart-outline"} color={focused ? Colors.GREEN_500 : color} size={Variables.ICON_SIZE_LIMIT_BOTTOM_BAR} />
+              <Ionicons
+                name={focused ? 'cart-sharp' : 'cart-outline'}
+                color={focused ? Colors.GREEN_500 : color}
+                size={Variables.ICON_SIZE_LIMIT_BOTTOM_BAR}
+              />
             ),
           }}
           name={CART_SCREEN}
@@ -426,11 +615,19 @@ function BottomTabNavigator() {
         <BottomTab.Screen
           options={{
             header: () => <ToolbarWithBackPress title={'Hội thoại'} />,
-            tabBarLabel: 'Messenger',
+            tabBarLabel: t('App.messenger'),
             tabBarActiveTintColor: Colors.GREEN_500,
             tabBarLabelStyle: { fontSize: Variables.FONT_SIZE_ERROR_TEXT },
             tabBarIcon: ({ color, focused }) => (
-              <Ionicons name={focused ? "chatbubble-ellipses" : "chatbubble-ellipses-outline"} color={focused ? Colors.GREEN_500 : color} size={Variables.ICON_SIZE_LIMIT_BOTTOM_BAR} />
+              <Ionicons
+                name={
+                  focused
+                    ? 'chatbubble-ellipses'
+                    : 'chatbubble-ellipses-outline'
+                }
+                color={focused ? Colors.GREEN_500 : color}
+                size={Variables.ICON_SIZE_LIMIT_BOTTOM_BAR}
+              />
             ),
           }}
           name={MESSENGER_SCREEN}
@@ -438,11 +635,15 @@ function BottomTabNavigator() {
         />
         <BottomTab.Screen
           options={{
-            tabBarLabel: 'Notification',
+            tabBarLabel: t('App.notification'),
             tabBarActiveTintColor: Colors.GREEN_500,
             tabBarLabelStyle: { fontSize: Variables.FONT_SIZE_ERROR_TEXT },
             tabBarIcon: ({ color, focused }) => (
-              <Ionicons name={focused ? "notifications-sharp" : "notifications-outline"} color={focused ? Colors.GREEN_500 : color} size={Variables.ICON_SIZE_LIMIT_BOTTOM_BAR} />
+              <Ionicons
+                name={focused ? 'notifications-sharp' : 'notifications-outline'}
+                color={focused ? Colors.GREEN_500 : color}
+                size={Variables.ICON_SIZE_LIMIT_BOTTOM_BAR}
+              />
             ),
           }}
           name={NOTIFICATION_SCREEN_OPTIONS_NAVIGATOR}
@@ -450,11 +651,15 @@ function BottomTabNavigator() {
         />
         <BottomTab.Screen
           options={{
-            tabBarLabel: 'Me',
+            tabBarLabel: t('App.me'),
             tabBarActiveTintColor: Colors.GREEN_500,
             tabBarLabelStyle: { fontSize: Variables.FONT_SIZE_ERROR_TEXT },
             tabBarIcon: ({ color, focused }) => (
-              <Ionicons name={focused ? "person" : "person-outline"} color={focused ? Colors.GREEN_500 : color} size={Variables.ICON_SIZE_LIMIT_BOTTOM_BAR} />
+              <Ionicons
+                name={focused ? 'person' : 'person-outline'}
+                color={focused ? Colors.GREEN_500 : color}
+                size={Variables.ICON_SIZE_LIMIT_BOTTOM_BAR}
+              />
             ),
           }}
           name={PROFILE_SCREEN_OPTIONS_NAVIGATOR}
@@ -462,13 +667,12 @@ function BottomTabNavigator() {
         />
       </BottomTab.Group>
     </BottomTab.Navigator>
-  )
+  );
 }
 
 function MainStackNavigator() {
   return (
-    <RootStack.Navigator
-      initialRouteName={SPLASH_SCREEN}>
+    <RootStack.Navigator initialRouteName={SPLASH_SCREEN}>
       <RootStack.Group>
         <RootStack.Screen
           name={SPLASH_SCREEN}
@@ -491,11 +695,11 @@ function MainStackNavigator() {
           options={{ header: () => false }}
         />
       </RootStack.Group>
-    </RootStack.Navigator >
+    </RootStack.Navigator>
   );
 }
 const Routes = () => {
   return <MainStackNavigator />;
-}
+};
 
-export default Routes
+export default Routes;

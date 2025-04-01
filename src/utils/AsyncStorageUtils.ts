@@ -7,7 +7,7 @@ export const saveTokenIntoStorage = async (
   key: 'token' | 'user',
 ) => {
   try {
-   await AsyncStorage.setItem(
+    await AsyncStorage.setItem(
       key === 'token' ? Variables.TOKEN_KEY : Variables.USER_LOGIN_KEY,
       JSON.stringify(value),
     );

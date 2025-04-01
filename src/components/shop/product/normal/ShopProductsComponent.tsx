@@ -1,59 +1,56 @@
-import { View, Text, TouchableWithoutFeedback, Image } from 'react-native'
-import React from 'react'
+import {View, Text, TouchableWithoutFeedback} from 'react-native';
+import React from 'react';
 import SpaceComponent from '../../../space/SpaceComponent';
 import TextComponent from '../../../text/TextComponent';
-import { Colors } from '../../../../constants/Colors';
-import { vietnameseCurrency } from '../../../../utils/FormatNumberUtils';
-import { FlatList } from 'react-native';
+import {Colors} from '../../../../constants/Colors';
+import {vietnameseCurrency} from '../../../../utils/FormatNumberUtils';
+import {FlatList} from 'react-native';
+import FastImage from 'react-native-fast-image';
 
 interface Props {
-    data: any;
-    onPress: (id: number) => void;
+  data: any;
+  onPress: (id: number) => void;
 }
 
 const ShopProductsComponent = (props: Props) => {
-    const { data, onPress } = props;
+  const {data, onPress} = props;
 
-    const renderItem = (item: any) => {
-        return (
-            <TouchableWithoutFeedback onPress={() => onPress(item.id)}>
-                <View style={{ marginRight: 10 }}>
-                    <Image
-                        source={{ uri: item.image }}
-                        style={{ width: 150, height: 150, borderRadius: 5 }}
-                    />
-                    <SpaceComponent height={5} />
-                    <TextComponent
-                        fontWeight="bold"
-                        color={Colors.BLACK}
-                        text={
-                            vietnameseCurrency(
-                                item.price - (item.price / 100) * item.saleOffPercent,
-                            )
-                        }
-                    />
-                </View>
-            </TouchableWithoutFeedback>
-        );
-    };
-
-
-
+  const renderItem = (item: any) => {
     return (
-        <View>
-            <FlatList
-                contentContainerStyle={{
-                    justifyContent: 'space-between',
-                }}
-                showsHorizontalScrollIndicator={false}
-                horizontal={true}
-                data={data}
-                extraData={data}
-                keyExtractor={item => item.id}
-                renderItem={({ item }: any) => renderItem(item)}
-            />
+      <TouchableWithoutFeedback onPress={() => onPress(item.id)}>
+        <View style={{marginRight: 10}}>
+          <FastImage
+            source={{uri: item.image}}
+            style={{width: 150, height: 150, borderRadius: 5}}
+          />
+          <SpaceComponent height={5} />
+          <TextComponent
+            fontWeight="bold"
+            color={Colors.BLACK}
+            text={vietnameseCurrency(
+              item.price - (item.price / 100) * item.saleOffPercent,
+            )}
+          />
         </View>
-    )
-}
+      </TouchableWithoutFeedback>
+    );
+  };
 
-export default ShopProductsComponent
+  return (
+    <View>
+      <FlatList
+        contentContainerStyle={{
+          justifyContent: 'space-between',
+        }}
+        showsHorizontalScrollIndicator={false}
+        horizontal={true}
+        data={data}
+        extraData={data}
+        keyExtractor={item => item.id}
+        renderItem={({item}: any) => renderItem(item)}
+      />
+    </View>
+  );
+};
+
+export default ShopProductsComponent;

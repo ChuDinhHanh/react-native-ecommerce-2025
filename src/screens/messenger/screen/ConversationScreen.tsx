@@ -1,113 +1,164 @@
-import { RouteProp, useRoute } from '@react-navigation/native'
-import React, { useEffect, useState } from 'react'
-import { Alert, FlatList, ScrollView } from 'react-native'
-import { verticalScale } from 'react-native-size-matters'
-import ContainerComponent from '../../../components/container/ContainerComponent'
-import SessionComponent from '../../../components/session/SessionComponent'
-import { Colors } from '../../../constants/Colors'
-import { useAppSelector } from '../../../redux/Hooks'
-import { useCreateNewMessageMutation, useLazyGetMessageByCodeQuery } from '../../../redux/Service'
-import { RootStackParamList } from '../../../routes/Routes'
-import { CreateNewMessageRequest } from '../../../types/request/CreateNewMessageRequest'
-import InputMessengerScreenComponent from '../component/input/InputMessengerScreenComponent'
-import ConversationItemComponent from '../component/item/ConversationItemComponent'
-import { styles } from './ConversationScreen.style'
+import {RouteProp, useIsFocused, useRoute} from '@react-navigation/native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {useTranslation} from 'react-multi-lang';
+import {Alert, Text} from 'react-native';
+import ContainerComponent from '../../../components/container/ContainerComponent';
+import {Colors} from '../../../constants/Colors';
+import {SERVER_SOCKET} from '../../../constants/System';
+import {Variables} from '../../../constants/Variables';
+import {useAppSelector} from '../../../redux/Hooks';
+import {
+  useCreateNewMessageMutation,
+  useLazyGetMessageByCodeQuery,
+} from '../../../redux/Service';
+import {RootStackParamList} from '../../../routes/Routes';
+import {useAuthService} from '../../../services/authService';
+import SessionComponent from '../../../components/session/SessionComponent';
+import ConversationSkeletonItem from '../../../components/skeletons/conversation/item/ConversationSkeletonItem';
+import {FlatList} from 'react-native';
+import ConversationItemComponent from '../component/item/ConversationItemComponent';
+import InputMessengerScreenComponent from '../component/input/InputMessengerScreenComponent';
+import {styles} from './ConversationScreen.style';
 
 const ConversationScreen = () => {
-  const route = useRoute<RouteProp<RootStackParamList, "CONVERSATION_SCREEN">>();
+  const route =
+    useRoute<RouteProp<RootStackParamList, 'CONVERSATION_SCREEN'>>();
   const code = route.params.code;
   const senderEmail = route.params.senderEmail;
-  const token = useAppSelector((state) => state.SpeedReducer.token) ?? "";
-  const [getMessageByCode, { data, isError, isFetching, isLoading, isSuccess, error }] = useLazyGetMessageByCodeQuery();
-  const [createNewMessage, { data: dataCreateNewMessage, isError: isErrorCreateNewMessage, isLoading: isLoadingCreateNewMessage, isSuccess: isSuccessCreateNewMessage, error: errorCreateNewMessage }] = useCreateNewMessageMutation();
-  const userLogin = useAppSelector((state) => state.SpeedReducer.userLogin);
-  const [refreshing, setRefreshing] = useState(false);
+  const token = useAppSelector(state => state.SpeedReducer.token) ?? '';
+  const refreshToken =
+    useAppSelector(state => state.SpeedReducer.userLogin?.refreshToken) ?? '';
+  const [
+    getMessageByCode,
+    {data, isError, isFetching, isLoading, isSuccess, error},
+  ] = useLazyGetMessageByCodeQuery();
+  const [createNewMessage, {isLoading: isLoadingCreateNewMessage}] =
+    useCreateNewMessageMutation();
+  const [receivedMessages, setReceivedMessages] = useState<any[]>([]);
+  const [socket, setSocket] = useState<WebSocket | null>(null);
+  const [message, setMessage] = useState('');
+  const {handleCheckTokenAlive} = useAuthService();
+  const isFocused = useIsFocused();
+  const t = useTranslation();
+
+  const handleError = useCallback(() => {
+    if (isError && isFocused) {
+      const textError = JSON.parse(JSON.stringify(error));
+      const errorMessage = textError?.data?.message || textError?.message;
+      if (errorMessage === Variables.ABORTED_ERROR) {
+        return;
+      } else if (errorMessage === Variables.TOKEN_EXPIRED) {
+        handleCheckTokenAlive(token, refreshToken);
+      } else {
+        Alert.alert(
+          t('ConversationScreen.alertWarning'),
+          t('ConversationScreen.alertSystemError'),
+        );
+      }
+    }
+  }, [
+    isError,
+    isFocused,
+    error,
+    token,
+    refreshToken,
+    handleCheckTokenAlive,
+    t,
+  ]);
 
   useEffect(() => {
-    const getMessageByCodeQueryAction = async () => {
-      try {
-        console.log({ code: code, token: token });
-        getMessageByCode({ code: code, token: token });
-      } catch (error) {
-        // Handle
-      }
-    }
-    code && token && getMessageByCodeQueryAction();
-  }, [code, token]);
+    handleError();
+  }, [handleError]);
 
-  const handleSendMessageAction = (content: string) => {
-    const createNewMessageAction = async () => {
+  useEffect(() => {
+    const fetchMessages = async () => {
       try {
-        const data: CreateNewMessageRequest = {
-          sender: senderEmail,
-          message: content
+        await getMessageByCode({code, token});
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      }
+    };
+
+    code && token && fetchMessages();
+  }, [code, token, refreshToken]);
+
+  useEffect(() => {
+    if (data) {
+      setReceivedMessages(data?.data);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    const setupWebSocket = async () => {
+      try {
+        const ws = new WebSocket(`ws://${SERVER_SOCKET}ws/chat/${code}`);
+        ws.onopen = () => {
+          console.log('WebSocket connection established');
+          setSocket(ws);
         };
-        await createNewMessage({ data: data, token: token });
+
+        ws.onmessage = event => {
+          try {
+            const data = JSON.parse(event.data);
+            setReceivedMessages(prevMessages => [...prevMessages, data]);
+          } catch (error) {
+            console.error('Error parsing message:', error);
+          }
+        };
+
+        ws.onclose = () => {
+          console.log('WebSocket connection closed');
+        };
+
+        return () => {
+          ws.close();
+        };
       } catch (error) {
-        // Handle
-        Alert.alert("Error", 'khong gui tin nhan duoc');
+        console.error('Error setting up WebSocket:', error);
       }
+    };
+
+    setupWebSocket();
+  }, [code, token, refreshToken]);
+
+  const sendMessage = (message: string) => {
+    if (socket && message.trim()) {
+      const data = {
+        receiver: senderEmail,
+        message,
+        username: token,
+      };
+      socket.send(JSON.stringify(data));
+      setMessage('');
+    } else {
+      Alert.alert(
+        t('ConversationScreen.alertWarning'),
+        t('ConversationScreen.errorNoSocketConnection'),
+      );
     }
-    userLogin?.email && token && createNewMessageAction();
-  }
-
-  // useEffect(() => {
-  //   if (data) {
-
-  //   }
-  //   if (isError) {
-  //     console.log('===============isError=====================');
-  //     console.log(JSON.stringify(isError));
-  //     console.log('====================================');
-  //   }
-  // }, [isError, isLoading, isSuccess]);
-
-  // Socket
-
-  // useEffect(() => {
-  //   const socket = io('https://64e61d2a09e64530d17f9bb8.mockapi.io/account');
-
-  //   socket.on('connect', () => {
-  //     console.log('Connected to server');
-  //   });
-
-  //   socket.on('message', (data) => {
-  //     console.log('Received message:', data);
-  //     setConverstation(data);
-  //   });
-
-  //   return () => {
-  //     socket.disconnect();
-  //   };
-  // }, []);
-
-  // const sendMessage = () => {
-  //   const socket = io('http://your-server-ip-address:3000');
-  //   socket.emit('sendMessage', 'Tin nhắn từ client'); // Thay 'sendMessage' bằng tên sự kiện bạn muốn sử dụng
-  // };
-
+  };
 
   return (
-    <ContainerComponent backgroundColor={Colors.WHITE} isFull>
+    <ContainerComponent isFull backgroundColor={Colors.WHITE}>
       <SessionComponent paddingNotTop={true}>
+        {isLoading && <ConversationSkeletonItem />}
         <FlatList
-          contentContainerStyle={{ paddingVertical: verticalScale(50) }}
-          style={styles['container__session--flatList']}
+          contentContainerStyle={styles.flatListContent}
           showsVerticalScrollIndicator={false}
-          data={data?.data ?? []}
-          keyExtractor={item => item.id.toString()}
+          data={receivedMessages ?? []}
           inverted
-          renderItem={({ item, index }) => <ConversationItemComponent item={item} />}
+          renderItem={({item, index}) => (
+            <ConversationItemComponent item={item} />
+          )}
         />
       </SessionComponent>
-      {/* Input */}
       <InputMessengerScreenComponent
-        placeholder={'Gửi tin nhắn'}
-        onSubmit={handleSendMessageAction}
+        placeholder={t('ConversationScreen.sendPlaceholder')}
+        onSubmit={sendMessage}
         isLoading={isLoadingCreateNewMessage}
       />
     </ContainerComponent>
-  )
-}
+  );
+};
 
-export default ConversationScreen
+export default ConversationScreen;

@@ -20,6 +20,8 @@ export const styles = StyleSheet.create({
   wrapperImage: {
     width: (appInfo.sizes.WIDTH - 10) / 2 - 16,
     height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   imageTruck: {
     width: 20,

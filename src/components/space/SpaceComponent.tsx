@@ -1,5 +1,5 @@
 import React from 'react';
-import { DimensionValue, View } from 'react-native';
+import {DimensionValue, View} from 'react-native';
 
 interface Props {
   width?: DimensionValue;
@@ -8,6 +8,6 @@ interface Props {
 }
 
 export default function SpaceComponent(props: Readonly<Props>) {
-  const { width, height, backgroundColor } = props;
-  return <View style={{ width, height, backgroundColor }}></View>;
-};
+  const {width, height, backgroundColor} = props;
+  return <View style={{width, height, backgroundColor}}></View>;
+}

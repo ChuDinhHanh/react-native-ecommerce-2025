@@ -30,6 +30,10 @@ import {LoginByGoogleResponse} from '../types/response/LoginByGoogleResponse';
 import {LoginResponse} from '../types/response/loginResponse';
 import {NotificationItem} from '../types/response/NotificationItem';
 import {RegisterByGoogleResponse} from '../types/response/RegisterByGoogleResponse';
+import {AddressData} from '../types/response/GetUserAddressResponse';
+import {GetMessageByCode} from '../types/request/GetMessageByCode';
+import {GetMessageByCodeResponse} from '../types/response/GetMessageByCodeResponse';
+import {UpdateProfileRequest} from '../types/request/UpdateProfileRequest';
 
 export const SpeedAPI = createApi({
   reducerPath: 'SpeedNetworkAPI',
@@ -44,7 +48,7 @@ export const SpeedAPI = createApi({
   // refetchOnMountOrArgChange: true, // Tự động fetch lại khi component mount hoặc argument thay đổi
   // refetchOnReconnect: true, // Fetch lại khi kết nối lại mạng
   // refetchOnFocus: true, // Fetch lại khi người dùng quay lại ứng dụng
-  tagTypes: ['Cart', 'Address'],
+  tagTypes: ['Cart', 'Address', 'Notification'],
   endpoints: builder => ({
     register: builder.mutation<Data<string>, Register>({
       query: data => ({
@@ -143,7 +147,7 @@ export const SpeedAPI = createApi({
       },
     }),
     getProductsOfCategory: builder.query<
-      Data<any>,
+      Data<Product[]>,
       {token: string; code: string}
     >({
       query: data => {
@@ -176,7 +180,6 @@ export const SpeedAPI = createApi({
       {username: string; token: string}
     >({
       query: data => {
-        console.log('================addToCart====================');
         return {
           url: `api/carts/${data.username}`,
           method: 'GET',
@@ -229,7 +232,6 @@ export const SpeedAPI = createApi({
       {code: string; token: string}
     >({
       query: data => {
-        console.log('=================getProductByCode===================');
         return {
           url: `api/products?pCode=${data.code}`,
           method: 'GET',
@@ -239,6 +241,7 @@ export const SpeedAPI = createApi({
           },
         };
       },
+      keepUnusedDataFor: 0,
     }),
     addCartChecked: builder.mutation<
       Data<any>,
@@ -258,6 +261,7 @@ export const SpeedAPI = createApi({
           },
         };
       },
+      invalidatesTags: ['Cart'],
     }),
     checkTokenAlive: builder.query<Data<any>, CheckTokenAlive>({
       query: data => {
@@ -288,7 +292,10 @@ export const SpeedAPI = createApi({
         };
       },
     }),
-    getUserAddress: builder.query<Data<any>, {user: string; token: string}>({
+    getUserAddress: builder.query<
+      Data<AddressData[]>,
+      {user: string; token: string}
+    >({
       query: data => {
         return {
           url: `api/users/address/${data.user}`,
@@ -345,6 +352,7 @@ export const SpeedAPI = createApi({
           },
         };
       },
+      invalidatesTags: ['Cart'],
     }),
     searchProduct: builder.query<Data<Product[]>, SearchProduct>({
       query: data => {
@@ -392,11 +400,11 @@ export const SpeedAPI = createApi({
     }),
     getNotification: builder.query<
       Data<NotificationItem[]>,
-      {name: string; token: string}
+      {name: string; token: string; status: number}
     >({
       query: data => {
         return {
-          url: `api/users/notifications/${data.name}`,
+          url: `api/users/notifications/${data.name}?status=${data.status}`,
           method: 'GET',
           headers: {
             'Content-type': 'application/json; charset=UTF-8',
@@ -404,6 +412,7 @@ export const SpeedAPI = createApi({
           },
         };
       },
+      providesTags: ['Notification'],
     }),
     likeProduct: builder.mutation<
       Data<any>,
@@ -482,7 +491,10 @@ export const SpeedAPI = createApi({
         };
       },
     }),
-    getMessageByCode: builder.query<Data<any>, {code: string; token: string}>({
+    getMessageByCode: builder.query<
+      Data<GetMessageByCodeResponse[]>,
+      GetMessageByCode
+    >({
       query: data => {
         return {
           url: `api/messages/get/${data.code}`,
@@ -537,6 +549,98 @@ export const SpeedAPI = createApi({
         };
       },
     }),
+    deleteAllNotification: builder.mutation<
+      Data<any>,
+      {email: string; token: string}
+    >({
+      query: data => {
+        return {
+          url: `api/users/notifications/delete/all/${data.email}?status=-1`,
+          method: 'DELETE',
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+      invalidatesTags: ['Notification'],
+    }),
+    createChatBox: builder.mutation<
+      Data<any>,
+      {senderUsername: string; token: string}
+    >({
+      query: data => {
+        return {
+          url: `api/boxchats/create`,
+          method: 'POST',
+          body: data.senderUsername,
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+    }),
+    notificationHadRead: builder.mutation<
+      Data<any>,
+      {notificationId: string; token: string}
+    >({
+      query: data => {
+        return {
+          url: `api/users/notifications/read/${data.notificationId}`,
+          method: 'POST',
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+      invalidatesTags: ['Notification'],
+    }),
+    deleteNotification: builder.mutation<
+      Data<any>,
+      {notificationId: string; token: string}
+    >({
+      query: data => {
+        return {
+          url: `api/users/notifications/delete/${data.notificationId}`,
+          method: 'DELETE',
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+      invalidatesTags: ['Notification'],
+    }),
+    uploadImage: builder.mutation<Data<any>, {file: any}>({
+      query: data => {
+        return {
+          url: `api/uploads`,
+          method: 'POST',
+          body: data.file,
+          headers: {
+            'content-type': 'multipart/form-data',
+          },
+        };
+      },
+    }),
+    updateProfile: builder.mutation<
+      Data<any>,
+      {data: UpdateProfileRequest; token: string}
+    >({
+      query: data => {
+        return {
+          url: 'api/users/update-profile',
+          method: 'POST',
+          body: data.data,
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            Authorization: `Bearer ${data.token}`,
+          },
+        };
+      },
+    }),
   }),
 });
 
@@ -577,4 +681,10 @@ export const {
   useLazyGetBannerQuery,
   useLazyGetImageByUrlForMobileQuery,
   useCreateNewMessageMutation,
+  useDeleteAllNotificationMutation,
+  useCreateChatBoxMutation,
+  useDeleteNotificationMutation,
+  useNotificationHadReadMutation,
+  useUploadImageMutation,
+  useUpdateProfileMutation,
 } = SpeedAPI;

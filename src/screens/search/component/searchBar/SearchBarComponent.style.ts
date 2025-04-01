@@ -5,7 +5,7 @@ import {moderateScale, verticalScale} from '../../../../utils/ScaleUtils';
 export const styles = StyleSheet.create({
   container__left: {
     flex: 1,
-    height: verticalScale(50),
+    height: verticalScale(42),
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Colors.COLOR_GREY_FEEBLE,

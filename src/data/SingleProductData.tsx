@@ -21,31 +21,38 @@ export const SingleProductData = {
   images: [
     {
       id: 1,
-      image: "https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-xinh-cuc-dep.jpg",
+      image:
+        'https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-xinh-cuc-dep.jpg',
     },
     {
       id: 2,
-      image: "https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-trung-quoc-cuc-dep.jpg",
+      image:
+        'https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-trung-quoc-cuc-dep.jpg',
     },
     {
       id: 3,
-      image: "https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-dep-de-thuong.jpg",
+      image:
+        'https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-dep-de-thuong.jpg',
     },
     {
       id: 4,
-      image: "https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-dep-de-thuong.jpg",
+      image:
+        'https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-dep-de-thuong.jpg',
     },
     {
       id: 5,
-      image: "https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-dep-de-thuong.jpg",
+      image:
+        'https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-dep-de-thuong.jpg',
     },
     {
       id: 6,
-      image: "https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-dep-de-thuong.jpg",
+      image:
+        'https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-dep-de-thuong.jpg',
     },
     {
       id: 7,
-      image: "https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-dep-de-thuong.jpg",
+      image:
+        'https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-dep-de-thuong.jpg',
     },
   ],
   rateList: [
@@ -98,19 +105,22 @@ export const SingleProductData = {
     displayProducts: [
       {
         id: 1,
-        image: "https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-xinh-cuc-dep.jpg",
+        image:
+          'https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-xinh-cuc-dep.jpg',
         price: 100000,
         saleOffPercent: 15,
       },
       {
         id: 2,
-        image: "https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-xinh-cuc-dep.jpg",
+        image:
+          'https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-xinh-cuc-dep.jpg',
         price: 100000,
         saleOffPercent: 30,
       },
       {
         id: 3,
-        image: "https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-xinh-cuc-dep.jpg",
+        image:
+          'https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-xinh-cuc-dep.jpg',
         price: 100000,
         saleOffPercent: 99,
       },
@@ -119,13 +129,15 @@ export const SingleProductData = {
   suggestProducts: [
     {
       id: 1,
-      image: "https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-xinh-cuc-dep.jpg",
+      image:
+        'https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-xinh-cuc-dep.jpg',
       price: 50000,
       saleOff: 15,
     },
     {
       id: 2,
-      image: "https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-xinh-cuc-dep.jpg",
+      image:
+        'https://kynguyenlamdep.com/wp-content/uploads/2022/06/anh-gai-xinh-cuc-dep.jpg',
       price: 50000,
       saleOff: 15,
     },

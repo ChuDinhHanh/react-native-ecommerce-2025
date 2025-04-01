@@ -1,6 +1,6 @@
-import { StyleSheet } from 'react-native';
-import { Colors } from '../../../constants/Colors';
-import { moderateScale } from '../../../utils/ScaleUtils';
+import {StyleSheet} from 'react-native';
+import {Colors} from '../../../constants/Colors';
+import {moderateScale} from '../../../utils/ScaleUtils';
 
 export const styles = StyleSheet.create({
   'container__row--image': {

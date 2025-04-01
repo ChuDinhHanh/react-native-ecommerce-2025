@@ -1,27 +1,22 @@
-import React, { useMemo } from 'react';
-import { ScrollView } from 'react-native';
+import React, {useMemo} from 'react';
+import {ScrollView} from 'react-native';
 import SessionComponent from '../../session/SessionComponent';
 import MessageSkeletonItemComponent from './item/MessageItem';
 
 const MessageSkeletonComponent = () => {
+  const handlePrintfSkeleton = useMemo(() => {
+    const qty = Math.round(Math.random() * 5) + 2;
+    const skeleton = Array.from({length: qty}, (_, i) => (
+      <MessageSkeletonItemComponent key={i} />
+    ));
+    return skeleton;
+  }, []);
 
-    const handlePrintfSkeleton = useMemo(() => {
-        const qty = Math.round(Math.random() * 5) + 2;
-        const skeleton = Array.from({ length: qty }, (_, i) => (
-            <MessageSkeletonItemComponent key={i} />
-        ))
-        return skeleton;
-    }, []);
+  return (
+    <ScrollView>
+      <SessionComponent>{handlePrintfSkeleton}</SessionComponent>
+    </ScrollView>
+  );
+};
 
-    return (
-        <ScrollView>
-            <SessionComponent>
-                {
-                    handlePrintfSkeleton
-                }
-            </SessionComponent>
-        </ScrollView>
-    )
-}
-
-export default MessageSkeletonComponent
+export default MessageSkeletonComponent;

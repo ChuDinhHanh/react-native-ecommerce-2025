@@ -10,6 +10,7 @@ import {
   logoutUser,
   saveLanguage,
 } from './userThunks';
+import {UpdateProfileRequest} from '../types/request/UpdateProfileRequest';
 
 export interface SpeedState {
   token: string | null;
@@ -56,6 +57,15 @@ export const SpeedSlice = createSlice({
     setGetInApp: (state, action: PayloadAction<boolean>) => {
       state.hadGetInApp = action.payload;
     },
+    updateProfileRedux: (
+      state,
+      action: PayloadAction<UpdateProfileRequest>,
+    ) => {
+      if (state.userLogin) {
+        state.userLogin.avatar = action.payload.image || state.userLogin.avatar;
+        state.userLogin.name = action.payload.name || state.userLogin.name;
+      }
+    },
   },
   extraReducers: builder => {
     builder.addCase(loadUser.fulfilled, (state, action) => {
@@ -98,5 +108,6 @@ export const {
   setLanguage,
   setNumberProductInCart,
   setGetInApp,
+  updateProfileRedux,
 } = SpeedSlice.actions;
 export default SpeedSlice.reducer;

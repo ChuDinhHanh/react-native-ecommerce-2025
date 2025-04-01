@@ -77,6 +77,10 @@
             <action android:name="vn.com.vng.zalopay.PAYMENT" />
             <category android:name="android.intent.category.DEFAULT" />
         </intent-filter>
+        <!-- Đây là intent filter cần thiết cho Image cache -->
+        <intent-filter>
+           <action android:name="android.intent.action.DOWNLOAD_COMPLETE"/> 
+        </intent-filter>
     </activity>
 
     <!-- Facebook activities -->

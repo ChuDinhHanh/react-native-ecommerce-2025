@@ -1,11 +1,11 @@
-import { useIsFocused, useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Formik } from 'formik';
-import React, { useCallback, useEffect, useState } from 'react';
-import { useTranslation } from 'react-multi-lang';
-import { Alert, Image, View } from 'react-native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {Formik} from 'formik';
+import React, {useCallback, useEffect, useState} from 'react';
+import {useTranslation} from 'react-multi-lang';
+import {Alert, Image, View} from 'react-native';
 import ActionSheet from 'react-native-actionsheet';
-import { Asset } from 'react-native-image-picker';
+import {Asset} from 'react-native-image-picker';
 import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import IconButtonComponent from '../../components/buttons/iconButton/IconButtonComponent';
 import TextButtonComponent from '../../components/buttons/textButton/TextButtonComponent';
@@ -19,23 +19,35 @@ import LoginTextQuestionComponent from '../../components/socialLogin/loginTextQu
 import SocialLoginComponent from '../../components/socialLogin/socialLoginComponent/SocialLoginComponent';
 import SpaceComponent from '../../components/space/SpaceComponent';
 import TextComponent from '../../components/text/TextComponent';
-import { Colors } from '../../constants/Colors';
-import { BOTTOM_TAB_NAVIGATOR, VERIFY_CAPTCHA_SEND_SMS_SCREEN, VERIFY_EMAIL_SCREEN } from '../../constants/Screens';
-import { Variables } from '../../constants/Variables';
-import { useAppDispatch } from '../../redux/Hooks';
-import { useRegisterByGoogleMutation, useRegisterMutation } from '../../redux/Service';
-import { loginUser } from '../../redux/userThunks';
-import { RootStackParamList } from '../../routes/Routes';
-import { globalStyles } from '../../styles/globalStyles';
-import { SignInRedux } from '../../types/other/SignInRedux';
-import { Data } from '../../types/request/Data';
-import { SignUpByGoogle } from '../../types/request/SignUpByGoogle';
-import { Register } from '../../types/request/UserRegister';
-import { moderateScale, verticalScale } from '../../utils/ScaleUtils';
-import { ValidateIdentifyTypePhoneOrEmail, validationSchemaRegisterUtils } from '../../utils/Rules';
-import { styles } from './RegisterScreen.style';
-import { RegisterByGoogleResponse } from '../../types/response/RegisterByGoogleResponse';
-import { getDeviceToken } from '../../utils/DeviceTokenUtils';
+import {Colors} from '../../constants/Colors';
+import {
+  BOTTOM_TAB_NAVIGATOR,
+  VERIFY_CAPTCHA_SEND_SMS_SCREEN,
+  VERIFY_EMAIL_SCREEN,
+} from '../../constants/Screens';
+import {Variables} from '../../constants/Variables';
+import {useAppDispatch} from '../../redux/Hooks';
+import {
+  useRegisterByGoogleMutation,
+  useRegisterMutation,
+  useUploadImageMutation,
+} from '../../redux/Service';
+import {loginUser} from '../../redux/userThunks';
+import {RootStackParamList} from '../../routes/Routes';
+import {globalStyles} from '../../styles/globalStyles';
+import {SignInRedux} from '../../types/other/SignInRedux';
+import {Data} from '../../types/request/Data';
+import {SignUpByGoogle} from '../../types/request/SignUpByGoogle';
+import {Register} from '../../types/request/UserRegister';
+import {RegisterByGoogleResponse} from '../../types/response/RegisterByGoogleResponse';
+import {getDeviceToken} from '../../utils/DeviceTokenUtils';
+import {
+  validateIdentifyType,
+  validationSchemaRegisterUtils,
+} from '../../utils/Rules';
+import {moderateScale, verticalScale} from '../../utils/ScaleUtils';
+import {styles} from './RegisterScreen.style';
+import FastImage from 'react-native-fast-image';
 
 interface RegisterFormValues {
   name: string;
@@ -56,38 +68,59 @@ function isAllFileValidate(data: Register, skip: string[]) {
 
 const RegisterScreen: React.FC = () => {
   const t = useTranslation();
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const [uploadImage, {isError, isLoading, isSuccess, data, error}] =
+    useUploadImageMutation();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [isPhone, setIsPhone] = useState(false);
   const [initialValues, setInitialValues] = useState<RegisterFormValues>({
     name: '',
     identifier: '',
     password: '',
-    accountType: ''
-  })
+    accountType: '',
+  });
   const isFocused = useIsFocused();
   const [value, setValue] = useState('');
   const [imagePicker, setImagePicker] = useState<Asset[]>();
-  const [imagePickerOption, setImagePickerOption] = useState<ActionSheet | any>();
-
+  const [imagePickerOption, setImagePickerOption] = useState<
+    ActionSheet | any
+  >();
+  const [imageNameUploadResponse, setImageNameUploadResponse] = useState('');
   const [
     register,
-    { data: dataRegister, isLoading: isLoadingRegister, isError: isErrorRegister, error: errorRegister, },
+    {
+      data: dataRegister,
+      isLoading: isLoadingRegister,
+      isError: isErrorRegister,
+      error: errorRegister,
+    },
   ] = useRegisterMutation();
 
-  const [registerByGoogle, {
-    data: dataRegisterByGoogle, isLoading: isLoadingRegisterByGoogle, isError: isErrorRegisterByGoogle, error: errorRegisterByGoogle
-  }] = useRegisterByGoogleMutation();
+  const [
+    registerByGoogle,
+    {
+      data: dataRegisterByGoogle,
+      isLoading: isLoadingRegisterByGoogle,
+      isError: isErrorRegisterByGoogle,
+      error: errorRegisterByGoogle,
+    },
+  ] = useRegisterByGoogleMutation();
   const dispatch = useAppDispatch();
 
   const dropdownData = [
-    { name: t('RegisterScreen.textChooseTypeAccountRegisterSellPerson'), value: Variables.TYPE_SELLER },
-    { name: t('RegisterScreen.textChooseTypeAccountRegisterBuyPerson'), value: Variables.TYPE_BUYER },
+    {
+      name: t('RegisterScreen.textChooseTypeAccountRegisterSellPerson'),
+      value: Variables.TYPE_SELLER,
+    },
+    {
+      name: t('RegisterScreen.textChooseTypeAccountRegisterBuyPerson'),
+      value: Variables.TYPE_BUYER,
+    },
   ];
 
   const handleShowActionSheet = useCallback(() => {
     imagePickerOption?.show();
   }, [imagePickerOption]);
-
 
   useEffect(() => {
     if (dataRegister) {
@@ -96,37 +129,39 @@ const RegisterScreen: React.FC = () => {
         if (isPhone) {
           navigation.navigate(VERIFY_CAPTCHA_SEND_SMS_SCREEN, {
             token: token,
-            phone: initialValues.identifier
-          })
+            phone: initialValues.identifier,
+          });
         } else {
           navigation.navigate(VERIFY_EMAIL_SCREEN, {
             token: token,
-            email: initialValues.identifier
-          })
+            email: initialValues.identifier,
+          });
         }
       }
     }
     if (isErrorRegister) {
       const errorText = JSON.parse(JSON.stringify(errorRegister));
-      Alert.alert(t("Alert.warning"), errorText?.data ? errorText?.data?.message : errorText?.message);
+      Alert.alert(
+        t('Alert.warning'),
+        errorText?.data ? errorText?.data?.message : errorText?.message,
+      );
     }
-  }, [dataRegister, isErrorRegister, errorRegister, initialValues.identifier])
-
+  }, [dataRegister, isErrorRegister, errorRegister, initialValues.identifier]);
 
   const handleSubmit = async (values: RegisterFormValues) => {
-    const email = ValidateIdentifyTypePhoneOrEmail('email', values.identifier);
-    const phone = ValidateIdentifyTypePhoneOrEmail('phone', values.identifier);
+    const email = validateIdentifyType('email', values.identifier);
+    const phone = validateIdentifyType('phone', values.identifier);
     email.length ? setIsPhone(false) : setIsPhone(true);
-    const deviceToken = await getDeviceToken() ?? "";
+    const deviceToken = (await getDeviceToken()) ?? '';
     const registerData: Register = {
       name: values.name,
       email: email.length ? email : null,
       phone: phone.length ? phone : null,
       password: values.password,
-      avatar: imagePicker ? `${imagePicker[0].uri}` : '',
+      avatar: imageNameUploadResponse[0] ?? '',
       roleCode: values.accountType,
       deviceToken: deviceToken,
-    }
+    };
     try {
       if (isAllFileValidate(registerData, ['avatar', 'phone'])) {
         await register(registerData).unwrap();
@@ -136,18 +171,18 @@ const RegisterScreen: React.FC = () => {
       console.error('register:', error);
     }
     // Update data
-    setInitialValues({ ...values });
-  }
+    setInitialValues({...values});
+  };
 
   const handleRegisterWithGoogle = async (data: SignUpByGoogle) => {
     if (isFocused) {
       try {
-        await registerByGoogle(data)
+        await registerByGoogle(data);
       } catch (error) {
         // Handle
       }
     }
-  }
+  };
 
   useEffect(() => {
     if (dataRegisterByGoogle) {
@@ -155,7 +190,10 @@ const RegisterScreen: React.FC = () => {
     }
     if (isErrorRegisterByGoogle) {
       const textError = JSON.parse(JSON.stringify(errorRegisterByGoogle));
-      Alert.alert(t("Alert.warning"), `${textError?.data?.message}` || t("Alert.registerFail"));
+      Alert.alert(
+        t('Alert.warning'),
+        `${textError?.data?.message}` || t('Alert.registerFail'),
+      );
     }
   }, [isErrorRegisterByGoogle, errorRegisterByGoogle, dataRegisterByGoogle]);
 
@@ -164,40 +202,65 @@ const RegisterScreen: React.FC = () => {
       user: data.data.user,
       token: data.data.token,
       isFirstTime: true,
-      refreshToken: data.data.user.refreshToken
-    }
-    dispatch(loginUser(user)).then((res) => {
+      refreshToken: data.data.user.refreshToken,
+    };
+    dispatch(loginUser(user)).then(res => {
       navigation.replace(BOTTOM_TAB_NAVIGATOR);
-    })
-  }
+    });
+  };
+
+  const handleUploadImageAction = async () => {
+    if (imagePicker?.length) {
+      const image = imagePicker[0];
+      const formData = new FormData();
+      formData.append('file', {
+        uri: image.uri,
+        type: image.type,
+        name: image.fileName,
+      });
+      try {
+        await uploadImage({file: formData})
+          .unwrap()
+          .then(res => {
+            if (res) {
+              setImageNameUploadResponse(res.data);
+              setInitialValues(prevValues => ({
+                ...prevValues,
+                avatar: res.data,
+              }));
+            }
+          });
+      } catch (error: any) {
+        if (error.error === 'TypeError: Network request failed') {
+          Alert.alert(t('Alert.warning'), t('Alert.systemError'));
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    handleUploadImageAction();
+  }, [imagePicker]);
 
   return (
-    <ContainerComponent
-      isScrollEnable
-      isFull
-    >
+    <ContainerComponent isScrollEnable isFull>
       {/* Top session */}
       <View style={styles['container__top']}>
         <SessionComponent>
           {/* Icon */}
-          <RowComponent justifyContent='center' alignItems='center'>
-            <View
-              style={styles['container__row--inside']}
-            >
-              {
-                imagePicker && imagePicker.length > 0 ?
-                  (
-                    <Image
-                      style={styles['inside__image--avatar']}
-                      source={{ uri: imagePicker[0].uri }}
-                    />
-                  )
-                  :
-                  <Image
-                    style={styles['inside__image--avatar']}
-                    source={require('../../assets/images/data/register/rabbit.png')}
-                  />
-              }
+          <RowComponent justifyContent="center" alignItems="center">
+            <View style={styles['container__row--inside']}>
+              {imagePicker && imagePicker.length > 0 ? (
+                <FastImage
+                  style={styles['inside__image--avatar']}
+                  source={{uri: imagePicker[0].uri}}
+                />
+              ) : (
+                <FastImage
+                  style={styles['inside__image--avatar']}
+                  source={require('../../assets/images/data/register/rabbit.png')}
+                />
+              )}
               <IconButtonComponent
                 customStyle={styles['inside__image--button']}
                 width={35}
@@ -213,16 +276,26 @@ const RegisterScreen: React.FC = () => {
             initialValues={initialValues}
             validationSchema={validationSchemaRegisterUtils}
             onSubmit={values => handleSubmit(values)}
-            enableReinitialize
-          >
-            {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
+            enableReinitialize>
+            {({
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              setFieldValue,
+              values,
+              errors,
+              touched,
+            }) => (
               <View>
                 {/* Name */}
                 <CustomTextInput
                   suffix={
-                    <SimpleLineIcons name='pencil' size={Variables.ICON_SIZE_SMALL} />
+                    <SimpleLineIcons
+                      name="pencil"
+                      size={Variables.ICON_SIZE_SMALL}
+                    />
                   }
-                  placeholder={t("Name")}
+                  placeholder={t('Name')}
                   onChangeText={handleChange('name')}
                   onBlur={handleBlur('name')}
                   value={values.name}
@@ -232,9 +305,14 @@ const RegisterScreen: React.FC = () => {
                 {/* Email or Phone */}
                 <CustomTextInput
                   suffix={
-                    <SimpleLineIcons name='user' size={Variables.ICON_SIZE_SMALL} />
+                    <SimpleLineIcons
+                      name="user"
+                      size={Variables.ICON_SIZE_SMALL}
+                    />
                   }
-                  placeholder={t("LoginScreen.textInputPlaceHolderEmailOrPhoneNumber")}
+                  placeholder={t(
+                    'LoginScreen.textInputPlaceHolderEmailOrPhoneNumber',
+                  )}
                   onChangeText={handleChange('identifier')}
                   onBlur={handleBlur('identifier')}
                   value={values.identifier}
@@ -244,9 +322,12 @@ const RegisterScreen: React.FC = () => {
                 {/* Password */}
                 <CustomTextInput
                   suffix={
-                    <SimpleLineIcons name='lock' size={Variables.ICON_SIZE_SMALL} />
+                    <SimpleLineIcons
+                      name="lock"
+                      size={Variables.ICON_SIZE_SMALL}
+                    />
                   }
-                  placeholder={t("LoginScreen.textInputPlaceHolderPassword")}
+                  placeholder={t('LoginScreen.textInputPlaceHolderPassword')}
                   onChangeText={handleChange('password')}
                   onBlur={handleBlur('password')}
                   value={values.password}
@@ -257,17 +338,20 @@ const RegisterScreen: React.FC = () => {
 
                 {/* Dropdown */}
                 <DropdownComponent
-                  FieldValue='accountType'
+                  FieldValue="accountType"
                   touched={touched.accountType}
                   errors={errors.accountType}
                   dropdownData={dropdownData}
                   values={values.accountType}
                   onSetFieldValue={setFieldValue}
                   onSetValue={setValue}
-                  placeHolder='ImmediateScreen.textTitleDropDown'
+                  placeHolder="ImmediateScreen.textTitleDropDown"
                 />
                 {errors.accountType && touched.accountType && (
-                  <TextComponent color={Colors.RED} text={t(errors.accountType)} />
+                  <TextComponent
+                    color={Colors.RED}
+                    text={t(errors.accountType)}
+                  />
                 )}
                 <SpaceComponent height={verticalScale(20)} />
                 <TextButtonComponent
@@ -276,7 +360,14 @@ const RegisterScreen: React.FC = () => {
                   padding={moderateScale(15)}
                   borderRadius={5}
                   backgroundColor={Colors.GREEN_500}
-                  title={<TextComponent fontWeight='bold' fontSize={Variables.FONT_SIZE_BUTTON_TEXT} color={Colors.WHITE} text={t("RegisterScreen.textRegister")} />}
+                  title={
+                    <TextComponent
+                      fontWeight="bold"
+                      fontSize={Variables.FONT_SIZE_BUTTON_TEXT}
+                      color={Colors.WHITE}
+                      text={t('RegisterScreen.textRegister')}
+                    />
+                  }
                   onPress={handleSubmit}
                 />
               </View>
@@ -285,16 +376,13 @@ const RegisterScreen: React.FC = () => {
           <SocialLoginComponent
             onPressRegisterByGoogle={handleRegisterWithGoogle}
             isLogin={false}
-            onPressLoginByGoogle={() => { }}
+            onPressLoginByGoogle={() => {}}
           />
         </SessionComponent>
       </View>
       {/* Bottom session */}
       <View style={[styles.container__bottom, globalStyles.center]}>
-        <LoginTextQuestionComponent
-          isLogin={false}
-          navigation={navigation}
-        />
+        <LoginTextQuestionComponent isLogin={false} navigation={navigation} />
         {/* Call image  */}
         <ImagePicker
           optionsRef={ref => setImagePickerOption(ref)}
